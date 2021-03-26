@@ -1,6 +1,6 @@
 # Table of contents
 
-* [介紹](README.md)
+* [簡介](README.md)
 
 ## 變數宣告
 
