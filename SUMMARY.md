@@ -5,12 +5,14 @@
 ## 變數宣告
 
 * [基本型態](bian-shu-xuan-gao/ji-ben-xing-tai.md)
-* [const](bian-shu-xuan-gao/const.md)
 * [pointer](bian-shu-xuan-gao/pointer.md)
+* [reference](bian-shu-xuan-gao/reference.md)
+* [const](bian-shu-xuan-gao/const.md)
 * [array](bian-shu-xuan-gao/array.md)
 * [enum](bian-shu-xuan-gao/enum.md)
 * [struct](bian-shu-xuan-gao/struct.md)
 * [class](bian-shu-xuan-gao/class.md)
+* [static](bian-shu-xuan-gao/static.md)
 
 ## 分支條件
 
