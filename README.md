@@ -4,4 +4,6 @@
 
 * [gitbook連結](https://hung-hsin-chen.gitbook.io/cpp-assembly/)
 * [Compiler explorer](https://godbolt.org/)
+* [cpp reference](https://en.cppreference.com/)
+* [cplusplus reference](https://www.cplusplus.com/)
 
