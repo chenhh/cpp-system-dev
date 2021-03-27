@@ -17,3 +17,5 @@
 * [NASM](https://www.nasm.us/)
 * [MASM](https://docs.microsoft.com/en-us/cpp/assembler/masm/microsoft-macro-assembler-reference?view=msvc-160)
 
+## Intel資源
+* [Intel 64 and IA-32 Architectures Software Developer Manuals](https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html)
