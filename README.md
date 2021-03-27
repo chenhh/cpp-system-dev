@@ -20,5 +20,9 @@
 ## Intel資源
 * [Intel 64 and IA-32 Architectures Software Developer Manuals](https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html)
 
+
+## Windows資源
+* [(MSDN) Windows PE format](https://docs.microsoft.com/en-us/windows/win32/debug/pe-format)
+
 ## Linux資源
-* [Linux Inside(gitbook)](https://0xax.gitbooks.io/linux-insides/)
+* [(gitbook) Linux Inside](https://0xax.gitbooks.io/linux-insides/)
