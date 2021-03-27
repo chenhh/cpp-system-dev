@@ -19,3 +19,6 @@
 
 ## Intel資源
 * [Intel 64 and IA-32 Architectures Software Developer Manuals](https://software.intel.com/content/www/us/en/develop/articles/intel-sdm.html)
+
+## Linux資源
+* [Linux Inside(gitbook)](https://0xax.gitbooks.io/linux-insides/)
