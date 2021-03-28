@@ -10,7 +10,8 @@
 
 ## 變數宣告 <a id="variable"></a>
 
-* [基本型態](variable/basic-type.md)
+* [C/C++ 基本型態](variable/basic-type.md)
+* [列表初始化\(list initialization\)](variable/lie-biao-chu-shi-hua-list-initialization.md)
 * [pointer](variable/pointer.md)
 * [reference](variable/reference.md)
 * [const](variable/const.md)
@@ -22,19 +23,20 @@
 * [union](variable/union.md)
 * [volatile](variable/volatile.md)
 
-## 分支條件 <a id="branch-condition"></a>
+## C/C++ 分支條件 <a id="branch-condition"></a>
 
 * [if-else](branch-condition/if-else.md)
 
-## 迴圈 <a id="loop"></a>
+## C/C++ 迴圈 <a id="loop"></a>
 
 * [for](loop/for.md)
 * [while](loop/while.md)
 
-## 函數 <a id="function"></a>
+## C/C++ 函數 <a id="function"></a>
 
 * [function](function/function.md)
 * [function pointer](function/function-pointer.md)
+* [x86呼叫慣例\(cdecl, stdcal\)](function/x86-hu-jiao-guan-li-cdecl-stdcal.md)
 
 ## 編譯與連結 <a id="compiling_and_linking"></a>
 
