@@ -15,9 +15,11 @@ struct Point{
 };
 
 void swap(Point p1, Point p2){
-    // call by value
-	std::cout << "(swap) address of p1 = " << &p1 << std::endl;
-	std::cout << "(swap) address of p2 = " << &p2 << std::endl;
+  // call by value
+	std::cout << "(swap) address of p1 = " 
+	          << &p1 << std::endl;
+	std::cout << "(swap) address of p2 = " 
+	          << &p2 << std::endl;
 
     Point temp = p1;
     p1 = p2;
@@ -27,10 +29,14 @@ void swap(Point p1, Point p2){
 int main(){
     Point p1{1,2}, p2{3,4};
     swap(p1, p2);
-    std::cout << "(main) address of p1 = " << &p1 << std::endl;
-	std::cout << "(main) address of p2 = " << &p2 << std::endl;
-    std::cout<< "p1 = (" << p1.x << "," << p1.y << ")" << std::endl 
-             << "p2 = (" << p2.x << "," << p2.y << ")" << std::endl;
+    std::cout << "(main) address of p1 = " 
+              << &p1 << std::endl;
+  	std::cout << "(main) address of p2 = " 
+	            << &p2 << std::endl;
+    std::cout<< "p1 = (" << p1.x << "," 
+             << p1.y << ")" << std::endl 
+             << "p2 = (" << p2.x << "," 
+             << p2.y << ")" << std::endl;
     return 0;
 }
 
