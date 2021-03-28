@@ -11,7 +11,7 @@
 ## 變數宣告 <a id="variable"></a>
 
 * [C/C++ 基本型態](variable/basic-type.md)
-* [列表初始化\(list initialization\)](variable/lie-biao-chu-shi-hua-list-initialization.md)
+* [列表初始化\(list initialization\)](variable/list-initialization.md)
 * [指標\(pointer\)](variable/pointer.md)
 * [reference](variable/reference.md)
 * [const](variable/const.md)
