@@ -38,14 +38,14 @@
 * [function pointer](function/function-pointer.md)
 * [x86呼叫慣例\(cdecl, stdcal\)](function/x86-hu-jiao-guan-li-cdecl-stdcal.md)
 
-## C/C++ IO
+## C++ Exception <a id="cpp-exception"></a>
 
-## C++ Exception
+## C/C++ IO <a id="c-cpp-io"></a>
 
-* [iostream](c++-exception/iostream.md)
-* [Untitled](c++-exception/untitled.md)
-* [stringstream](c++-exception/stringstream.md)
-* [fstream](c++-exception/fstream.md)
+* [iostream](c-cpp-io/iostream.md)
+* [Untitled](c-cpp-io/untitled.md)
+* [stringstream](c-cpp-io/stringstream.md)
+* [fstream](c-cpp-io/fstream.md)
 
 ## C++ class
 
