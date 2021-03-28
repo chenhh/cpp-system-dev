@@ -9,36 +9,40 @@
 ```cpp
 #include <iostream>
 
-void swap(int x, int y) {
-  // call by value
-	std::cout << "(swap) address of x = " << &x << std::endl;
-	std::cout << "(swap) address of y = " << &y << std::endl;
-	
-  int temp = x;
-  x = y;
-  y = temp;
+struct Point{
+    int x;
+    int y;
+};
+
+void swap(Point p1, Point p2){
+    // call by value
+	std::cout << "(swap) address of p1 = " << &p1 << std::endl;
+	std::cout << "(swap) address of p2 = " << &p2 << std::endl;
+
+    Point temp = p1;
+    p1 = p2;
+    p2 = temp;
 }
 
-int main() {
-  int x = 3, y = 2;
-  swap(x, y);
-  std::cout << "x = " << x << std::endl;
-	std::cout << "y = " << y << std::endl;
-	std::cout << "(main) address of x = " << &x << std::endl;
-	std::cout << "(main) address of y = " << &y << std::endl;
-    
-  return 0;
+int main(){
+    Point p1{1,2}, p2{3,4};
+    swap(p1, p2);
+    std::cout << "(main) address of p1 = " << &p1 << std::endl;
+	std::cout << "(main) address of p2 = " << &p2 << std::endl;
+    std::cout<< "p1 = (" << p1.x << "," << p1.y << ")" << std::endl 
+             << "p2 = (" << p2.x << "," << p2.y << ")" << std::endl;
+    return 0;
 }
 
 /*
-	call by value, the values does not swap
-	在swap函式的x,y的address與main中不同
-	(swap) address of x = 0x7ffc6aeb473c
-	(swap) address of y = 0x7ffc6aeb4738
-	x = 3
-	y = 2
-	(main) address of x = 0x7ffc6aeb4760
-	(main) address of y = 0x7ffc6aeb4764
+	因為是call by value, Point傳入swap是用copy的方式
+	(swap) address of p1 = 0x7ffff6648d08
+	(swap) address of p2 = 0x7ffff6648d00
+	(main) address of p1 = 0x7ffff6648d38
+	(main) address of p2 = 0x7ffff6648d40
+	p1, p2的值並沒有被交換
+	p1 = (1,2)
+	p2 = (3,4)
 */
 ```
 
