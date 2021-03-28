@@ -2,37 +2,42 @@
 
 * [簡介](README.md)
 
-## 組合語言
+## 組合語言 <a id="assembly"></a>
 
-* [暫存器\(register\)](zu-he-yu-yan/zan-cun-qi-register.md)
-* [x86定址模式\(addressing mode\)](zu-he-yu-yan/x86-ding-zhi-mo-shi-addressing-mode.md)
-* [真實與保護模式\(real and protect mode\)](zu-he-yu-yan/zhen-shi-yu-bao-hu-mo-shi-real-and-protect-mode.md)
+* [暫存器\(register\)](assembly/register.md)
+* [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
+* [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
 
-## 變數宣告
+## 變數宣告 <a id="variable"></a>
 
-* [基本型態](bian-shu-xuan-gao/ji-ben-xing-tai.md)
-* [pointer](bian-shu-xuan-gao/pointer.md)
-* [reference](bian-shu-xuan-gao/reference.md)
-* [const](bian-shu-xuan-gao/const.md)
-* [array](bian-shu-xuan-gao/array.md)
-* [struct](bian-shu-xuan-gao/struct.md)
-* [class](bian-shu-xuan-gao/class.md)
-* [static](bian-shu-xuan-gao/static.md)
-* [enum](bian-shu-xuan-gao/enum.md)
-* [union](bian-shu-xuan-gao/union.md)
-* [volatile](bian-shu-xuan-gao/volatile.md)
+* [基本型態](variable/basic-type.md)
+* [pointer](variable/pointer.md)
+* [reference](variable/reference.md)
+* [const](variable/const.md)
+* [array](variable/array.md)
+* [struct](variable/struct.md)
+* [class](variable/class.md)
+* [static](variable/static.md)
+* [enum](variable/enum.md)
+* [union](variable/union.md)
+* [volatile](variable/volatile.md)
 
-## 分支條件
+## 分支條件 <a id="branch-condition"></a>
 
-* [if-else](fen-zhi-tiao-jian/if-else.md)
+* [if-else](branch-condition/if-else.md)
 
-## 迴圈
+## 迴圈 <a id="loop"></a>
 
-* [for](hui-quan/for.md)
-* [while](hui-quan/while.md)
+* [for](loop/for.md)
+* [while](loop/while.md)
 
-## 函數
+## 函數 <a id="function"></a>
 
-* [function](han-shu/function.md)
-* [function pointer](han-shu/function-pointer.md)
+* [function](function/function.md)
+* [function pointer](function/function-pointer.md)
+
+## 編譯與連結 <a id="compiling_and_linking"></a>
+
+* [常用工具](compiling_and_linking/tool.md)
+* [cmake](compiling_and_linking/cmake.md)
 
