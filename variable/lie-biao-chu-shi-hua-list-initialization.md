@@ -18,10 +18,10 @@ using std::endl;
 int main(){
     auto z1 {99};   // z1 is an int
     auto z2 = {99}; // z2 is std::initializer_list<int>
-    auto z3 = 99;   // z3 is an int
+    auto z3 = 99.0;   // z3 is a float number
     cout << typeid(z1).name() << endl; //i
     cout << typeid(z2).name() << endl; // St16initializer_listIiE
-    cout << typeid(z3).name() << endl; // i
+    cout << typeid(z3).name() << endl; // d
     return 0;
 }
 ```
