@@ -7,6 +7,7 @@
 * [暫存器\(register\)](assembly/register.md)
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
+* [大端與小端\(big endian and little endian\)](assembly/da-duan-yu-xiao-duan-big-endian-and-little-endian.md)
 
 ## C/C++變數宣告 <a id="variable"></a>
 
