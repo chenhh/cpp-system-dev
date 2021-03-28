@@ -87,3 +87,55 @@ void swap(Point& p1, Point& p2){
 */
 ```
 
+## call by address
+
+在C語言中，因為沒有call by reference，因此若在函數中需要修改變數時，必須使用call by address的方式將變數傳入。
+
+而在C++中，儘量使用call by reference的方式將參數傳入函數以增加程式的可讀性。
+
+```cpp
+#include <iostream>
+
+struct Point{
+    int x;
+    int y;
+};
+
+void swap(Point* p1, Point* p2){
+  // call by address
+	std::cout << "(swap) address of pointer p1 = "
+			  << p1 << std::endl;
+	std::cout << "(swap) address of pointer p2 = "
+	     	  << p2 << std::endl;
+
+	// 此處建立暫存物件時，可使用std::move避免拷貝
+    Point temp = *p1;	
+    *p1 = *p2;
+    *p2 = temp;
+}      
+
+int main(){
+    Point p1{1,2}, p2{3,4};
+    swap(&p1, &p2);
+    std::cout << "(main) address of p1 = "
+              << &p1 << std::endl;
+        std::cout << "(main) address of p2 = "
+                    << &p2 << std::endl;
+    std::cout<< "p1 = (" << p1.x << ","
+             << p1.y << ")" << std::endl
+             << "p2 = (" << p2.x << ","
+             << p2.y << ")" << std::endl;
+    return 0;
+}
+
+/*
+	使用call by adress時，傳入參數要使用變數的地址而非變數值
+	(swap) address of pointer p1 = 0x7ffd00341398
+	(swap) address of pointer p2 = 0x7ffd003413a0
+	(main) address of p1 = 0x7ffd00341398
+	(main) address of p2 = 0x7ffd003413a0
+	p1 = (3,4)
+	p2 = (1,2)
+*/
+```
+
