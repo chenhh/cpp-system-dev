@@ -31,3 +31,12 @@
 
 * [\(gitbook\) Linux Inside](https://0xax.gitbooks.io/linux-insides/)
 
+## 逆向工程
+
+* [Ghidra](https://ghidra-sre.org/)
+* [IDA](https://www.hex-rays.com/products/ida/)
+* [看雪學院](https://www.kanxue.com/)
+* [安全客](https://www.anquanke.com/)
+
+
+
