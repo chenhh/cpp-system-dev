@@ -8,3 +8,23 @@
 *  不能將浮點值隱式轉換為整數型別。 
 *  不能將整數值隱式轉換為浮點型別。
 
+只有在使用auto關鍵字來獲取由初始化器確定的型別時，才會優先使用=而不是{}。
+
+```cpp
+#include<iostream>
+using std::cout;
+using std::endl;
+
+int main(){
+    auto z1 {99};   // z1 is an int
+    auto z2 = {99}; // z2 is std::initializer_list<int>
+    auto z3 = 99;   // z3 is an int
+    cout << typeid(z1).name() << endl; //i
+    cout << typeid(z2).name() << endl; // St16initializer_listIiE
+    cout << typeid(z3).name() << endl; // i
+    return 0;
+}
+```
+
+
+
