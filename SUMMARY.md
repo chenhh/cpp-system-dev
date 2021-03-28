@@ -8,16 +8,15 @@
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
 
-## 變數宣告 <a id="variable"></a>
+## C/C++變數宣告 <a id="variable"></a>
 
-* [C/C++ 基本型態](variable/basic-type.md)
+* [基本型態](variable/basic-type.md)
 * [列表初始化\(list initialization\)](variable/list-initialization.md)
 * [指標\(pointer\)](variable/pointer.md)
 * [reference](variable/reference.md)
 * [const](variable/const.md)
 * [array](variable/array.md)
 * [struct](variable/struct.md)
-* [class](variable/class.md)
 * [static](variable/static.md)
 * [enum](variable/enum.md)
 * [union](variable/union.md)
@@ -38,6 +37,33 @@
 * [function pointer](function/function-pointer.md)
 * [x86呼叫慣例\(cdecl, stdcal\)](function/x86-hu-jiao-guan-li-cdecl-stdcal.md)
 
+## C/C++ IO
+
+* [iostream](c-c++-io/iostream.md)
+* [stringstream](c-c++-io/stringstream.md)
+* [fstream](c-c++-io/fstream.md)
+
+## C++ class
+
+* [class宣告](c++-class/class-xuan-gao.md)
+* [override](c++-class/override.md)
+* [final](c++-class/final.md)
+* [virtual](c++-class/virtual.md)
+* [RAII](c++-class/raii.md)
+
+## C++ template
+
+* [template function](c++-template/template-function.md)
+
+## C++ STL
+
+* [string](c++-stl/string.md)
+* [iterator](c++-stl/iterator.md)
+* [vector](c++-stl/vector.md)
+* [array](c++-stl/array.md)
+* [map](c++-stl/map.md)
+* [set](c++-stl/set.md)
+
 ## 編譯與連結 <a id="compiling_and_linking"></a>
 
 * [常用工具](compiling_and_linking/tool.md)
@@ -45,5 +71,6 @@
 
 ## 作業系統 <a id="operating-system"></a>
 
-* [虛擬記憶體](operating-system/virtual-memory.md)
+* [虛擬記憶體\(virtual memory\)](operating-system/virtual-memory.md)
+* [分頁\(paging\)](operating-system/fen-ye-paging.md)
 
