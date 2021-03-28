@@ -67,6 +67,15 @@
 * [array](c++-stl/array.md)
 * [map](c++-stl/map.md)
 * [set](c++-stl/set.md)
+* [deque](c++-stl/deque.md)
+* [list](c++-stl/list.md)
+* [bitset](c++-stl/bitset.md)
+* [forward\_list](c++-stl/forward_list.md)
+* [string\_view](c++-stl/string_view.md)
+* [Functor](c++-stl/functor.md)
+* [algorithm](c++-stl/algorithm.md)
+* [filesystem](c++-stl/filesystem.md)
+* [thread](c++-stl/thread.md)
 
 ## 編譯與連結 <a id="compiling_and_linking"></a>
 

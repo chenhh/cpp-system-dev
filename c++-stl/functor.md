@@ -1,0 +1,6 @@
+---
+description: function object
+---
+
+# Functor
+
