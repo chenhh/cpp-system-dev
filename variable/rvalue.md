@@ -26,7 +26,14 @@ const string four() { return "world"; }  // const rvalue
 
 ## Universal reference
 
-C++11 的 type deduction 對於兩個 `&` 的規定其實很簡單明瞭：傳進來的參數列達式如果是一個 lvalue，然後表示式的型別是 `E`，那麼 `T` 就會變成 `E&`；如果表示式是 rvalue，且型別一樣為 `E` ，那麼 `T` 就會被推斷成 `E&&`。我們看到 `T&&` 可以接 lvalue reference，也可以接上 rvalue reference，這也是他被稱作 universal reference 的由來。
+並不是所有型別為`T&&`皆代表右值引用，`T&&`有可能代表universal reference或者rvalue reference。`T&&`為universal reference必須滿足以下兩個條件：
+
+* 型別為`T&&`。 
+* `T`參與型別推導過程。\(右值引用不需型別推導，因為在宣告時已知型別\)。
+
+
+
+ C++11 的型別推導對於兩個 `&` 的規定其實很簡單明瞭：傳進來的參數列達式如果是一個 lvalue，然後表示式的型別是 `E`，那麼 `T` 就會變成 `E&`；如果表示式是 rvalue，且型別一樣為 `E` ，那麼 `T` 就會被推斷成 `E&&`。我們看到 `T&&` 可以接 lvalue reference，也可以接上 rvalue reference，這也是他被稱作 universal reference 的由來。
 
 ## 
 
@@ -62,6 +69,7 @@ gogo(b); // T推斷成int&
 * `int&& &`
 * `int& &&`
 * `int&& &&`
+* 簡單規則：凡是有左值引用參與，均為左值引用，否則為右值引用。
 
 reference collapsing 規則規定只有第四種會化簡成 rvalue reference `(int &&)`，其它三種都變成 lvalue reference。
 
@@ -69,7 +77,29 @@ reference collapsing 規則規定只有第四種會化簡成 rvalue reference `(
 
 ## 問題
 
-* universal reference的`T&&`如果換成`const T&&` 的狀況?
+### universal reference的`T&&`如果換成`const T&&` 的狀況?
+
+如果沒有const修飾字時，為universal reference，若有CV-qualifier時，則不是unversal reference。
+
+```cpp
+template <typename T>
+void gogo(T&& par) {
+}	// T&&為universal reference
+
+template <typename T>
+void gogo(const T&& par) {
+}	// const T&&不是universal reference
+
+template <typename T>
+class TClass {
+  public:
+	// par未參與型別推斷，因為T在class初始化時就決定了，
+	// 不為universal reference。
+    void gogo(T&& par) {
+    }
+}
+```
+
 * class沒有實作move constructor時，如果建立實體時使用`std::move`會發生什麼事?
 * 編譯器會自動產生default \(copy\) constructor，何時會有default move constructor而不必使用者自行實作?
 
