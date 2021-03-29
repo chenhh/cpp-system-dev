@@ -52,8 +52,8 @@
 ## C++ class
 
 * [class宣告](c++-class/class-xuan-gao.md)
-* [override](c++-class/override.md)
-* [final](c++-class/final.md)
+* [override關鍵字](c++-class/override.md)
+* [final關鍵字](c++-class/final.md)
 * [virtual](c++-class/virtual.md)
 * [RAII](c++-class/raii.md)
 
