@@ -51,7 +51,7 @@
 
 ## C++ class
 
-* [class宣告](c++-class/class-xuan-gao.md)
+* [建構子與解構子\(constructor and destructor\)](c++-class/constructor-and-destructor.md)
 * [override關鍵字](c++-class/override.md)
 * [final關鍵字](c++-class/final.md)
 * [virtual](c++-class/virtual.md)
