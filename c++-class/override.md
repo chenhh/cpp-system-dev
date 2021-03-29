@@ -2,6 +2,8 @@
 
 ## override關鍵字
 
+C++11後開始支援。
+
 我們明確地告訴編譯我們要的是override base class的virtual function，而不是在dervied class中創造一個新的virutal function。可以解決單純使用virtual function的三大問題。
 
 ```cpp

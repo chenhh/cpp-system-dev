@@ -1,5 +1,7 @@
 # final關鍵字
 
+C++11後開始支援。
+
 final關鍵字可用於修飾class或virtual function。
 
 * 用在修飾class時，表示該class不能被繼承。

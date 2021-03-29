@@ -55,6 +55,7 @@
 * [override關鍵字](c++-class/override.md)
 * [final關鍵字](c++-class/final.md)
 * [virtual](c++-class/virtual.md)
+* [default與delete關鍵字](c++-class/default-and-delete.md)
 * [RAII](c++-class/raii.md)
 
 ## C++ template
