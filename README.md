@@ -13,6 +13,8 @@
   * [各編譯器支援C++標準與特性表](https://en.cppreference.com/w/cpp/compiler_support)   
 * [cplusplus reference](https://www.cplusplus.com/)
 * [Compiler explorer](https://godbolt.org/)
+* [C++ Help \(many books\)](https://cpphelp.com/)
+* [C++ FAQ](https://www.parashift.com/c++-faq-lite/)
 
 ## 組合語言
 
