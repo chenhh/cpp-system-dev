@@ -7,7 +7,7 @@
 * [暫存器\(register\)](assembly/register.md)
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
-* [大端與小端\(big endian and little endian\)](assembly/da-duan-yu-xiao-duan-big-endian-and-little-endian.md)
+* [大端與小端\(big endian and little endian\)](assembly/big-endian-and-little-endian.md)
 
 ## C/C++變數宣告 <a id="variable"></a>
 
@@ -38,7 +38,7 @@
 * [lambda function](function/lambda-function.md)
 * [overloading](function/overloading.md)
 * [function pointer](function/function-pointer.md)
-* [x86呼叫慣例\(cdecl, stdcal\)](function/x86-hu-jiao-guan-li-cdecl-stdcal.md)
+* [x86呼叫慣例\(cdecl, stdcal\)](function/x86-call-convention.md)
 
 ## C++ Exception <a id="cpp-exception"></a>
 
@@ -63,7 +63,7 @@
 
 ## C++ STL
 
-* [STL容器\(container\)比較](c++-stl/stl-rong-qi-container-bi-jiao.md)
+* [STL容器\(container\)比較](c++-stl/stl-container-comparison.md)
 * [string](c++-stl/string.md)
 * [iterator](c++-stl/iterator.md)
 * [vector](c++-stl/vector.md)
