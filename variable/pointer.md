@@ -6,7 +6,7 @@ description: 儲存的內容為記憶體地址
 
 ## 儲存的內容為記憶體地址
 
-![](../.gitbook/assets/pointer.jpg) 
+![](.img/pointer/pointer.jpg) 
 
 ```cpp
 #include<iostream>
