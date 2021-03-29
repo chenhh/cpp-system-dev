@@ -86,7 +86,7 @@
 ## 編譯與連結 <a id="compiling_and_linking"></a>
 
 * [常用工具](compiling_and_linking/tool.md)
-* [cmake](compiling_and_linking/cmake.md)
+* [CMake](compiling_and_linking/cmake.md)
 * [LLVM](compiling_and_linking/llvm.md)
 
 ## 作業系統 <a id="operating-system"></a>
