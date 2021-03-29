@@ -18,6 +18,7 @@
 * [const](variable/const.md)
 * [array](variable/array.md)
 * [struct](variable/struct.md)
+* [右值\(rvalue\)](variable/you-zhi-rvalue.md)
 * [static](variable/static.md)
 * [enum](variable/enum.md)
 * [union](variable/union.md)
