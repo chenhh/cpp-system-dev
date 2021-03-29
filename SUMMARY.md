@@ -87,6 +87,7 @@
 
 * [常用工具](compiling_and_linking/tool.md)
 * [cmake](compiling_and_linking/cmake.md)
+* [LLVM](compiling_and_linking/llvm.md)
 
 ## 作業系統 <a id="operating-system"></a>
 
