@@ -2,8 +2,8 @@
 
 LLVM的命名最早來源於底層語言虛擬機器（Low Level Virtual Machine）的縮寫。它是一個用於建立編譯器的基礎框架，以C++編寫。建立此工程的目的是對於任意的程式語言，利用該基礎框架，構建一個包括編譯時、連結時、執行時等的語言執行器。
 
+![LLVM&#x4E09;&#x6BB5;&#x5F0F;&#x67B6;&#x69CB;](../.gitbook/assets/llvm_three_stage_arch.jpg)
 
-![LLVM三段式架構](./img/llvm/llvm_three_stage_arch.jpg)
 
 
 ## 參考資料
