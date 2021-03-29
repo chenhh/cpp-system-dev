@@ -26,17 +26,21 @@ const string four() { return "world"; }  // const rvalue
 
 ## Universal reference
 
+C++11 的 type deduction 對於兩個 `&` 的規定其實很簡單明瞭：傳進來的參數列達式如果是一個 lvalue，然後表示式的型別是 `E`，那麼 `T` 就會變成 `E&`；如果表示式是 rvalue，且型別一樣為 `E` ，那麼 `T` 就會被推斷成 `E&&`。我們看到 `T&&` 可以接 lvalue reference，也可以接上 rvalue reference，這也是他被稱作 universal reference 的由來。
+
+## 
+
 ```cpp
 //universal reference 的宣告
 template<typename T>
 void gogo(T&& par); // 傳入的型別不確定是lvalue或是rvalue
  
-gogo(1); // 傳入的型別為rvalue
+gogo(1); // T推斷成int&&
  
-int a;
-int &b = a;
-gogo(a); // 傳入為lvalue
-gogo(b); // 傳入為reference
+int a;        // lvalue
+int &b = a;   // lvalue
+gogo(a); // T推斷成int&
+gogo(b); // T推斷成int&
 ```
 
 在上面範例中，`T` 是一個尚未被推斷出來的型號，但一般的 rvalue reference 中，出現在 `T` 位置的卻是一個已經明確知道的型別。
@@ -44,6 +48,32 @@ gogo(b); // 傳入為reference
 `T&&` 的行為簡單來說，就是當傳入 lvalue 時，`T` 的型別會被推導為`Foo&`，當傳入的是 rvalue 時，`T` 的型別則會是 `Foo&&`。這樣完全符合我們的預期，傳入已經存在的變數，就用reference來接，如果傳入的是暫時變數，就用 rvalue 的參考來接。
 
 使用 universal reference 實際除了正確傳遞變數資訊外，另一個常見的用途是減少無謂的複製和物件建立的開銷。
+
+### Reference collapsing 
+
+推斷完型別之後，接下來是繼續完成函式具現化（template instantiation\)。所以我們就依照推斷出來的 `T` 來具現化一下整個函式。
+
+* `gogo(1)` 具現化出來的函式原型是 `void gogo(int&& &&par)`經過collapsing得 `void gogo(int &&par)`。
+* `gogo(a)`與`gogo(b)` 具現化出來的函式原型是 `void gogo(int& &&par)`經過collapsing得到`void gogo(int &par)`。
+
+對於這種經過型別推導之後，在具現化出現三顆四顆 & 的情況。C++11 有一套規定來簡化他們：reference collapsing。經由推斷型別後總共有四種組合形成這種情況 \(不限定在 template type deduction\)：
+
+* `int& &`
+* `int&& &`
+* `int& &&`
+* `int&& &&`
+
+reference collapsing 規則規定只有第四種會化簡成 rvalue reference `(int &&)`，其它三種都變成 lvalue reference。
+
+為什麼需要 reference collasping，因為 C++11中的perfect forwarding需要此特性。
+
+## 問題
+
+* universal reference的`T&&`如果換成`const T&&` 的狀況?
+* class沒有實作move constructor時，如果建立實體時使用`std::move`會發生什麼事?
+* 編譯器會自動產生default \(copy\) constructor，何時會有default move constructor而不必使用者自行實作?
+
+### 
 
 
 
