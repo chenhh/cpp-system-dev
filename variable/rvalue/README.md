@@ -128,6 +128,12 @@ class TClass {
 * class沒有實作move constructor時，如果建立實體時使用`std::move`會發生什麼事?
 * 編譯器會自動產生default \(copy\) constructor，何時會有default move constructor而不必使用者自行實作?
 
+
+
+## 參考資料
+
+* [Universal References in C++11 -- Scott Meyers](https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers)
+
 ### 
 
 
