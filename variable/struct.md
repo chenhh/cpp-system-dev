@@ -1,2 +1,2 @@
-# struct
+# 結構\(struct\)
 
