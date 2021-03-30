@@ -12,6 +12,30 @@ Modern C++中不再使用原始指標，且不再使用 `new/delete`，全面改
 
 **要不要刪物件，要怎麼刪物件都「不用管」，而且很安全**。
 
+`unique_ptr` 是在 &lt;memory&gt;  標準程式庫的標頭中定義。 它與原始指標的效率完全相同，而且可以在 C++ 標準程式庫容器中使用。 將實例新增 `unique_ptr` 至 C++ 標準程式庫容器會很有效率，因為的移動函式不需要複製操作。
+
+### std::make\_unique
+
+建立並傳回指向指定型別之物件的 unique\_ptr，該型別是使用指定的引數所建構。
+
+```cpp
+// 第一個多載用於單一物件。 
+// make_unique<T>
+template <class T, class... Args>
+unique_ptr<T> make_unique(Args&&... args);
+
+// 針對陣列叫用第二個多載。
+// make_unique<T[]>
+template <class T>
+unique_ptr<T> make_unique(size_t size);
+
+// 第三個多載可防止您在型別引數 (make_unique) 中
+// 指定陣列大小 <T[N]> ; 目前的標準並不支援此結構。
+// make_unique<T[N]> disallowed
+template <class T, class... Args>
+/* unspecified */ make_unique(Args&&...) = delete;
+```
+
 ## 物件所有權轉移
 
 `unique_ptr`不會共用其指標。 它無法複製到另一個 `unique_ptr` ，以傳值方式傳遞至函式，或是用於需要進行複製的任何 c + + 標準程式庫演演算法。 只能移動 `unique_ptr`。
@@ -56,29 +80,33 @@ int main() {
 #include <memory>
 #include <string>
 #include <vector>
-
 using namespace std;
 
-struct Song {
-  Song(string singer_, string name_):
-    singer(singer_), name(name_) {}
-  string singer, name;
+struct Song{
+    Song(){}
+    Song(string singer_, string name_):
+        singer(singer_), name(name_){}
+    string singer, name;
 };
 
-int main() {
-  // Song obj("hello", "world");
-  //vector內存的是unique_ptr<T>的類別，而非原始的指標
-  vector < unique_ptr < Song >> songs;
-  songs.push_back(make_unique < Song > ("Bz", "Juice"));
-  songs.push_back(make_unique < Song > ("Namie Amuro", "Funky Town"));
-  songs.push_back(make_unique < Song > ("Kome Kome Club", "Kimi ga Iru Dake de"));
-  songs.push_back(make_unique < Song > ("Ayumi Hamasaki", "Poker Face"));
+int main(){
+    // Song obj("hello", "world");
+    //vector內存的是unique_ptr<T>的類別，而非原始的指標
+    vector<unique_ptr<Song>> songs;
+    songs.push_back(make_unique<Song>("Bz", "Juice"));
+    songs.push_back(make_unique<Song>("Namie Amuro", "Funky Town"));
+    songs.push_back(make_unique<Song>("Kome Kome Club", "Kimi ga Iru Dake de"));
+    songs.push_back(make_unique<Song>("Ayumi Hamasaki", "Poker Face"));
 
-  for (const auto & song: songs) {
-    printf("singer: %s, title:%s \n",
-      song -> singer.c_str(), song -> name.c_str());
-  }
+    for (const auto& song : songs){
+        printf("singer: %s, title:%s \n",
+            song->singer.c_str(), song->name.c_str());
+    } 
+
+    // Create a unique_ptr to an array
+    unique_ptr<Song[]> ptr = make_unique<Song[]>(4);   
 }
+
 ```
 
 ## 
