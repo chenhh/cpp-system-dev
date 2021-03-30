@@ -18,6 +18,10 @@
 * 引數個數不一樣。
 * 引數順序不一樣。
 
+即函數的簽名必須不相同，才能夠多載。
+
+在同一個名稱空間內，C++的函式簽名（function signature）包括：函式名、引數個數、引數型別、引數順序，但不包含回傳型別。
+
 ```cpp
 int getmax(int x) {
   cout << "getmax(int)" << endl;
@@ -57,6 +61,21 @@ double getmax(double x, int y) {
 //     cout<<"getmax(double,int)"<<endl;
 //     return x>y ? x: y;
 // }
+```
+
+call by value與call by reference的函式簽名是相同的，無法重載
+
+```cpp
+// 兩函數的簽名相同，無法重載
+int func(int x){
+    cout<<"by value:"<<x<<endl;
+    return x;
+}
+
+int func(int &x){
+    cout<<"by reference:"<<x<<endl;
+    return x;
+}
 ```
 
 ## 過載的實作
