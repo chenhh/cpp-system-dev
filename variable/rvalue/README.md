@@ -54,13 +54,9 @@ const string four() { return "world"; }  // const rvalue
 * 型別為`T&&`。 
 * `T`參與型別推導過程。\(右值引用不需型別推導，因為在宣告時已知型別\)。
 
-
-
- C++11 的型別推導對於兩個 `&` 的規定其實很簡單明瞭：傳進來的參數列達式如果是一個 lvalue，然後表示式的型別是 `E`，那麼 `T` 就會變成 `E&`；如果表示式是 rvalue，且型別一樣為 `E` ，那麼 `T` 就會被推斷成 `E&&`。我們看到 `T&&` 可以接 lvalue reference，也可以接上 rvalue reference，這也是他被稱作 universal reference 的由來。
+ C++11 的型別推導對於兩個 `&` 的規定其實很簡單明瞭：傳進來的參數列達式如果是一個 lvalue，然後表示式的型別是 `E`，那麼 `T` 就會變成 `E&`；如果表示式是 rvalue，且型別一樣為 `E` ，那麼 `T` 就會被推斷成 `E&&`。我們看到 `T&&` 可以接 lvalue reference，也可以接上 rvalue reference，這也是他被稱作 universal reference 的由來。
 
 那麼如何確定universal reference的引用型別呢？**有如下規則：如果universal reference是通過rvalue初始化的，那麼它就對應一個rvalue reference；如果universal reference是通過lvalue初始化的，那麼它就對應一個lvalue reference**。
-
-## 
 
 ```cpp
 //universal reference 的宣告
@@ -80,6 +76,10 @@ gogo(b); // T推斷成int&
 `T&&` 的行為簡單來說，就是當傳入 lvalue 時，`T` 的型別會被推導為`Foo&`，當傳入的是 rvalue 時，`T` 的型別則會是 `Foo&&`。這樣完全符合我們的預期，傳入已經存在的變數，就用reference來接，如果傳入的是暫時變數，就用 rvalue 的參考來接。
 
 使用 universal reference 實際除了正確傳遞變數資訊外，另一個常見的用途是減少無謂的複製和物件建立的開銷。
+
+**Universal reference接受到的參數，如果再次使用時，會變成左值，必須靠std::forward才可維持為右值**。
+
+
 
 ### Reference collapsing 
 

@@ -21,7 +21,8 @@
 * [指標\(pointer\)](variable/pointer.md)
 * [reference](variable/reference.md)
 * [const](variable/const.md)
-* [array](variable/array.md)
+* [volatile](variable/volatile.md)
+* [陣列\(array\)](variable/array.md)
 * [結構\(struct\)](variable/struct.md)
 * [右值\(rvalue\)](variable/rvalue/README.md)
   * [std::move](variable/rvalue/std-move.md)
@@ -29,7 +30,6 @@
 * [static](variable/static.md)
 * [enum](variable/enum.md)
 * [聯合\(union\)](variable/union.md)
-* [volatile](variable/volatile.md)
 
 ## C/C++ 分支條件 <a id="branch-condition"></a>
 
