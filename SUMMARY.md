@@ -4,6 +4,10 @@
 
 ## 組合語言 <a id="assembly"></a>
 
+* [組譯器\(assembler\)](assembly/assembler.md)
+* [程式重定址\(program relocation\)](assembly/program-relocation.md)
+* [載入程式\(loading program\)](assembly/loading-program.md)
+* [連結程式\(linker\)](assembly/linker.md)
 * [暫存器\(register\)](assembly/register.md)
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
