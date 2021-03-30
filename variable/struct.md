@@ -1,5 +1,9 @@
 # 結構\(struct\)
 
+如果結構只是要單純的存放資料\(plain old data, POD\)，應使用C的結構宣告方式以增加程式相容性。
+
+如果在C++當成類別使用，則struct和class的區別只有預設的存取屬性struct為public，class為private而已。
+
 ## C與C++結構的比較
 
 | C | C++ |
@@ -11,7 +15,6 @@
 
 ```c
 #include <stdio.h>
-
 #include <stddef.h>
 
 struct Item {
@@ -51,6 +54,20 @@ int main() {
 }
 ```
 
+```c
+  // designated initializers用於array的初始化
+  Item items[] = {
+    [0] = {
+      .name = "Programming",
+      .amount = 10
+    },
+    [1] = {
+      .name = "novel",
+      .amount = 20
+    }
+  };
+```
+
 也可用typdef合併在struct的宣告上，不必再另外宣告。
 
 ```c
@@ -59,15 +76,13 @@ int main() {
 typedef struct {
   const char * name;
   int amount;
-}
-Item;
+} Item;
 
 // 結構的名稱為Good, 以typedef將struct Good定為Item
 // 可用struct Good或Item宣告變數，兩者同義
 typedef struct Good {
   const char * name;
   int amount;
-}
-Item;
+} Item;
 ```
 
