@@ -103,4 +103,5 @@
 
 * [虛擬記憶體\(virtual memory\)](operating-system/virtual-memory.md)
 * [分頁\(paging\)](operating-system/fen-ye-paging.md)
+* [NUMA架構](operating-system/numa.md)
 
