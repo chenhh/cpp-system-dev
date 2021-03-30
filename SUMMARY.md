@@ -18,7 +18,10 @@
 
 * [基本型態](variable/basic-type.md)
 * [列表初始化\(list initialization\)](variable/list-initialization.md)
-* [指標\(pointer\)](variable/pointer.md)
+* [指標\(pointer\)](variable/pointer/README.md)
+  * [unique\_ptr](variable/pointer/unique_ptr-1.md)
+  * [shared\_ptr](variable/pointer/shared_ptr.md)
+  * [unique\_ptr](variable/pointer/unique_ptr.md)
 * [reference](variable/reference.md)
 * [const](variable/const.md)
 * [volatile](variable/volatile.md)
