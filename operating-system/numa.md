@@ -2,7 +2,7 @@
 
 ## NUMA\(non-uniform memory access\)架構
 
-NUMA架構在多個CPU系統中，而不是在單CPU多核中出現。Linux中可用`lscpu`指令看numa節點的個數，2個\(含\)以上才有numa的架構，單CPU多核的的numa節點個數為1。
+NUMA架構在多個CPU系統中才有明顯的問題。Linux中可用`lscpu`指令看numa節點的個數，2個\(含\)以上才有numa的架構，單CPU多核的的numa節點個數為1。
 
 ![&#x96D9;CPU&#x96FB;&#x8166;&#x4E2D;&#xFF0C;lscpu&#x7684;&#x7D50;&#x679C;](../.gitbook/assets/numa.png)
 
@@ -11,6 +11,8 @@ NUMA架構在多個CPU系統中，而不是在單CPU多核中出現。Linux中�
 在NUMA架構出現前，CPU朝著頻率越來越高的方向發展。受到物理極限的挑戰，又轉為核數越來越多的方向發展。
 
 由於所有CPU核都是通過共享一個北橋來讀取記憶體，隨著核數如何的發展，北橋在響應時間上的效能瓶頸越來越明顯。於是，聰明的硬體設計師們，先到了把記憶體控制器（原本北橋中讀取記憶體的部分）也做個拆分，平分到了每個晶片上。於是NUMA就出現了。
+
+CPU訪問自己晶片上所插的記憶體時速度快，而訪問其他CPU所關聯的記憶體（remote access）的速度相較慢三倍左右。
 
 ## NUMA是什麼?
 
@@ -36,4 +38,6 @@ NUMA中，雖然記憶體直接attach在CPU上，但是由於記憶體被平均�
 * Java – Optimizing Linux Memory Management for Low-latency / High-throughput Databases
 
 究其原因幾乎都和：「因為CPU親和策略導致的記憶體分配不平均」及「NUMA Zone Claim記憶體回收」有關。
+
+Linux核心預設使用CPU親和的記憶體分配策略，使記憶體頁儘可能的和呼叫執行處在同一個Core/Chip中。	 由於記憶體頁沒有動態調整策略，使得大部分記憶體頁都集中在CPU 0上。	• 又因為Reclaim預設策略優先淘汰/Swap本Chip上的記憶體，使得大量有用記憶體被換出當被換出頁被訪問時問題就以資料庫響應時間飆高甚至阻塞的形式出現了。
 
