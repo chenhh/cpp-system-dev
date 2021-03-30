@@ -7,7 +7,8 @@
 * [組譯器\(assembler\)](assembly/assembler.md)
 * [程式重定址\(program relocation\)](assembly/program-relocation.md)
 * [載入程式\(loading program\)](assembly/loading-program.md)
-* [連結程式\(linker\)](assembly/linker.md)
+* [連結器\(linker\)](assembly/linker/README.md)
+  * [靜態連結\(static linking\)](assembly/linker/static-linking.md)
 * [暫存器\(register\)](assembly/register.md)
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
@@ -89,13 +90,12 @@
 * [filesystem](c++-stl/filesystem.md)
 * [thread](c++-stl/thread.md)
 
-## 編譯與連結 <a id="compiling_and_linking"></a>
+## 編譯與連結工具 <a id="compiling_and_linking_tool"></a>
 
-* [常用工具](compiling_and_linking/tool.md)
-* [靜態連結\(static linking\)](compiling_and_linking/static-linking.md)
-* [GCC](compiling_and_linking/gcc.md)
-* [CMake](compiling_and_linking/cmake.md)
-* [LLVM](compiling_and_linking/llvm.md)
+* [常用工具](compiling_and_linking_tool/tool.md)
+* [GCC](compiling_and_linking_tool/gcc.md)
+* [CMake](compiling_and_linking_tool/cmake.md)
+* [LLVM](compiling_and_linking_tool/llvm.md)
 
 ## 作業系統 <a id="operating-system"></a>
 
