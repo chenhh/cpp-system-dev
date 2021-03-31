@@ -105,7 +105,46 @@ int main() {
 }
 ```
 
-### 
+### 位元位移操作\(bit shift operation\)
+
+* 邏輯位移 \(Logical shift\) : 左側會補上 0。
+* 算術位移 \(Arithmetic shift\) : 補上號數 \(sign bit\) 也就是MSB的值在左側。
+* eg: `X=10100010`
+
+  * 邏輯位移, `X>>2=00101000`
+  * 算術位移, `X>>2=11101000` 
+
+
+
+位移運算的兩種未定義狀況：
+
+* 左移超過變數長度，其結果未定義;
+* 右移一個負數時，可能是邏輯位移或是算術位移，C 語言標準未定義;
+
+```c
+/* gcc, icc, clang結果均相同 */
+#include <cstdio>
+
+int main() {
+  // 1000 0000 0000 0000 0000 0000 0000 0000
+  int x = 0x80000000;
+  // x=x<<32;    // error, 位移超過型別長度
+  printf("%d\n", x); // -2147483648
+  x = x >> 31;
+  // arithmetic shift    
+  printf("%d\n", x); // -1
+  printf("0x%08x\n", x); // 0xffffffff
+
+  unsigned int y = 0x80000000;
+  printf("%u\n", y); // 2147483648
+  y = y >> 31;
+  // logical shift
+  printf("%u\n", y); // 1
+  printf("0x%08x\n", y); // 0x00000001
+
+  return 0;
+}
+```
 
 ### short, int, long, long long
 
