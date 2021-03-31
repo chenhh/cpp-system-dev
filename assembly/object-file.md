@@ -11,7 +11,7 @@
 
 COFF是由Unix system V release 3提供並使用的格式規範。之後Microsoft據此製定了PE格式，而release 4以COFF為基礎引進了ELF格式，兩者源於相同格式，因此結構相似。
 
-COFF的主要貢戲是在目的檔裡面引進了區段\(segment\)的機制，相異的目的檔可擁有不同數量及類型的區段。而且COFF定義了除錯資料的格式。
+COFF的主要貢戲是在目的檔裡面引進了區段\(section or segment\)的機制，相異的目的檔可擁有不同數量及類型的區段。而且COFF定義了除錯資料的格式。
 
 ### ELF檔案格式分類
 
