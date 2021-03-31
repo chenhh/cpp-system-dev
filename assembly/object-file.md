@@ -26,3 +26,9 @@ COFF的主要貢戲是在目的檔裡面引進了區段\(section or segment\)的
 
 ![&#x4EE5;file&#x547D;&#x4EE4;&#x67E5;&#x770B;ELF&#x6A94;&#x6848;&#x985E;&#x578B;](../.gitbook/assets/file_elf_format.png)
 
+* 程式碼編譯後的機器指令經常被放在程式碼區段\(code section\)，常見的名稱為.code或.text。
+* \(已初始化的\)全域變數和區域靜態變數資料經常放在資料區段\(data section\)，一般稱為.data。
+* \(未初始化的\)全域變數和區域靜態變數資料經常放在名為.bss的區段。
+
+
+

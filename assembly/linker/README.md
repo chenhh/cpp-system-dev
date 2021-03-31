@@ -8,6 +8,8 @@
 
 ![&#x9023;&#x7D50;&#x5668;&#x7684;&#x5DE5;&#x4F5C;](../../.gitbook/assets/linker.png)
 
+![&#x9023;&#x7D50;&#x5668;&#x66F4;&#x7D30;&#x90E8;&#x7684;&#x5DE5;&#x4F5C;](../../.gitbook/assets/role_of_the_linker.png)
+
 ## 動態連結\(dynamic linking\)
 
 動態連結是指將連結的動作，延遲到程式執行時才處理。真正會被執行到的程式段才執行連結處理動作。
