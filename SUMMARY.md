@@ -16,7 +16,7 @@
 
 ## C/C++變數宣告 <a id="variable"></a>
 
-* [基本型態](variable/basic-type.md)
+* [有號數與無號數\(signed and unsigned number\)](variable/signed-unsigned-integer.md)
 * [列表初始化\(list initialization\)](variable/list-initialization.md)
 * [指標\(pointer\)](variable/pointer/README.md)
   * [unique\_ptr](variable/pointer/unique_ptr-1.md)
