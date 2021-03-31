@@ -5,6 +5,7 @@
 ## 組合語言 <a id="assembly"></a>
 
 * [組譯器\(assembler\)](assembly/assembler.md)
+* [目的檔\(object file\)](assembly/object-file.md)
 * [程式重定址\(program relocation\)](assembly/program-relocation.md)
 * [載入程式\(loading program\)](assembly/loading-program.md)
 * [連結器\(linker\)](assembly/linker/README.md)
