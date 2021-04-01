@@ -38,5 +38,48 @@ socket常用的4種型別，分別是Steam Socket、Datagram Sockets、Raw Socke
 
 該Socket型別為使用者提供了訪問底層通訊協議的能力，該型別不適於一般的使用者，它主要是用於有想法開發新的協議或者對現有協議進行自定義操作的研發人員。
 
+## 簡單的TCP客戶端與伺服器通訊
+
+```python
+# client.py
+import socket
+
+con = socket.socket(socket.AF_INET, 
+        socket.SOCK_STREAM)
+con.connect(('192.168.88.132', 8888))
+
+while True:
+  try:
+  user = raw_input("\033>>>\033:")
+con.sendall(user)
+except Exception:
+  break
+print str(con.recv(1024))
+con.close()
+```
+
+```python
+# server.py
+import socket
+
+server = socket.socket(socket.AF_INET, 
+            socket.SOCK_STREAM)
+
+server.bind(('0.0.0.0', 8888))
+server.listen(5)
+
+while True:
+  print "listenning...."
+con, add = server.accept()
+while True:
+  try:
+  print con.recv(1024)
+message = raw_input("\033>>>\033:")
+con.sendall(message)
+except Exception:
+  break
+con.close()
+```
+
 
 
