@@ -102,6 +102,7 @@
 * [GCC](compiling_and_linking_tool/gcc.md)
 * [CMake](compiling_and_linking_tool/cmake.md)
 * [LLVM](compiling_and_linking_tool/llvm.md)
+* [Ghidra](compiling_and_linking_tool/ghidra.md)
 
 ## 作業系統 <a id="operating-system"></a>
 
