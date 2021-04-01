@@ -98,7 +98,7 @@
 
 ## 編譯與連結工具 <a id="compiling_and_linking_tool"></a>
 
-* [常用工具](compiling_and_linking_tool/tool.md)
+* [GNU binutils](compiling_and_linking_tool/tool.md)
 * [GCC](compiling_and_linking_tool/gcc.md)
 * [CMake](compiling_and_linking_tool/cmake.md)
 * [LLVM](compiling_and_linking_tool/llvm.md)
