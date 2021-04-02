@@ -14,6 +14,7 @@
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
 * [大端與小端\(big endian and little endian\)](assembly/big-endian-and-little-endian.md)
+* [組合語言格式\(Intel, AT&T格式\)](assembly/assembly-style.md)
 
 ## C/C++變數宣告 <a id="variable"></a>
 
@@ -102,7 +103,6 @@
 * [GCC](compiling_and_linking_tool/gcc.md)
 * [CMake](compiling_and_linking_tool/cmake.md)
 * [LLVM](compiling_and_linking_tool/llvm.md)
-* [Ghidra](compiling_and_linking_tool/ghidra.md)
 
 ## 作業系統 <a id="operating-system"></a>
 
@@ -115,4 +115,9 @@
 
 * [OSI與TCP分層](wang-lu/osi_tcp_layers.md)
 * [BSD socket](wang-lu/bsd-socket.md)
+
+## 逆向工程 <a id="reverse-engineering"></a>
+
+* [逆向工程簡介](reverse-engineering/ni-xiang-gong-cheng-jian-jie.md)
+* [Ghidra](reverse-engineering/ghidra.md)
 
