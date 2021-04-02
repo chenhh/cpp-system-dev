@@ -15,6 +15,8 @@
 
 ![Little endian&#x7BC4;&#x4F8B;](../.gitbook/assets/little-endian.png)
 
+![Big&#x8207;Little endian&#x6BD4;&#x8F03;](../.gitbook/assets/byte_order.png)
+
 ## 應用
 
 * **大端：**基於其儲存特點，符號位在所表示的資料的記憶體的第一個位元組中，便於快速判斷資料的正負和大小（CPU做數值運算時從記憶體中依順序依次從低位地址到高位地址取資料進行運算，大端就會最先拿到資料的\(高位元組的\)符號位）。
