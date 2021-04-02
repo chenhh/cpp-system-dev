@@ -21,5 +21,6 @@ Ghidra是一個軟體逆向工程（SRE）框架，包括一套功能齊全的�
 ## 參考資料
 
 * [Ghidra官方網站](https://ghidra-sre.org/)
+  * [Ghidra快速鍵](https://ghidra-sre.org/CheatSheet.html)
 * [Ghidra github](https://github.com/NationalSecurityAgency/ghidra)
 
