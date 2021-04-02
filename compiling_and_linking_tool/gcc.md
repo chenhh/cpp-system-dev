@@ -174,3 +174,49 @@ $ objdump -d -j .text hello
 ...
 ```
 
+## gcc編譯技巧
+
+通常在編譯後只會生成一個可執行檔案，而中間過程生成的 .i、.s、.o 檔案都不會被儲存。我們可以使用引數 `-save-temps` 永久儲存這些臨時的中間檔案。
+
+```css
+$ gcc -save-temps hello.c
+$ ls
+a.out hello.c  hello.i  hello.o  hello.s
+```
+
+gcc 預設使用動態連結，所以這裡生成的 a.out 實際上是共享目標檔案。靜態連結要加上`--static`引數。
+
+```css
+$file a.out
+a.out: ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=59b12d2b61718335b179997b3d5c31ea7228026b, for GNU/Linux 3.2.0, not stripped
+```
+
+使用引數 `--verbose` 可以輸出 gcc 詳細的工作流程。
+
+```css
+$gcc hello.c -static --verbose
+```
+
+輸出的訊息很多，我們主要關注3個指令的資訊，`cc1`、`as`、`collect2`：
+
+```css
+ /usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -v -imultiarch x86_64-linux-gnu hello.c -quiet -dumpbase hello.c -mtune=generic -march=x
+86-64 -auxbase hello -version -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protect
+ion -fcf-protection -o /tmp/ccBDq9oH.s
+
+as -v --64 -o /tmp/cchPfD2H.o /tmp/ccBDq9oH.s
+
+ /usr/lib/gcc/x86_64-linux-gnu/8/collect2 -plugin /usr/lib/gcc/x86_64-linux-gnu/8/liblto_plugin.so -plugin-opt=/usr/lib/gcc/x86_64-l
+inux-gnu/8/lto-wrapper -plugin-opt=-fresolution=/tmp/ccoSjkYJ.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_eh
+ -plugin-opt=-pass-through=-lc --build-id -m elf_x86_64 --hash-style=gnu --as-needed -static -z relro /usr/lib/gcc/x86_64-linux-gnu/
+8/../../../x86_64-linux-gnu/crt1.o /usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crti.o /usr/lib/gcc/x86_64-linux-gnu/8/
+crtbeginT.o -L/usr/lib/gcc/x86_64-linux-gnu/8 -L/usr/lib/gcc/x86_64-linux-gnu/8/../../../x86_64-linux-gnu -L/usr/lib/gcc/x86_64-linu
+x-gnu/8/../../../../lib -L/lib/x86_64-linux-gnu -L/lib/../lib -L/usr/lib/x86_64-linux-gnu -L/usr/lib/../lib -L/usr/lib/gcc/x86_64-li
+nux-gnu/8/../../.. /tmp/cchPfD2H.o --start-group -lgcc -lgcc_eh -lc --end-group /usr/lib/gcc/x86_64-linux-gnu/8/crtend.o /usr/lib/gc
+c/x86_64-linux-gnu/8/../../../x86_64-linux-gnu/crtn.o
+```
+
+* cc1 是 gcc 的編譯器，將 .c 檔案編譯為 .s 檔案
+* as 是彙編器命令，將 .s 檔案彙編成 .o 檔案。
+* collect2 是連結器命令，它是對命令 ld 的封裝。靜態連結時，gcc 將 C 語言執行時庫的 5 個重要目標檔案 crt1.o、crti.o、crtbeginT.o、crtend.o、crtn.o 和 -lgcc、-lgcc\_eh、-lc 表示的 3 個靜態庫連結到可執行檔案中。
+
