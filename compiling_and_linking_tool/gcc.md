@@ -150,3 +150,27 @@ Contents of section .eh_frame:
 
 將多個目的檔結合形成可執行檔。
 
+目的檔案需要連結一大堆檔案才能得到最終的可執行檔案（範例只展示了連結後的 main 函式，可以和 hello.o 中的 main 函式作對比）。連結過程主要包括地址和空間分配（Address and Storage Allocation）、符號決議（Symbol Resolution）和重定向（Relocation）等。
+
+```css
+gcc hello.o -o hello
+```
+
+```css
+$ objdump -d -j .text hello
+...
+0000000000001149 <main>:
+    1149:       f3 0f 1e fa             endbr64
+    114d:       55                      push   %rbp
+    114e:       48 89 e5                mov    %rsp,%rbp
+    1151:       48 8d 3d ac 0e 00 00    lea    0xeac(%rip),%rdi        # 2004 <_IO_stdin_used+0x4>
+    1158:       e8 f3 fe ff ff          callq  1050 <puts@plt>
+    115d:       b8 00 00 00 00          mov    $0x0,%eax
+    1162:       5d                      pop    %rbp
+    1163:       c3                      retq
+    1164:       66 2e 0f 1f 84 00 00    nopw   %cs:0x0(%rax,%rax,1)
+    116b:       00 00 00
+    116e:       66 90                   xchg   %ax,%ax
+...
+```
+
