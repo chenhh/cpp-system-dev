@@ -50,7 +50,7 @@
 * [lambda function](function/lambda-function.md)
 * [過載\(overloading\)](function/overloading.md)
 * [function pointer](function/function-pointer.md)
-* [x86呼叫慣例\(cdecl, stdcal\)](function/x86-call-convention.md)
+* [x86呼叫約定\(cdecl, stdcal\)](function/x86-call-convention.md)
 
 ## C++ Exception <a id="cpp-exception"></a>
 
