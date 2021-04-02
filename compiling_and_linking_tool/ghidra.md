@@ -22,5 +22,7 @@ Ghidra是一個軟體逆向工程（SRE）框架，包括一套功能齊全的�
 
 * [Ghidra官方網站](https://ghidra-sre.org/)
   * [Ghidra快速鍵](https://ghidra-sre.org/CheatSheet.html)
-* [Ghidra github](https://github.com/NationalSecurityAgency/ghidra)
+  * [Ghidra github](https://github.com/NationalSecurityAgency/ghidra)
+* [\[平安銀河實驗室\] 使用Ghidra P-Code進行輔助逆向分析](https://galaxylab.pingan.com.cn/%E4%BD%BF%E7%94%A8ghidra-p-code%E8%BF%9B%E8%A1%8C%E8%BE%85%E5%8A%A9%E9%80%86%E5%90%91%E5%88%86%E6%9E%90/)
+* [CTF 競賽入門指南\(CTF All In One\)：Ghidra](https://www.bookstack.cn/read/CTF-All-In-One/doc-2.2.6_Ghidra.md)
 
