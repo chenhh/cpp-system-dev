@@ -101,10 +101,49 @@ main:
 
 ## 組譯\(assembly\)
 
-將組合語言轉換成目的檔\(或可執行檔\)。
+將組合語言轉換成目的檔\(objective file\)或可執行檔 \(executable file\)。
 
 ```text
-gcc -c hello.s -o hello
+gcc -c hello.s -o hello.o
+或
+gcc -c helloc -o hello.o
+```
+
+會將原始碼轉換為機器碼，必須使用`objdump -sd`轉換成可讀的內容分析。-s：顯示所有sections的資訊。 -d：反組譯成指令。
+
+```css
+objdump -sd hello.o
+hello.o:     file format elf64-x86-64
+
+Contents of section .text:
+ 0000 f30f1efa 554889e5 488d3d00 000000e8  ....UH..H.=.....
+ 0010 00000000 b8000000 005dc3             .........].
+Contents of section .rodata:
+ 0000 68656c6c 6f20776f 726c6400           hello world.
+Contents of section .comment:
+ 0000 00474343 3a202855 62756e74 7520382e  .GCC: (Ubuntu 8.
+ 0010 342e302d 33756275 6e747532 2920382e  4.0-3ubuntu2) 8.
+ 0020 342e3000                             4.0.
+Contents of section .note.gnu.property:
+ 0000 04000000 10000000 05000000 474e5500  ............GNU.
+ 0010 020000c0 04000000 03000000 00000000  ................
+Contents of section .eh_frame:
+ 0000 14000000 00000000 017a5200 01781001  .........zR..x..
+ 0010 1b0c0708 90010000 1c000000 1c000000  ................
+ 0020 00000000 1b000000 00450e10 8602430d  .........E....C.
+ 0030 06520c07 08000000                    .R......
+ 
+ Disassembly of section .text:
+
+0000000000000000 <main>:
+   0:   f3 0f 1e fa             endbr64
+   4:   55                      push   %rbp
+   5:   48 89 e5                mov    %rsp,%rbp
+   8:   48 8d 3d 00 00 00 00    lea    0x0(%rip),%rdi        # f <main+0xf>
+   f:   e8 00 00 00 00          callq  14 <main+0x14>
+  14:   b8 00 00 00 00          mov    $0x0,%eax
+  19:   5d                      pop    %rbp
+  1a:   c3                      retq
 ```
 
 ## 連結\(linking\)
