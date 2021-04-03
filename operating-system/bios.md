@@ -80,7 +80,16 @@ BIOS只識別到由主開機記錄（MBR）初始化的硬碟，之所以說明�
 | INT 04h | CPU：算數溢位。通常由INTO指令在置溢位位時觸發。|
 | INT 05h | 在按下Shift-Print Screen或BOUND指令檢測到範圍異常時觸發。|
 | INT 06h | CPU：非法指令。|
-
+| INT 07h |CPU：沒有數學協處理器時嘗試執行浮點指令觸發。|
+| INT 08h |IRQ0：可程式化中斷控制器每 55 毫秒觸發一次，即每秒 18.2 次。|
+| INT 09h |IRQ1：每次鍵盤按下、按住、釋放。|
+| INT 0Ah |IRQ2：|
+| INT 0Bh	|IRQ3：COM2/COM4 |
+| INT 0Ch |IRQ4：COM1/COM3。|
+| INT 0Dh |IRQ5：硬碟控制器（PC/XT 下）或 LPT2。|
+| INT 0Eh |IRQ6：需要時由軟碟控制器呼叫。|
+| INT 0Fh |IRQ7：LPT1。|
+| INT 10h |顯示服務 - 由BIOS或作業系統設定以供軟體呼叫。|
 
 
 
