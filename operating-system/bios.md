@@ -14,6 +14,17 @@ BIOS 有時候稱做為韌體因為它是與硬體系統整合在一起的。在
 | :--- | :--- | :--- | :--- |
 | FFFF0 | FFFFF | 16 Bytes | BIOS入口地址，此地址也屬於BIOS程式碼，同樣屬於頂部的640 KB位元組。只是為了強調入口地址才單獨寫出。此處16位元組的內容是跳轉指令 `JMP F000:E05B`。 |
 | F0000 | FFFEF | 64KB~16B | 系統BIOS的範圍是F0000~FFFFF共640 KB，為了說明入口地址，將最上面的16 Bytes從此處扣除，所以結束地址是FFFEF。 |
+| C8000 | EFFFF | 160KB | 映射硬體配接器的ROM或是記憶體映射的I/O |
+| C0000 | C7FFF | 32KB | 顯示配接器BIOS |
+| B8000 | BFFFF | 32KB | 文字模式顯示的配接器 |
+| B0000 | B7FFF | 32KB | 用於黑白顯示配接器 |
+| A0000 | AFFFF | 64KB | 用於彩色顯示配接器 |
+| 9FC00 | 9FFFF | 1KB | EBDA \(extended BIOS data area\) |
+| 7E00 | 9EBFF | 約608KB | 可用區域 |
+| 7C00 | 7DFF | 512B | MBR被BIOS加載到此處，共512B |
+| 500 | 7BFF | 約30KB | 可用區域 |
+| 400 | 4FF | 256B | BIOS data area |
+| 000 | 3FF | 1KB | Interrupt Vector Table\(中斷向量表\) |
 
 
 
