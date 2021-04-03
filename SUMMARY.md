@@ -110,6 +110,7 @@
 * [分頁\(paging\)](operating-system/fen-ye-paging.md)
 * [NUMA架構](operating-system/numa.md)
 * [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
+* [BIOS](operating-system/bios.md)
 
 ## 網路
 
