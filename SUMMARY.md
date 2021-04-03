@@ -112,10 +112,10 @@
 * [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
 * [BIOS](operating-system/bios.md)
 
-## 網路
+## 網路 <a id="network"></a>
 
-* [OSI與TCP分層](wang-lu/osi_tcp_layers.md)
-* [BSD socket](wang-lu/bsd-socket.md)
+* [OSI與TCP分層](network/osi_tcp_layers.md)
+* [BSD socket](network/bsd-socket.md)
 
 ## 逆向工程 <a id="reverse-engineering"></a>
 
