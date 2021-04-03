@@ -111,6 +111,7 @@
 * [NUMA架構](operating-system/numa.md)
 * [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
 * [BIOS](operating-system/bios.md)
+* [中斷\(interrupt\)](operating-system/interrupt.md)
 
 ## 網路 <a id="network"></a>
 
