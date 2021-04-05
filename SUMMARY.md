@@ -115,7 +115,9 @@
 * [系統呼叫\(system call\)](operating-system/xi-tong-hu-jiao-system-call.md)
 * [Windows API](operating-system/windows-api.md)
 * [GLIBC](operating-system/glibc.md)
-* [Init行程](operating-system/init-process.md)
+* [Init行程：sysvinit](operating-system/init-process-sysvinit/README.md)
+  * [init行程：upstart](operating-system/init-process-sysvinit/init-process-upstart.md)
+  * [init行程：systemd](operating-system/init-process-sysvinit/init-process-systemd.md)
 
 ## 網路 <a id="network"></a>
 
