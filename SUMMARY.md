@@ -115,6 +115,7 @@
 * [系統呼叫\(system call\)](operating-system/xi-tong-hu-jiao-system-call.md)
 * [Windows API](operating-system/windows-api.md)
 * [GLIBC](operating-system/glibc.md)
+* [Init行程](operating-system/init-process.md)
 
 ## 網路 <a id="network"></a>
 
