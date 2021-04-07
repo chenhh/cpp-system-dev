@@ -87,13 +87,13 @@ CPU是一個簡單的訊息處理單元，只看的懂本身的控制指令和�
 | 指位暫存器 \(index\) | IP、SP、BP、SI、DI |
 | 旗標暫存器 | FLAG |
 
-## 一般暫存器
+## 一般暫存器 \(general purpose register\)
 
 一般暫存器是用來暫時存放資料用，但在特殊的情況\(指令\)下，會有特定的用途和功能。
 
 每一個一般暫存器都是16位元所構成，而每一個暫存器還可以再分兩個8位元暫存器來使用。如AX暫存器的8個高位元為AH暫存器，8個低位元為AL暫存器。
 
-![&#x4E00;&#x822C;&#x8207;&#x8C50;](../.gitbook/assets/general-purpose-register.jpg)
+![&#x4E00;&#x822C;&#x66AB;&#x5B58;&#x5668;](../.gitbook/assets/general-purpose-register.jpg)
 
 ### AX \(accumulator\)暫存器
 
@@ -113,9 +113,40 @@ MOV AX, INDEX[BX]  #將記憶體[BX]+INDEX所存放的資料搬到AX暫存器中
 
 ![CX&#x505A;&#x70BA;&#x8FF4;&#x5708;&#x8A08;&#x6578;&#x4F7F;&#x7528;](../.gitbook/assets/cx_loop.png)
 
-上圖中，首先CX的初始值為10，而在tg區塊內的程式，每經過LOOP tg後，CX之值會減1，重複執行到CX內的值為0為止。
+上圖中，首先CX的初始值為10，而在tg區塊內的程式，每經過LOOP tg後，CX之值會減去特定值\(通常是-1\)，重複執行到CX內的值為0為止。
 
+### DX\(data\)暫存器
 
+資料暫存器一般是資料存放或存放I/O地址所用。也可和AX暫存器配合，用作字組資料的乘法和除法使用。
+
+```erlang
+# 將 DX:AX =00100000h視為被除數
+# CX為除數，商放在AX中，餘數放在DX中。
+# 00100000h/0100h = 1000h + 0000h
+MOV AX, 0000h
+MOV DX, 0010h
+MOV CX, 0100h
+DIV CX
+```
+
+## 區段暫存器 \(segment register\)
+
+![&#x8A18;&#x61B6;&#x9AD4;&#x4E2D;4&#x500B;&#x91CD;&#x8981;&#x7684;&#x5340;&#x6BB5;](../.gitbook/assets/segment_register-min.png)
+
+一般組合語言被組譯成機器語言時，各區段的地址分別用CS、DS、SS、ES來代表，而一個程式至少要有CS和DS兩個部份。
+
+```c
+#include <stdio.h>
+
+int main(){
+  int a = 0, b = 1, c;
+  c = a + b;
+  printf("%d\n", c);
+  return 0;
+}
+```
+
+上面程式中，`a=0`與 `b=1`是資料常數，會存在資料段中，而`printf`為被執行的指令，會放在程式段中。
 
 
 
