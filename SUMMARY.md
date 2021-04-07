@@ -4,6 +4,7 @@
 
 ## 組合語言 <a id="assembly"></a>
 
+* [x86 CPU簡介](assembly/x86-cpu-jian-jie.md)
 * [組譯器\(assembler\)](assembly/assembler.md)
 * [目的檔\(object file\)](assembly/object-file.md)
 * [程式重定址\(program relocation\)](assembly/program-relocation.md)
