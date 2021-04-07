@@ -270,6 +270,10 @@ ADD AX, BX    ;AX=1000, MSB進位, 所以CF=1
 
 ![&#x5B57;&#x4E32;&#x8655;&#x7406;&#x65B9;&#x5411;](../.gitbook/assets/di_flag-min.png)
 
+### OF \(overflow flag\)
+
+溢位旗標。當運算結果數太大，超過CPU可接受的範圍時，稱之為溢位，此時OF=1，否則OF=0。
+
 
 
 
