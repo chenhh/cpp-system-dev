@@ -1,6 +1,16 @@
 # x86定址模式\(addressing mode\)
 
-x86使用segment的方式讓作業系統管理記憶體的優點，是程式設計師不必自行管理程式放在記憶體的區塊。且CPU使用CS、DS、SS分別記錄DATA、CODE與STACK segment在記憶體中的開始位址，然後以同樣以偏移量\(offset\)方式存取讓區塊中所需要元素即可。
+## 記憶體簡介
+
+記憶體是電腦用來存放程式與資料的地方。依讀寫能力可分為隨機存取記憶體 \(random access memory, RAM\)與唯讀記憶體 \(read only memory, ROM\)。
+
+### 記憶體地址
+
+以8088可定址的1M記憶體來說，為了便於管理這些容量，會將記憶體編號為00000h~FFFFh，這些編號即為**記憶體地址 \(memory address\)**。 
+
+![8088&#x8A18;&#x61B6;&#x9AD4;&#x67B6;&#x69CB;](../.gitbook/assets/8088_mem_arch-min.png)
+
+x86使用區段\(segment\)的方式讓作業系統管理記憶體的優點，是程式設計師不必自行管理程式放在記憶體的區塊。且CPU使用CS、DS、SS分別記錄資料\(data\)、程式\(code\)與堆疊\(stack\) 區段在記憶體中的開始位址，然後以同樣以偏移量\(offset\)方式存取讓區段中所需要元素即可。
 
 ## 立即定址\(immediate addressing mode\)
 

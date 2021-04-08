@@ -5,6 +5,7 @@
 ## 組合語言 <a id="assembly"></a>
 
 * [x86 CPU簡介](assembly/x86-cpu-jian-jie.md)
+* [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [組譯器\(assembler\)](assembly/assembler.md)
 * [目的檔\(object file\)](assembly/object-file.md)
 * [程式重定址\(program relocation\)](assembly/program-relocation.md)
@@ -12,7 +13,6 @@
 * [連結器\(linker\)](assembly/linker/README.md)
   * [靜態連結\(static linking\)](assembly/linker/static-linking.md)
 * [暫存器\(register\)](assembly/register.md)
-* [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
 * [大端與小端\(big endian and little endian\)](assembly/big-endian-and-little-endian.md)
 * [組合語言格式\(Intel, AT&T格式\)](assembly/assembly-style.md)
