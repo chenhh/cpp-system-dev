@@ -4,17 +4,45 @@
 
 記憶體是電腦用來存放程式與資料的地方。依讀寫能力可分為隨機存取記憶體 \(random access memory, RAM\)與唯讀記憶體 \(read only memory, ROM\)。
 
-### 記憶體地址
+### 記憶體地址 \(memory address\)
 
 以8088可定址的1M記憶體來說，為了便於管理這些容量，會將記憶體編號為00000h~FFFFh，這些編號即為**記憶體地址 \(memory address\)**。 
 
 ![8088&#x8A18;&#x61B6;&#x9AD4;&#x67B6;&#x69CB;](../.gitbook/assets/8088_mem_arch-min.png)
 
+### 資料儲存：小端 \(little endian\)
+
+x86 CPU儲存資料是採用小端的方式。詳細介細可看[大端與小端章節](big-endian-and-little-endian.md)。
+
+簡單的說，如果有數值1234h要存入記憶體中，高位元組為12h，低位元組為34h。高位元組存在記憶體高地址，低位元組放在記憶體低地址處的方式稱為小端。
+
+![&#x5C0F;&#x7AEF;&#xFF0C;&#x9AD8;\(&#x4F4E;\)&#x4F4D;&#x5143;&#x5B58;&#x653E;&#x65BC;&#x8A18;&#x61B6;&#x9AD4;&#x9AD8;\(&#x4F4E;\)&#x5730;&#x5740;](../.gitbook/assets/x86_little_endian-min.png)
+
+### 區段管理記憶體
+
 x86使用區段\(segment\)的方式讓作業系統管理記憶體的優點，是程式設計師不必自行管理程式放在記憶體的區塊。且CPU使用CS、DS、SS分別記錄資料\(data\)、程式\(code\)與堆疊\(stack\) 區段在記憶體中的開始位址，然後以同樣以偏移量\(offset\)方式存取讓區段中所需要元素即可。
+
+## 定址模式簡介
+
+定址模式 \(addressing mode\)是要告訴CPU如何存取和取得資料的模式。可分為以下7大類。
+
+* 立即定址法
+* 暫存器定址法
+* 直接定址法
+* 暫存器間接定址法
+* 基底相對定址法
+* 直接索引定址法
+* 基底索引定地法
+
+在組合語言中，可將指令分為兩個部份，分別為操作碼\(operation\)與存放資料的運算元\(operand\)，而運算元又可分別目的運算元與來源運算元。在指令前面有時會加上標籤\(label\)以標記程式碼的位置。
+
+![x86&#x7D44;&#x5408;&#x8A9E;&#x8A00;&#x683C;&#x5F0F;](../.gitbook/assets/assembly_instruction_format-min.png)
+
+Intel格式的組合語言是 `operation destination operand, source operand`。目的運算元在前，來源運算元在後。
 
 ## 立即定址\(immediate addressing mode\)
 
-這種表示法是最簡單的，完全不用去尋找記憶體位址，就直接給定記憶體地址 \(當然這樣程式比較沒有彈性\) 。例如 `MOV AX,12h` 就是直接把12這個地址，傳送暫存器AX中。
+這種表示法是最簡單的，完全不用去尋找記憶體位址，就直接給定記憶體地址 \(當然這樣程式比較沒有彈性\) 。例如 `MOV AX,12h` 就是直接把12這個記憶體地址，傳送暫存器AX中。
 
 ## 直接定址\(direct addressing mode\)
 
