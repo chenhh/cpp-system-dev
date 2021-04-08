@@ -78,7 +78,7 @@ MOV CS, AX
 
 ![&#x66AB;&#x5B58;&#x5668;&#x4E2D;&#x5B58;&#x7684;&#x662F;&#x8A18;&#x61B6;&#x9AD4;&#x5730;&#x5740;&#xFF0C;&#x800C;&#x975E;&#x6578;&#x503C;](../.gitbook/assets/register-indirect-mode-min.png)
 
-### 基底定址\(base addressing mode\)
+### 基底相對定址法\(base addressing mode\)
 
 類似暫存器間接定址法，只是在後面又增加了數值的偏移量。利用BP或BX暫存器再加上一的偏移量得到真實的記憶體地址。
 
@@ -86,14 +86,31 @@ MOV CS, AX
 ; 以下三個指令意義相同
 ; 以基底暫存器BX為記憶體起始地址
 ; 再加上2 bytes得真實記憶體地址
+; 預設取DS段的資料
 MOV AX, [BX]2
 MOV AX, 2[BX]
 MOV AX, [BX+2]
 ```
 
-例如 `MOV CX, [BX]+0156h`，對應到的實體地址為`(DS)0+BX+0156h`。
+例如 `MOV AX, [BX]2`，AX對應到的實體地址為 `(DS<<4)+[BX]+2` 中資料之值。
+
+![&#x57FA;&#x5E95;&#x5B9A;&#x5740;&#x6CD5;](../.gitbook/assets/base-index-min.png)
+
+* 當使用BX暫存器做基底相對定址時，組譯器會認為資料在資料區段，所以會自動用DS計算真實地址。
+* 如果是使用BP暫存器做基底相對定址時，組譯器會認為資料在堆疊區段，所以會自動用SS計算真實地址。
 
 ### 直接索引定址法 \(index addressing mode\)
+
+與基底相對定址法相似，只是索引的暫存器暫存器是SI或DI，再加上偏移量得到真實的記憶體地址。
+
+```erlang
+MOV SI, 5
+MOV AX, [SI]2    ;等同2[SI]或 [SI+2]
+```
+
+![&#x76F4;&#x63A5;&#x7D22;&#x5F15;&#x5B9A;&#x5740;&#x6CD5;](../.gitbook/assets/direct-index-addressing-min.png)
+
+不論使用SI或DI做直接索引定址時，均會使用DS為區段暫存器，計算真實地址。AX對應到的實體地址為 `(DS<<4)+[SI]+2` 中資料之值。
 
 
 
