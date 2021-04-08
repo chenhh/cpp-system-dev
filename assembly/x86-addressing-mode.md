@@ -69,7 +69,7 @@ MOV CS, AX
 
 ![&#x76F4;&#x63A5;&#x5B9A;&#x5740;&#x53D6;&#x5F97;&#x7684;&#x662F;&#x8A18;&#x61B6;&#x9AD4;&#x5730;&#x5740;&#x4E2D;&#x7684;&#x8CC7;&#x6599;](../.gitbook/assets/direct_addressing-min.png)
 
-## 暫存器間接定址法\(register indirect addressing mode\)
+### 暫存器間接定址法\(register indirect addressing mode\)
 
 此種表示法，就是把暫存器裡面的數值資料，當成記憶體位址的偏移量，與直接定址法類似，只是把指定的地址改放到暫存器中。例如本來 BX 裡面放了 0123h 這筆資料， 用了暫存器間接定址之後，就變成是指定 0123h 這個地址。
 
@@ -112,13 +112,14 @@ MOV AX, [SI]2    ;等同2[SI]或 [SI+2]
 
 不論使用SI或DI做直接索引定址時，均會使用DS為區段暫存器，計算真實地址。AX對應到的實體地址為 `(DS<<4)+[SI]+2` 中資料之值。
 
-
-
-
-
 ### 基底索引定址\(base-indexed addressing mode\)
 
-類似base addressing mode，但是多了索引值，常用在陣列。
+把基底和索引定址法一起使用。常用於陣列。
 
-例如 `MOV CX, [BX+DI]+0156h`，`BX`為陣列的起始地址，而`DI`為陣列的索引值。
+```erlang
+; 預設使用DS區段
+MOV AX, [BX][SI]2 ; 即[BX+SI+2]
+```
+
+![&#x57FA;&#x5E95;&#x7D22;&#x5F15;&#x5B9A;&#x5740;&#x6CD5;](../.gitbook/assets/base-index-address-min.png)
 
