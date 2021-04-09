@@ -107,9 +107,10 @@
 
 ## 作業系統 <a id="operating-system"></a>
 
-* [虛擬記憶體\(virtual memory\)](operating-system/virtual-memory.md)
-* [記憶體管理\(memory management\)](operating-system/memory-management.md)
-* [分頁\(paging\)](operating-system/fen-ye-paging.md)
+* [記憶體管理\(memory management\)](operating-system/memory-management/README.md)
+  * [分頁\(paging\)](operating-system/memory-management/fen-ye-paging.md)
+  * [虛擬記憶體\(virtual memory\)](operating-system/memory-management/virtual-memory.md)
+  * [記憶體置換\(memory swapping\)](operating-system/memory-management/ji-yi-ti-zhi-huan-memory-swapping.md)
 * [NUMA架構](operating-system/numa.md)
 * [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
 * [BIOS](operating-system/bios.md)
