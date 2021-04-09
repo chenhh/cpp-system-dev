@@ -108,6 +108,7 @@
 ## 作業系統 <a id="operating-system"></a>
 
 * [虛擬記憶體\(virtual memory\)](operating-system/virtual-memory.md)
+* [記憶體管理\(memory management\)](operating-system/memory-management.md)
 * [分頁\(paging\)](operating-system/fen-ye-paging.md)
 * [NUMA架構](operating-system/numa.md)
 * [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
