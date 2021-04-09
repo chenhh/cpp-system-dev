@@ -8,6 +8,7 @@
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [組譯器\(assembler\)](assembly/assembler.md)
 * [目的檔\(object file\)](assembly/object-file.md)
+* [Windows PE格式](assembly/pe-format.md)
 * [程式重定址\(program relocation\)](assembly/program-relocation.md)
 * [載入程式\(loading program\)](assembly/loading-program.md)
 * [連結器\(linker\)](assembly/linker/README.md)
