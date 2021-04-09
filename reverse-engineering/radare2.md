@@ -36,6 +36,24 @@ Radare2（也稱為r2）用於逆向工程和分析二進製文件的完整框�
 * `pdc`：印出從當前函式的 C-like pseudo code。一定要在函式的開頭才能用。
 * `pdf` ：可以列出該函式的組合語言，與 objdump 功能類似。
 
+### 專案
+
+radare2 的專案管理，可以在標記完符號以後儲存在專案 ，下次就直接開啟同一個專案即可。
+
+* `Ps {project name}`：儲存當前專案。
+* `Po {project name}`：開啟專案。
+* `PS {script name}`：將當前所有的操作 \(主要是 symbol 上的\) 儲存成腳本。
+
+### 離開
+
+* `q`：退出 r2 ，或者是退出某個模式。
+
+### Visual Mode
+
+visual mode 可以看到 binary 的圖形。
+
+* `V`：打一次 V 可以看到 binary 的 hexdump，再輸入一次 V 可以看到圖形。
+
 ## 參考資料
 
 * [官方網站](https://www.radare.org/r/)
