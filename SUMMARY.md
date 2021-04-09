@@ -132,6 +132,7 @@
 
 * [逆向工程簡介](reverse-engineering/ni-xiang-gong-cheng-jian-jie.md)
 * [Ghidra](reverse-engineering/ghidra.md)
+* [Radare2](reverse-engineering/radare2.md)
 
 ## 平行處理 <a id="parallel-processing"></a>
 
