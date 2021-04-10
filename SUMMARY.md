@@ -113,6 +113,7 @@
   * [虛擬記憶體\(virtual memory\)](operating-system/memory-management/virtual-memory.md)
   * [記憶體置換\(memory swapping\)](operating-system/memory-management/ji-yi-ti-zhi-huan-memory-swapping.md)
   * [連續記憶體分配\(contiguous memory allocation\)](operating-system/memory-management/contiguous-memory-allocation.md)
+* [保護環\(protection rings\)](operating-system/protection-rings.md)
 * [NUMA架構](operating-system/numa.md)
 * [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
 * [BIOS](operating-system/bios.md)
