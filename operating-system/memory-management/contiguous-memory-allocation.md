@@ -25,6 +25,8 @@ Q: 如何滿足大小為n的行程進入記憶體？
 
 在速度以及空間利用率方面，first-fit跟best-fit好過於worst-fit。
 
+![](../../.gitbook/assets/best-first-worst-fit-min.png)
+
 ## 碎裂\(Fragmentation\)
 
 ### 外部碎裂 \(External Fragmentation\)
