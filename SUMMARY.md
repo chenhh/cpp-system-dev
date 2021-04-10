@@ -4,7 +4,7 @@
 
 ## 組合語言 <a id="assembly"></a>
 
-* [x86 CPU簡介](assembly/x86-cpu-jian-jie.md)
+* [x86 CPU架構簡介](assembly/x86-cpu-arch.md)
 * [x86定址模式\(addressing mode\)](assembly/x86-addressing-mode.md)
 * [組譯器\(assembler\)](assembly/assembler.md)
 * [目的檔\(object file\)](assembly/object-file/README.md)
