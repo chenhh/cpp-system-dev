@@ -122,6 +122,7 @@
 * [Windows API](operating-system/windows-api.md)
 * [GLIBC](operating-system/glibc.md)
 * [Init行程：sysvinit](operating-system/init-process-sysvinit/README.md)
+  * [檔案系統\(file system\)](operating-system/init-process-sysvinit/file-system.md)
   * [init行程：upstart](operating-system/init-process-sysvinit/init-process-upstart.md)
   * [init行程：systemd](operating-system/init-process-sysvinit/init-process-systemd.md)
 
