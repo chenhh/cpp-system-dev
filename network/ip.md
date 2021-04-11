@@ -10,7 +10,33 @@ IPv4使用32位元（4位元組）位址，因此位址空間中只有2^32個位
 
 IPv4位址可被寫作任何表示一個32位元整數值的形式，但為了方便人類閱讀和分析，它通常被寫作點分十進位的形式，即四個位元組被分開用十進位寫出如127.0.0.1，中間用點分隔。
 
+[Linux kernel 表頭檔](https://github.com/torvalds/linux/blob/master/include/uapi/linux/ip.h)：
+
 ![IPv4&#x5C01;&#x5305;&#x8868;&#x982D;&#xFF0C;&#x901A;&#x5E38;&#x70BA;20 bytes](../.gitbook/assets/ipv4_packet-min.png)
+
+```c
+struct iphdr {
+  #if defined(__LITTLE_ENDIAN_BITFIELD)
+  __u8 ihl: 4,    // 4-bit for version
+    version: 4;   // 4-bit for IHL
+  #elif defined(__BIG_ENDIAN_BITFIELD)
+  __u8 version: 4,
+    ihl: 4;
+  #else
+  #error "Please fix <asm/byteorder.h>"
+  #endif
+  __u8 tos;       // 8-bit for DSCP+EPN
+  __be16 tot_len; // 16-bit for total length
+  __be16 id;      // 16-bit for ID
+  __be16 frag_off;// 16-bit for flag and offset
+  __u8 ttl;       // 8-bit for TTL
+  __u8 protocol;  // 8-bit for protocol
+  __sum16 check;  // 16-bit for checksum
+  __be32 saddr;   // 32-bit for source addr
+  __be32 daddr;   // 32-bit for dest addr
+  /*The options start here. */
+};
+```
 
 ## IPv6
 
