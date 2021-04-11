@@ -144,6 +144,7 @@
 * [Ghidra](reverse-engineering/ghidra.md)
 * [Radare2](reverse-engineering/radare2.md)
 * [加殼與脫殼](reverse-engineering/shelling.md)
+* [RSA](reverse-engineering/rsa.md)
 
 ## 平行處理 <a id="parallel-processing"></a>
 
