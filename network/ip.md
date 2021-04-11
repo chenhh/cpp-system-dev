@@ -64,7 +64,5 @@ struct iphdr {
   * 記錄時間戳記
   * 指定 routing 的路徑
 
-
-
 ## IPv6
 
