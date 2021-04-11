@@ -82,6 +82,22 @@ QUIC 的 Stream Multiplexing 具有以下幾點特性：
 
 過去TCP在封包遺失恢復策略所用的做法，是在發送端為每一個封包標記一個編號 \(sequence number\)，接收端在收到封包時，就會回傳一個帶有對應編號的 ACK 封包給發送端，告知發送端封包已經確實收到。當發送端在超過一定時間 \(Retransmiting Timeout, RTO\) 之後還沒有收到回傳的 ACK，就會認為封包已經丟失，啟動重新傳送的機制，複用與原來相同的編號重新發送一次封包，確保在接收端這邊沒有任何封包漏接。
 
+這樣的機制會有什麼問題呢？假設發送端總共對同一個封包發送了兩次 \(初始 + 重傳\)，使用的都是同一個 sequence number：編號N。之後發送端在拿到編號N封包的回傳 ACK 時，將無法判斷這個帶有編號N的ACK，是接收端在收到初始封包後回傳的ACK \(較長RTT\)，還是接收端在收到重傳封包後回傳的ACK \(較短RTT\)，這就是TCP重傳歧異問題 \(TCP retransmission ambiguity problem\)。
+
+ACK 是屬於初始封包還是重傳封包如果判斷錯誤，會造成 TCP 演算法對連線通道內實際 RTT \(Round Trip Time\) 取樣和預測的誤差，影響後續壅塞控制 \(congestion controll\) 演算法的判斷。RTT 如果被不真實的放大， RTO 就會隨著 RTT 的增加呈現指數型成長，嚴重拉長封包重傳的反應時間。
+
+QUIC為了避免重傳歧異問題，發送端在傳送封包時，初始與重傳的每一個封包都改用一個新的編號，unique packet number，每一個編號都唯一而且嚴格遞增，這樣每次在收到ACK時，就可以依據編號明確的判斷這個 ACK 是來自初始封包或者是重傳封包。接收端則是藉由封包內的 Stream ID 和 Stream Offset 的值，辨認封包是屬於哪一個 Stream，再依照每個封包的 Offset 將資料照順序重組。簡單來說就是將原本由 sequence number 一手包辦的封包傳輸順序和封包資料位置\(offset\)的資訊，拆分成由 unique packet number 和 Stream Offset 兩個數字分別記錄，如此就同時解決了重傳歧異和封包重組的問題，大大提昇 RTT 的取樣與預測的準確度，盡可能的降低封包重傳的反應時間。
+
+### 流量控制 \(Flow Control\)
+
+透過流量控制可以限制客戶端傳輸資料量的大小，有了流量控制後，接收端就可以只保留相對應大小的接收 buffer，優化記憶體被佔用的空間。但是如果存在一個流量極慢的 Stream ，光一個 Stream 就有可能佔用掉接收端所有的 buffer。QUIC 為了避免這個潛在的 HOL Blocking，採用了連線層 \(connection flow control\) 和 Stream 層的 \(stream flow control\) 流量控制，限制單一 Stream 可以佔用的最大 buffer size。
+
+### 連線遷移 \(Connection Migration\)
+
+目前要識別 TCP 的連線，需要用\(1\)來源IP、\(2\)來源port、\(3\)目標IP和\(4\)目標port總共四個參數來區分收到的封包是屬於哪一個 TCP 連線。這個機制的缺點就是當客戶端的IP變動時，例如手機從WIFI連線轉移到4G網路連線，原本的連線就全部失效了。這在頻繁於 WIFI 網路與不同的 3G 和 4G 網路中做切換的手機使用情境上，TCP 協議就顯得非常的不友善。
+
+因此 QUIC 為了可以很平順的處理傳輸過程中的 Connection Migration 問題，它連線的識別採用的是一個 64 bits 的獨立 Connection ID，ID 由客戶端在建立連線時隨機產生。當客戶端的 IP 改變時，只要客戶端繼續使用舊的 Connection ID 傳送封包，即使新發送封包的來源 IP 位址不同，接收端也可以透過 Connection ID 順利的識別新封包所歸屬的連線。而原本正在傳遞中，存有舊 IP 的封包，也一樣也可以透過 Connection ID 來識別，正確的被接收端接收。
+
 
 
 
