@@ -1,5 +1,12 @@
 # OSI與TCP分層
 
+## 分層的理由
+
+* 切割複雜系統成許多小塊
+* 容易維護與發展每一分層
+* 更動某一分層不會牽動整個系統
+* 分層使得每一層的行為容易理解
+
 ## OSI與TCP/IP模型
 
 ISO所制定的標準中，牽涉到網路通訊方面的就是開放式系統互連 \( Open Systems Interconnection, OSI \) 分層模型，是在1970 年代後期所提出來的。 
@@ -78,27 +85,63 @@ MAC位址是一組序號，每個網路裝置的MAC位址都是獨一無二的�
 
 在開發網路應用程式的過程當中，設計師大部分關注多在應用層，因為傳輸層與網路層實作，多半已由作業系統完成\(Windows socket, BSD socket等\)，而實體層則靠電腦與網路設備完成。
 
-## TCP vs. UDP
+## 傳輸層：TCP vs UDP
 
 TCP 和 UDP 都是透過同樣的方式傳輸資料，並透過 IP 找到目標。不過兩者因為性質上的差異，所以應用場景也有很大的不同。
 
+### TCP
+
+* 連結導向\(connection-oriented\)
+* 要透過TCP溝通需要先建立連線\(three way handshake\)
+* 提供可靠的傳輸\(reliable transport\)
+* 提供流量控制\(flow control\)
+* 提供壅塞控制\(congestion control\)
+
 TCP 用於需要「可靠通訊」的場景，即資料在傳輸的過程中不會遺漏，而且有正確的順序性。大部分情況下我們都需要 TCP 來保證通訊的可靠性。
+
+### UDP
+
+* 非連結導向\(connectionless\)
+* 要透過UDP溝通不需要先建立連線
+* 提供盡力的傳送\(best effort transport\)
 
 相對於 TCP，UDP 有時也被稱作「不可靠的通訊」。因為 TCP 為了保證「可靠」，必須依賴相對應的機制，而這些機制會使用較多的資源，並降低傳輸效率。而在某些使用場景，像是網路電話、視訊會議、遊戲等，更看重傳輸速度與即時性，品質方面可以稍微犧牲，因此就可以採用 UDP 的傳輸方式。
 
 另一方面，UDP 可以做到一對多的廣播功能，而 TCP 就只能夠一對一通訊。
 
-## TCP 3-Way handshake & 4-Way handshake
+## TCP建立連線的三次握手\( 3-Way handshake\) 
 
 TCP 為了在通訊連線前，確認對方可以準備接收訊號，以及在斷線前，確認對方準備好離線，因此發展出了連線前的 3-way handshake 與離線前的 4-way handshake 機制。
 
 ### 連線前的 3-way handshake
 
-* CLIENT: 傳送通訊連線請求
-* SERVER: 確認允許連線
-* CLIENT: 確認連線
+* CLIENT: 傳送通訊連線請求  ，發送了 SEQ 100，標志位是 SYN；
+* SERVER: 確認允許連線，且發回了 ACK 101 與 SEQ 200，標志位是 SYN 與 ACK（兩個過程合並了）。注意，ACK 是101意味著，伺服端希望接收到 101序列號開始的數據段。
+* CLIENT: 確認連線，返回了空的數據，SEQ 101， ACK 201，標志位為 ACK。至此，雙方的開始 SEQ （也就是 ISN）號100與200都被確認接收到了。
+* 開始正式發送資料包，注意的是 ACK 依舊是第四行的201，因為沒有需要 ACK 的 SYN 了。
 
-### 離線前的 4-way handshake
+![TCP&#x5EFA;&#x7ACB;&#x9023;&#x7DDA;&#x524D;&#x7684;&#x4E09;&#x6B21;&#x63E1;&#x624B;](../.gitbook/assets/tcp-3-way-handshake-min.png)
+
+三次握手的原則設計是防止舊復用連接的初始化導致問題，為瞭解決此問題，我們設計了reset這個特別的控制信號來處理。
+
+* 如果接收中的 TCP 在一個未同步狀態如 SYN-SENT, SYN-RECEIVED，它會返回 reset 給對方。
+* 如果 TCP 是同步狀態中如\(ESTABLISHED, FIN-WAIT-1, FIN-WAIT-2, CLOSE-WAIT, CLOSING, LAST-ACK, TIME-WAIT\)，他會終止此連接並通知用戶。
+
+### [TCP 為什麼是三次握手，而不是兩次或四次](https://www.zhihu.com/question/24853633/answer/573627478)？
+
+RFC793講到了為什麼三次握手是必須的，TCP 需要 seq 序列號來做可靠重傳或接收，而避免連接復用時無法分辨出 seq 是延遲或者是舊鏈接的 seq，因此需要三次握手來約定確定雙方的 ISN（初始 seq 序列號）。
+
+我們首先要知道到一點就是， TCP 的可靠連接是靠 seq（ sequence numbers 序列號）來達成的。TCP 設計中一個基本設定就是，通過TCP 連接發送的每一個包，都有一個sequence number。而因為每個包都是有序列號的，所以都能被確認收到這些包。確認機制是累計的，所以一個對sequence number X 的確認，意味著 X 序列號之前\(不包括 X\) 包都是被確認接收到的。
+
+TCP 協議是不限制一個特定的連接（兩端 socket 一樣）被重復使用的。所以這樣就有一個問題：這條連接突然斷開重連後，TCP 怎麼樣識別之前舊鏈接重發的包？——這就需要獨一無二的 ISN（初始序列號）機制。
+
+當一個新連接建立時，初始序列號（ initial sequence number ISN）生成器會生成一個新的32位的 ISN，且不太可能會碰撞。發送方與接收方都會有自己的 ISN （下面的例子中就是 X 與 Y）來做雙方互發通信，為了確認雙方的ISN，三次握手是必須的。
+
+三次握手（A three way handshake）是必須的， 因為 sequence numbers（序列號）沒有綁定到整個網絡的全局時鐘（全部統一使用一個時鐘，就可以確定這個包是不是延遲到的）以及 TCPs 可能有不同的機制來選擇 ISN（初始序列號）。
+
+接收方接收到第一個 SYN 時，沒有辦法知道這個 SYN 是是否延遲了很久了，除非他有辦法記住在這條連接中，最後接收到的那個sequence numbers（然而這不總是可行的）。這句話的意思是：一個 seq 過來了，跟現在記住的 seq 不一樣，我怎麼知道他是上條延遲的，還是上上條延遲的呢？所以，接收方一定需要跟發送方確認 SYN。
+
+## TCP離線前的4次握手\( 4-way handshake\)
 
 * CLIENT: 傳送通訊斷線請求
 * SERVER: 確認收到斷線請求，並繼續傳送最後的資訊
