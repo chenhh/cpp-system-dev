@@ -109,6 +109,10 @@ TCP 和 UDP 都是透過同樣的方式傳輸資料，並透過 IP 找到目標�
 
 另一方面，UDP 可以做到一對多的廣播功能，而 TCP 就只能夠一對一通訊。
 
+## TCP狀態轉移圖
+
+![TCP&#x72C0;&#x614B;&#x8F49;&#x79FB;&#x5716;](../.gitbook/assets/tcp_state-min.png)
+
 ## TCP建立連線的三次握手\( 3-Way handshake\) 
 
 TCP 為了在通訊連線前，確認對方可以準備接收訊號，以及在斷線前，確認對方準備好離線，因此發展出了連線前的 3-way handshake 與離線前的 4-way handshake 機制。
