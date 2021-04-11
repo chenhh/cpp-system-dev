@@ -10,6 +10,8 @@ OSI模型是一個概念模型，它建立了一個框架，說明資訊該如�
 
 ![OSI 7&#x5C64;&#x8207;TCP/IP 4&#x5C64;&#x5C0D;&#x7167;&#x5716;](../.gitbook/assets/osi_tcp_mapping.png)
 
+![TCP/IP&#x7528;&#x5230;&#x7684;&#x4F4D;&#x5740;&#x8207;&#x5404;&#x5C64;&#x7684;&#x95DC;&#x4FC2;&#x3002;port: 16 bits, IP address: 32 bits \(v4\), ARP,](../.gitbook/assets/tcp_layers_address-min.png)
+
 ## OSI分層
 
 ### 應用層（Application Layer）
