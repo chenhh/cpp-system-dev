@@ -12,6 +12,18 @@
 
 ![http&#x8207;http2&#x591A;&#x5DE5;&#x6BD4;&#x8F03;](../.gitbook/assets/http_http2-min.jpg)
 
+## HTTP Request and Response
+
+訊息是使用ASCII text所寫，易於閱讀。
+
+
+
+![HTTP&#x3000;Request](../.gitbook/assets/http_request-min.png)
+
+![HTTP Response](../.gitbook/assets/http_response-min.png)
+
+
+
 ## HTTP/3：QUIC傳輸協議
 
 ![HTTP2&#x8207;HTTP3&#x50B3;&#x8F38;&#x5354;&#x8B70;](../.gitbook/assets/http2-3_proc-min.png)
