@@ -41,23 +41,81 @@
 
 ![search www.microsoft.com](../.gitbook/assets/interactive-query-min.png)
 
+### Recursive Query
+
+為了Load balance還有一種Recursive Query，使用Forward方式進行（以DNS為單位，對象不一定為上游）。執行順序：Interactive Query, Recursive Query。
+
+![Cache DNS&#x4E0D;&#x6703;&#x53BB;&#x554F;root DNS](../.gitbook/assets/recursive-query-min.png)
+
+## DNS的種類
+
+Interactive Query和Recursive Query的分別：
+
+* Interactive Query：尋找到完整的名稱
+* Recursive Query：為了Load balance的目的
+
+DNS的種類區分：
+
+* Primary DNS：有自己的ZONE
+* Secondary DNS：有從別人那一邊copy的ZONE（只要有就算）
+* Master DNS：自己的ZONE被別人Copy
+* Catch DNS：每一台DNS Server都算是 
+
 ## ZONE
 
 ZONE：是一個特殊單位。一個ZONE一定要有一個DNS來管，但是一個DNS可以管理許多的ZONE，而每一個ZONE都有一個ZONE File。
 
 ### ZONE File
 
-### OA （Start-of-Authority）
+* SOA （Start-of-Authority）
+* Version Number（判斷新舊，但clock要相同）
+* Refresh timer（一個ZONE有兩個DNS Server, Secondary Server每隔一段時間去跟Master Server複製）
+* Entry timer
+* Expire time
+* TTL（問到機器的IP後可存放在catch中的時間。if TTL=0，多用於Proxy, DHCP）
+* NS（Name Server）
+* MX（Mail Exchange Server）
+* A（Host）：ZONE有多少台機器，需要Dynamic update
+* CN（alias）：多IP對應一台主機
+* PTR（Pointer）：
+  * 有IP查名稱（逆向查詢）
+  * 正向查詢：---.ZONE
+  * 逆向查詢：97.25.163.in-addr.arpa
 
-Version Number（判斷新舊，但clock要相同）
+## DNS的紀錄檔
 
-Refresh timer（一個ZONE有兩個DNS Server, Secondary Server每隔一段時間去跟Master Server複製）
+DNS: distributed database storing resource records \(RR\)
 
-Entry timer
+RR格式為：\(name, value, type, ttl\)
 
-Expire time
+* type=A
+  * name為主機名稱
+  * value為IP位址
+* type=NS
+  * name為domain\(如foo.com\)
+  * value為此domain的授權名稱伺服器的IP
+* type=CNAME
+  * name為某些真實名稱的別名
+  * value為真實的名稱
+* tpye=MX
+  * value為郵件主機名稱的hostname
 
-TTL（問到機器的IP後可存放在catch中的時間。if TTL=0，多用於Proxy, DHCP）
+## DNS協定的訊息格式
+
+DNS的query和reply訊息格式是一樣的。
+
+![](../.gitbook/assets/dns-header-min.png)
+
+
+
+* Identification：一個16 bit的代號，query和reply都使用同一個代號。
+* 
+  Flags：
+
+  * query或reply
+  * Recursion desired
+  * Recursion available
+  * Reply is authoritative
 
 
 
