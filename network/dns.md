@@ -36,7 +36,8 @@
 1. web往cs DNS主機查詢，找不到時往root DNS找。
 2. cs DNS主機\(問: .com主機的IP\)往root DNS主機查詢\(答: .com DNS主機的IP\)。
 3. cs DNS主機\(問: microsoft.com主機的IP\)往com DNS主機查詢\(答: microsoft.com DNS主機的IP\)。
-4. cs DNS主機\(問：www.microsoft.com主機的IP\)往microsoft.com的DNS主機查詢\(問：www.microsoft.com主機的IP\)。
+4. cs DNS主機\(問：www.microsoft.com主機的IP\)往microsoft.com的DNS主機查詢\(問：www.microsoft.com主機的IP\)。取得名稱解析後的IP，會放在cs主機的快取中。
+5. cs DNS主機回覆給web。
 
 ![search www.microsoft.com](../.gitbook/assets/interactive-query-min.png)
 
