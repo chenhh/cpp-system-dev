@@ -20,6 +20,8 @@ IP address由兩個部分組成：
 * Network part:較高位\(High order part\)的位元用來辨識網域。
 * Host Part \(Interface part\):較低位\(Low order part\)的位元用來辨識主機。
 
+要申請IP位址網段必須要向ICANN \(Internet Corporation for Assigned Names and Numbers\)申請。
+
 ### 何謂一個網域\(Network\)?
 
 IP address具有相同高位位元\(Network Part\)的介面所成的統稱。這些介面彼此互相連接而不透過router \(Layer-3 Device\)。
@@ -30,6 +32,8 @@ IP address具有相同高位位元\(Network Part\)的介面所成的統稱。�
 
 IP網路位址可以依照前面若干個位元來區分是屬於哪個class \(A, B, C, D\)。
 
+利用網路遮罩\(Network Mask\)可以將取得的一段IP再度分割成更小段的子網路\(sub-network\)。
+
 ![IPv4 class](../.gitbook/assets/ip_class-min.png)
 
 ### CIDR: \(Classless Inter Domain Routing\)
@@ -37,6 +41,23 @@ IP網路位址可以依照前面若干個位元來區分是屬於哪個class \(A
 如果完全依照class來分配IP位址，可能無法有效的利用IP位址\(空著很多IP並未使用\)。IP位址的Network part長度並未固定，可以依照Network Mask來決定Network part的長度。
 
 ![CIDR&#x7BC4;&#x4F8B;](../.gitbook/assets/cidr-min.png)
+
+## IP封包切割與重組
+
+MTU \(Maximum Transfer Unit\)： 表示Link-Layer所能夠傳送封包的最大長度\(會因不同的Link-Layer而有不同的MTU\)。
+
+IP封包的切割：
+
+* 在傳送過程中將一個封包切割\(fragmentation\)為若干個小封包。
+* 在接收端接收到以後利用Header中的identifier重新組合\(reassembly\)。
+
+
+
+![IP&#x5C01;&#x5305;&#x53C3;&#x8003;MTU&#x5207;&#x5272;&#x5F8C;&#xFF0C;&#x4EE5;ID&#x91CD;&#x7D44;](../.gitbook/assets/ip_fragement-min.png)
+
+
+
+
 
 ## IPv4
 
