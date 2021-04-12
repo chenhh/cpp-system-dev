@@ -1,6 +1,42 @@
 # Internet protocol
 
+## 網路層的主要功能
+
+* Routing:決定封包\(packet\)適當的傳輸路徑。
+  * Routing Algorithms:計算傳輸路徑的演算法。
+* Switching:將封包轉送至適當的出口埠。
+* Call Setup:在傳送資料前建立整條傳輸路徑。
+
+協助通訊的兩端在資料\(Data Flow\)真正開始傳送之前建立連線\(example: TCP 3-way handshaking, ATM\)。
+
+
+
 ![UDP&#x5C01;&#x5305;](../.gitbook/assets/udp_encapsulation.png)
+
+## IP address
+
+IP address由兩個部分組成：
+
+* Network part:較高位\(High order part\)的位元用來辨識網域。
+* Host Part \(Interface part\):較低位\(Low order part\)的位元用來辨識主機。
+
+### 何謂一個網域\(Network\)?
+
+IP address具有相同高位位元\(Network Part\)的介面所成的統稱。這些介面彼此互相連接而不透過router \(Layer-3 Device\)。
+
+### 網路遮罩\(Network Mask\)
+
+用來判斷IP位址中的Network Part以及Host Part。例： 223.1.1.4/24，代表左邊24個位元是Network part，剩下的8位元是host part。
+
+IP網路位址可以依照前面若干個位元來區分是屬於哪個class \(A, B, C, D\)。
+
+![IPv4 class](../.gitbook/assets/ip_class-min.png)
+
+### CIDR: \(Classless Inter Domain Routing\)
+
+如果完全依照class來分配IP位址，可能無法有效的利用IP位址\(空著很多IP並未使用\)。IP位址的Network part長度並未固定，可以依照Network Mask來決定Network part的長度。
+
+![CIDR&#x7BC4;&#x4F8B;](../.gitbook/assets/cidr-min.png)
 
 ## IPv4
 
