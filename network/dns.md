@@ -41,6 +41,28 @@
 
 ![search www.microsoft.com](../.gitbook/assets/interactive-query-min.png)
 
+## ZONE
+
+ZONE：是一個特殊單位。一個ZONE一定要有一個DNS來管，但是一個DNS可以管理許多的ZONE，而每一個ZONE都有一個ZONE File。
+
+### ZONE File
+
+### OA （Start-of-Authority）
+
+Version Number（判斷新舊，但clock要相同）
+
+Refresh timer（一個ZONE有兩個DNS Server, Secondary Server每隔一段時間去跟Master Server複製）
+
+Entry timer
+
+Expire time
+
+TTL（問到機器的IP後可存放在catch中的時間。if TTL=0，多用於Proxy, DHCP）
+
+
+
+
+
 
 
 
