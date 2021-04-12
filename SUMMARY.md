@@ -135,7 +135,8 @@
 * [Internet protocol](network/ip.md)
 * [BSD socket](network/bsd-socket.md)
 * [Winsock](network/winsock.md)
-* [http](network/http.md)
+* [HTTP](network/http.md)
+* [SMTP](network/smtp.md)
 * [websocket](network/websocket.md)
 
 ## 逆向工程 <a id="reverse-engineering"></a>
