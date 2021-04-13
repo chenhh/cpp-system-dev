@@ -308,11 +308,73 @@ Ad hoc network: IEEE 802.11 station 可以動態形成一個沒有AP的網路。
 
 ![CSMA/CA](../.gitbook/assets/csma-ca-min.png)
 
+NAV: Network Allocation Vector
 
+* 802.11 訊框包含傳送時間的欄位
+* 其他節點聽到此一訊框，就會依照NAV延遲時間傳送
 
+### Hidden terminal
 
+hidden terminal即A和C互相聽不到彼此，如果同時傳送，就會在B 發生碰撞。CSMA/CA可以解決在B發生碰撞的問題。
 
+![Hidden terminal](../.gitbook/assets/hidden_terminal-min.png)
 
+### RTS/CTS
 
+CSMA/CA：做頻道預留
 
+* 傳送端送RTS \( request to send\)
+* 接收端回覆CTS \(clear to send\)
+* CTS幫傳送端預留頻道，通知可能原本是隱藏的節點。
+* RTS和CTS是小的訊息，較不會發生碰撞。
+
+![RTS/CTS](../.gitbook/assets/rts_cts-min.png)
+
+## Point to Point Data Link Control
+
+一條連線兩端有傳送和接收端
+
+* 沒有Media Access Control
+* MAC位址在此沒有必要
+* 例如: 撥接網路, ISDN 連線
+
+常見的 point-to-point DLC 協定
+
+* PPP \(point-to-point protocol\)
+* HDLC: High level data link control
+
+PPP DLC協定要求：
+
+* packet framing: 封裝網路層的封包
+* bit transparency: 必須可以完整重現上層的資料\(bits\)
+* error detection:不做錯誤修正
+* connection livenes: 偵測訊號錯誤通知網路層
+* network layer address negotiation: 兩端點可以\(互相\)學習/設定網路層位址
+
+但不要求：
+
+* 不做錯誤的修正/回復
+* 不做流量控制
+* 允許不照順序的封包傳送
+* 不支援多點的連線，如輪詢系統
+* 錯誤修正，流量控制，資料重新排序等工作留給網路的上一層去解決
+
+### PPP 資料訊框 \(Data Frame\)
+
+![PPP Frame](../.gitbook/assets/ppp_frame-min.png)
+
+* Flag: 分別訊框的符號
+* Address:  無意義
+* Control: 無意義
+* Protocol: 上一層的協定 \(如: PPP-LCP, IP, IPCP等等\) 
+* info： 資料
+* check： CRC
+
+### 位元填塞 \(Byte Stuffing\)
+
+在資料欄位中可能會包含和flag一樣的pattern  &lt;01111110&gt;，會造成接收端的誤解。
+
+解法是傳送端在&lt; 01111110&gt;之後填塞多餘的&lt; 01111110&gt;位元組，而接收端 連續收到兩個&lt;01111110&gt;， 就丟棄一個，另一個當作是資料。收到單一&lt;01111110&gt;時視為flag byte。
+
+![byte stuffing](../.gitbook/assets/byte_stuffing-min.png)
 
