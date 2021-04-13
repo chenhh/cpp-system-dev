@@ -87,6 +87,14 @@ CSMA/CD：載波偵測\(carrier sensing\)。如CSMA一般會延遲傳送：
 * 發生碰撞就取消傳送，發出訊號告知其他節點，可降低頻道的浪費  。
 * 以persistent或是non-persistent的機制重送  。
 
+Jam Signal：用來保證所有的節點都知道發生碰撞，48 bits。
+
+Exponential Backoff： 用來調節何時重送的機制
+
+* 第一次發生碰撞：從{0,1}中選出K；延遲時間等於 K x 512位元的傳輸時間  。
+* 第二次發生碰撞：從{0,1,2,3}選出K  。
+* 直到第十次以後。固定從{0,1,2,3,4,…,1023}選出K  。
+
 ### 輪流\(polling\)
 
 主節點邀請其他節點以輪流的方式傳送，利用RTS/CTS訊息。
@@ -108,6 +116,42 @@ ARP協定用於已知設備IP位址, 想推知MAC位址\(實際位址\)。
 設備A首先會對網路廣播ARP查詢封包, 裡頭包含設備B的IP位址。在區域網路中的所有節點都會收到此一查詢封包，當B收到此一封包，就回覆自己的MAC位址\(實際位址\)給A。
 
 如果B不在區域網路中, 則gateway會回覆自己的MAC位址給A，A會儲存IP和MAC位址對應的關係。
+
+### 封包經路由器到另一個區域網路的過程
+
+![&#x5C01;&#x5305;&#x8F49;&#x9001;&#x6D41;&#x7A0B;](../.gitbook/assets/routing_process-min.png)
+
+* A\(111.111.111.111\)有IP封包要傳送到B\(222.222.222.222\)
+* A利用ARP查詢R\(111.111.111.110\)的MAC位址
+* A以R的MAC位址為目的地端，產生Ethernet訊框
+* A的資料傳輸層傳送Ethernet訊框
+* R的資傳輸層接收Ethernet訊框
+* R發現Ethernet訊框是包含要到B的datagram
+* R利用ARP去找到B的MAC位址
+* R以B的MAC位址為目的地端, 產生Ethernet訊框
+
+## 乙太網路訊框結構\(Ethernet frame\)
+
+網路卡會把IP封包封裝成Ethernet訊框。
+
+Preamble: 
+
+* 在10101011之後有7個位元組的10101010
+* 用來同步傳送端和接收端的clock rate
+
+![&#x8A0A;&#x6846;&#x7D50;&#x69CB;](../.gitbook/assets/frame-min.png)
+
+* \(MAC\) Addresses: 6個位元組，48-bits  。
+* Type: 表示上一層的協定，通常是IP  。
+* CRC: 接收端會檢查此一欄位，如果錯誤就會丟棄此一訊框  。
+
+
+
+
+
+
+
+
 
 
 
