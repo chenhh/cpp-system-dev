@@ -44,6 +44,18 @@
 
 ![FDMA](../.gitbook/assets/fdma%20%282%29.png)
 
+### 頻道分割MAC協定：CDMA \(code division multiple access\)
+
+* 指定唯一的code給每一個使用者，是為分割code set  ，通常用在無線寬頻頻道 \(cellular, satellite\)  。
+* 所有的使用者分享一樣的頻率但是使用自己的code去編碼  。
+* encoded signal = \(original data\) X \(chipping sequence\)
+* decoding: inner-product of encoded signal and chipping sequence
+* 允許許多使用者同時傳送資料  。
+
+![CDMA&#xFF0C;&#x6709;&#x5169;&#x8005;&#x4F7F;&#x7528;&#x8005;&#x4F7F;&#x7528;&#x6B63;&#x4EA4;&#x7684;&#x7DE8;&#x78BC;&#x50B3;&#x9001;&#x8A0A;&#x865F;](../.gitbook/assets/cdma.png)
+
+
+
 
 
 
