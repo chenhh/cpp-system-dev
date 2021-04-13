@@ -28,7 +28,35 @@
 
 惡意地產生大量的封包會讓接收端有掛點的現象。分散式的 DOS \(DDOS\): 多方來源使接收端掛點。例如： C 和遠端終端機同步地攻擊 A。
 
-![](../.gitbook/assets/dos-min.png)
+![DoS](../.gitbook/assets/dos-min.png)
+
+### 中間人攻擊\(man-in-the-middle\)
+
+![MITM&#x653B;&#x64CA;](../.gitbook/assets/the-man-in-the-middle-mitm-attack.png)
+
+## 密碼學
+
+* 對稱金鑰\(symmetric key\) crypto： 傳送端和接收端使用相同的金鑰。
+  * 替代祕文\(substitution cipher\): 由另一文字替代原本文字
+  * DES: 資料加密標準\(Data Encryption Standard\)
+    * 每一筆資料使用三個連續的（循序的）金鑰。
+    * 使用密碼區塊鍊鎖。
+
+
+
+
+
+
+* 公開金鑰\(public-key\) crypto: 使用公開金鑰加密，私人金鑰解密。
+  * RSA \(Rivest, Shamir, Adelson\) algorithm
+
+
+
+### 
+
+
+
+
 
 
 
