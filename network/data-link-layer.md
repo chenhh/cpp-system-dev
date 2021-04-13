@@ -213,9 +213,56 @@ Ethernet標準訊框，允許點對點連線和共享廣播頻道。在共享�
 
 ![backbone&#x6A4B;&#x63A5;&#x5668;](../.gitbook/assets/backbone_bridge-min.png)
 
+### 橋接器和路由器的比較
 
+* 均為store-and-forward設備
+  * 路由器是網路層設備 \(檢查網路層的標頭\)
+  * 橋接器是鏈結層的設備
+* 路由器會維護路由表，依路由演算法運作  。
+* 橋接器會維護filtering tables, 依照filtering, learning, spanning tree演算法運作。
 
+![&#x6A4B;&#x63A5;&#x5668;&#x548C;&#x8DEF;&#x7531;&#x5668;](../.gitbook/assets/bridge_and_router-min.png)
 
+<table>
+  <thead>
+    <tr>
+      <th style="text-align:left"></th>
+      <th style="text-align:left">&#x6A4B;&#x63A5;&#x5668;</th>
+      <th style="text-align:left">&#x8DEF;&#x7531;&#x5668;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align:left">&#x512A;&#x9EDE;</td>
+      <td style="text-align:left">&#x7C21;&#x55AE;&#xFF0C;&#x984D;&#x5916;&#x9700;&#x8981;&#x7684;&#x983B;&#x5BEC;&#x8F03;&#x5C0F;
+        <br
+        />
+      </td>
+      <td style="text-align:left">
+        <p>&#x652F;&#x63F4;&#x4EFB;&#x610F;&#x62D3;&#x64B2;&#xFF0C;&#x8DEF;&#x7531;&#x5354;&#x5B9A;&#x53EF;&#x907F;&#x514D;&#x8FF4;&#x5708;&#xFF0C;&#x548C;&#x5EE3;&#x64AD;&#x98A8;&#x66B4;
+          <br
+          />
+        </p>
+        <p></p>
+      </td>
+    </tr>
+    <tr>
+      <td style="text-align:left">&#x7F3A;&#x9EDE;</td>
+      <td style="text-align:left">&#x5FC5;&#x9808;&#x7528;spanning tree&#x6F14;&#x7B97;&#x6CD5;, &#x652F;&#x63F4;&#x56FA;&#x5B9A;&#x62D3;&#x64B2;
+        <br
+        />
+      </td>
+      <td style="text-align:left">&#x9700;&#x8981;&#x4EBA;&#x529B;&#x8A2D;&#x5B9A;, &#x9700;&#x8981;&#x984D;&#x5916;&#x7684;&#x983B;&#x5BEC;&#x8F03;&#x591A;</td>
+    </tr>
+    <tr>
+      <td style="text-align:left">&#x5927;&#x5C0F;</td>
+      <td style="text-align:left">&#x9069;&#x7528;&#x5728;&#x5C0F;&#x7DB2;&#x8DEF;</td>
+      <td style="text-align:left">&#x9069;&#x7528;&#x5728;&#x5927;&#x7DB2;&#x8DEF;
+        <br />
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 
 
