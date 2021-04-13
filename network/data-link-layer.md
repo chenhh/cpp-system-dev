@@ -70,6 +70,49 @@
 
 ![pure ALOHA](../.gitbook/assets/pure_aloha-min.png)
 
+### CSMA \(Carrier Sense Multiple Access\)
+
+CSMA: 傳送之前會先聽傳送的頻道：
+
+* 如果聽到idle：馬上傳送。
+* 如果聽到busy：延遲傳送  。
+  * Persistent CSMA：等到發現媒介idle，以p的機率重送    。
+  * Non-persistent CSMA：亂數延遲一段時間    。
+
+### CSMA/CD \(Collision Detection\)
+
+CSMA/CD：載波偵測\(carrier sensing\)。如CSMA一般會延遲傳送：
+
+* 會偵測碰撞  。
+* 發生碰撞就取消傳送，發出訊號告知其他節點，可降低頻道的浪費  。
+* 以persistent或是non-persistent的機制重送  。
+
+### 輪流\(polling\)
+
+主節點邀請其他節點以輪流的方式傳送，利用RTS/CTS訊息。
+
+Token passing：節點輪流保管token，拿到token可以傳送封包。
+
+## MAC位址 \(實際位址\)
+
+在同一網路中，實際互連的設備用來通訊的位址，網路卡的ROM中紀錄著48位元的MAC位址。每一張網路卡有唯一的MAC位址。
+
+MAC位址的分配由IEEE管理，製造商使用部分的MAC位址以保證唯一性，MAC位址是平面的，所以網路卡可以拿到任意網路下使用。相反的，IP位址是階層式的，和所連接的網路有關。
+
+![MAC address&#x5728;LAN&#x901A;&#x8A0A;](../.gitbook/assets/mac_address-min.jpg)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
