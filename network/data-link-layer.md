@@ -270,7 +270,45 @@ Ethernet標準訊框，允許點對點連線和共享廣播頻道。在共享�
 
 cut-through switching： 接收端口不用”等到接收到完整訊框, 再加以轉送到出口端口，可降低轉送的延遲。且可與shared/dedicated, 10/100/1000 Mbps interfaces合併使用。
 
-![](../.gitbook/assets/switch-min.png)
+![Switch](../.gitbook/assets/switch-min.png)
+
+## IEEE802.11 Wireless LAN
+
+IEEE 802.11 標準，主要定義MAC協定和使用ISM頻帶:900Mhz,  2.4Ghz。
+
+Basic Service Set \(BSS\)包含：
+
+* wireless hosts
+* access point \(AP\)
+
+許多BSS可組成一distribution system \(DS\)。
+
+![BSS](../.gitbook/assets/bss-min.png)
+
+### Ad Hoc網路
+
+Ad hoc network: IEEE 802.11 station 可以動態形成一個沒有AP的網路。
+
+應用：
+
+* 會議廳, 車輛交通
+* 個人通訊設備的互連
+* 戰場環境
+
+### IEEE 802.11 MAC協定：CSMA/CA
+
+802.11 CSMA 傳送端：
+
+* 如果持續聽到維持DISF的頻道idle, 就傳送訊框
+* 如果聽到頻道是busy, 就開始做binary back-off
+
+802.11 CSMA 接收端：
+
+* 如果成功接收一訊框, 就等SIFS後回覆ACK
+
+![CSMA/CA](../.gitbook/assets/csma-ca-min.png)
+
+
 
 
 
