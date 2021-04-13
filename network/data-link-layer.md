@@ -39,6 +39,13 @@
 
 ### 頻道分割MAC協定: FDMA\(frequency division multiple access\)
 
+* 頻譜分割成幾個頻帶  ，每一個節點使用固定的頻帶  ，頻帶中可能有沒用到的傳輸時間  。
+* 範例: 6-station LAN, 1,3,4有封包, 頻帶2,5,6idle 。
+
+![FDMA](../.gitbook/assets/fdma%20%282%29.png)
+
+
+
 
 
 
