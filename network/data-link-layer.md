@@ -66,6 +66,8 @@
 
 設計較簡單，非同步，封包不會等到在slot的開頭才傳送，但會增加碰撞的機率。
 
+假設有N個節點要傳送封包，每個slot以p的機率傳送封包，成功傳送的機率S 約為18% \(最佳情況\)。
+
 ![pure ALOHA](../.gitbook/assets/pure_aloha-min.png)
 
 
