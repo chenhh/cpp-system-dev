@@ -264,5 +264,17 @@ Ethernet標準訊框，允許點對點連線和共享廣播頻道。在共享�
   </tbody>
 </table>
 
+## 交換器\(Switch\)
+
+以第二層MAC位址轉送、過濾封包，同時傳輸A到B, 和A’到B’ ，而不會發生碰撞。支援較多的介面，通常以星型拓撲連接，為沒有碰撞的乙太網路。
+
+cut-through switching： 接收端口不用”等到接收到完整訊框, 再加以轉送到出口端口，可降低轉送的延遲。且可與shared/dedicated, 10/100/1000 Mbps interfaces合併使用。
+
+![](../.gitbook/assets/switch-min.png)
+
+
+
+
+
 
 
