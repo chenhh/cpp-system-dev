@@ -101,3 +101,13 @@ MAC位址的分配由IEEE管理，製造商使用部分的MAC位址以保證唯
 
 ![MAC address&#x5728;LAN&#x901A;&#x8A0A;](../.gitbook/assets/mac_address-min.jpg)
 
+## ARP 協定
+
+ARP協定用於已知設備IP位址, 想推知MAC位址\(實際位址\)。
+
+設備A首先會對網路廣播ARP查詢封包, 裡頭包含設備B的IP位址。在區域網路中的所有節點都會收到此一查詢封包，當B收到此一封包，就回覆自己的MAC位址\(實際位址\)給A。
+
+如果B不在區域網路中, 則gateway會回覆自己的MAC位址給A，A會儲存IP和MAC位址對應的關係。
+
+
+
