@@ -54,6 +54,16 @@
 
 ![CDMA&#xFF0C;&#x6709;&#x5169;&#x8005;&#x4F7F;&#x7528;&#x8005;&#x4F7F;&#x7528;&#x6B63;&#x4EA4;&#x7684;&#x7DE8;&#x78BC;&#x50B3;&#x9001;&#x8A0A;&#x865F;](../.gitbook/assets/cdma.png)
 
+### Slotted ALOHA
+
+時間分割成等長的slot，節點在下一slot的開頭就傳送封包，如果發生碰撞：以p的機率重送封包直到成功為止。
+
+![slotted ALOHA, S\(success\), C\(collision\), E\(empty\)](../.gitbook/assets/slotted_aloha-min.jpg)
+
+
+
+
+
 
 
 
