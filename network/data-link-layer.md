@@ -37,7 +37,7 @@
 
 ![TDMA](../.gitbook/assets/tdma.png)
 
-
+### 頻道分割MAC協定: FDMA\(frequency division multiple access\)
 
 
 
