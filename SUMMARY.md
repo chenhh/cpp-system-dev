@@ -153,4 +153,5 @@
 ## 平行處理 <a id="parallel-processing"></a>
 
 * [平行處理簡介](parallel-processing/parallel-processing-introduction.md)
+* [平行計算簡介](parallel-processing/basic-parallel-computing.md)
 
