@@ -8,7 +8,6 @@
 * 定義媒介上的存取方式
 * 使用實際位址 \(physical addresses\)，如網卡的MAC address。
 * 實際連接兩點之間的可靠傳輸，如在傳送端和接收端的流量控制。
-
   * 錯誤偵測 \(Error Detection\)     ：訊號衰減和雜訊會造成錯誤發生    。當接收端發現錯誤，會通知傳送端重送或是把訊框給丟掉    。
   * 錯誤修正     ：由傳送端辨別並修正錯誤的位元，避免重送    。
   * parity check, checksum
@@ -26,7 +25,23 @@
   * 允許發生碰撞
   * 重點在發生碰撞後的處理動作
 * 輪流  \(polling\)
+
   * 嚴格地調節共享媒介的使用，以不發生碰撞為目的
+
+### 頻道分割MAC協定: TDMA \(time division multiple access\)
+
+* 每一個節點可以得到固定長度的slot\(長度 = 封包傳輸時間\)
+* 沒用到的slot稱為idle 
+* 範例: 6-station LAN, 1,3,4有封包, slots 2,5,6 idle 
+* TDM \(Time Division Multiplexing\): 頻道分割成 N個時間槽, 每個節點使用一個
+
+![TDMA](../.gitbook/assets/tdma.png)
+
+
+
+
+
+
 
 
 
