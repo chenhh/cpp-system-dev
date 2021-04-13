@@ -101,35 +101,3 @@ MAC位址的分配由IEEE管理，製造商使用部分的MAC位址以保證唯
 
 ![MAC address&#x5728;LAN&#x901A;&#x8A0A;](../.gitbook/assets/mac_address-min.jpg)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
