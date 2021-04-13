@@ -157,6 +157,64 @@ Preamble:
 
 ![10Base2](../.gitbook/assets/10base2-min.png)
 
+### 10BaseT/100BaseT
+
+10/100 Mbps，100Mbps又稱為fast Ethernet，T表示雙絞線\(Twisted Pair\)。
+
+使用hub技術，運用在星型拓撲，在hub上實作CSMA/CD，節點到hub的最長佈線長度為100公尺。
+
+![10BaseT, Hub](../.gitbook/assets/10baset.png)
+
+### 1000BaseT
+
+Ethernet標準訊框，允許點對點連線和共享廣播頻道。在共享模式中， 節點間的距離較短。使用稱作“Buffered Distributors”的hub，點對點連線是全雙工的1G bps。
+
+### Token pass \(IEEE 802.5\)
+
+速度為4 Mbps ，最長token擁有時間：10 ms，限制訊框的長度。
+
+* SD/ED：表示封包的開始/結尾  。
+* AC： access control byte。
+  * token bit： 0：表示token可以被使用， 1：表示資料是根據FC    。
+  * priority bits：封包的優先權    。
+  * reservation bits：優先權較高的節點可以利用此一位元防止優先權較低的節點拿到token    。
+* FC： frame control
+* source, destination address: 48 bit 實際位址
+* checksum： CRC 
+* FS: frame status： 由目的地端設定  ，告知傳送端已經收到  ，DLC-level ACKing  。
+
+![Token pass](../.gitbook/assets/token_pass-min.png)
+
+## 集線器\(hub\)
+
+實體層的設備：可視為repeater的變形，重複訊號給所有的介面。Hub可以架設成階層式，節點都在同一碰撞區域內。
+
+優點：
+
+* 簡單、便宜、容易佈置  。
+* 延長佈線的長度限制  。
+
+限制：
+
+* 訊號碰撞區域的相同，效能並沒有提升  。
+* 相同的碰撞區域一樣會限制住可加入LAN的節點數目  。
+* 無法和其他Ethernet技術相連  ，如 10BaseT和100 BaseT  。
+
+## 橋接器\(Bridge\)
+
+為鏈結層的設備，檢查乙太網路訊框的標頭，決定要送往的目的地。橋接器的主要功能為可以分割碰撞區域\(collision domain\)。
+
+優點：
+
+* 分割碰撞區域可以增加效能並且沒有節點數目的限制
+* 可連接不同Ethernet技術的網路
+* 通透性：對網路卡來說，不必知道橋接器的存在  。
+* 同一網段\(segment\)的封包不會透過橋接器流到外面  。
+
+![backbone&#x6A4B;&#x63A5;&#x5668;](../.gitbook/assets/backbone_bridge-min.png)
+
+
+
 
 
 
