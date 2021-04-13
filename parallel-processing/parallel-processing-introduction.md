@@ -137,35 +137,21 @@ MPP、COW的自然模型。
 
 典型代表實作為MPI與PVM。
 
+## 平行程式設計模型標準
 
+平行程式設計模型標準可分為以下三類:
 
+* 資料平行：HPF、fortran90。用於SMP、 DSM。 
+* 共享記憶體設計：OpenMP。用於SMP、DSM。
+* 訊息傳遞：MPI、PVM。用於所有平行計算機。
 
+三者可混合使用。
 
+## 基本平行化方法
 
-
-
-
-
-
-
-
-
-
-
-
-### 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+* 相平行（Phase Parallel）
+* 流水線平行（Pipeline Parallel）
+* 主從平行（Master-Slave Parallel）
+* 分治平行（Divide and Conquer Parallel）
+* 工作池平行（Work Pool Parallel）
 
