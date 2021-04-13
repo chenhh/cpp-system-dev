@@ -145,11 +145,17 @@ Preamble:
 * Type: 表示上一層的協定，通常是IP  。
 * CRC: 接收端會檢查此一欄位，如果錯誤就會丟棄此一訊框  。
 
+## 乙太網路 \(ethernet\)
 
+### 10Base2
 
+* 10: 10Mbps  ，2: 佈線最長可達200公尺  。
+* 線材：同軸線
+* 拓撲：匯流排
+* Segment之間可用repeater加以連接  。
+* Repeater功用在於加強和修補收到的訊號，再送出去，屬於第一層\(實體層\)的網路設備  。
 
-
-
+![10Base2](../.gitbook/assets/10base2-min.png)
 
 
 
