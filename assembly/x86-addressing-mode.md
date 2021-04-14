@@ -12,9 +12,27 @@ x86 CPU 在運作時根據其對記憶體的定址的模式，主要區分為真
 
 ### 記憶體地址 \(memory address\)
 
-以8088可定址的1M記憶體來說，為了便於管理這些容量，會將記憶體編號為00000h~FFFFh，這些編號即為**記憶體地址 \(memory address\)**。 而記憶體最小的存取單元為1 byte。
+以8086可定址的1M記憶體來說，為了便於管理這些容量，會將記憶體編號為00000h~FFFFFh，這些編號即為**記憶體地址 \(memory address\)**。 而記憶體最小的存取單元為1 byte。
 
 ![8088&#x8A18;&#x61B6;&#x9AD4;&#x67B6;&#x69CB;](../.gitbook/assets/8088_mem_arch-min.png)
+
+### x86真實模式下的記憶體佈局
+
+| 起始地址 | 結束地址 | 大小 | 用途 |
+| :--- | :--- | :--- | :--- |
+| 000 | 3FF | 1KB | 中斷向量表\(interrupt vector table\) |
+| 400 | 4FF | 256B | BIOS Data area |
+| 500 | 7BFF | 30464B，約30KB | 程式設計師可用區域 |
+| 7C00 | 7DFF | 512B | MBR被BIOS加載到此處，共512 bytes |
+| 7E00 | 9FBFF | 622080B，約608KB | 程式設計師可用區域 |
+| 9FC00 | 9FFFF | 1KB | EBDA \(extended BIOS data area\) |
+| A0000 | AFFFF | 64KB | 彩色顯示配適器 |
+| B0000 | B7FFFF | 32KB | 黑白顯示配適器 |
+| B8000 | BFFFF | 32KB | 用於文本模式顯示配適器 |
+| C0000 | C7FFF | 32KB | 顯示配適器BIOS |
+| C8000 | EFFFF | 160KB | 映射硬體配適器的ROM或記憶體映式IO |
+| F0000 | FFFEF | 64KB-16B | 系統BIOS範圍是F0000~FFFFF，為說明入口地址，將最後面的16 bytes從此處去除，所以終止地址為0xFFFEF |
+| FFFF0 | FFFFF | 16B | BIOS入口地址，此地址也屬於BIOS程式碼，同樣屬於頂部的640KB，只是為了強調入口地址才單獨列出。此處16 bytes的內容是跳轉指令 JMP F000:E05B。 |
 
 ### 資料儲存：小端 \(little endian\)
 
