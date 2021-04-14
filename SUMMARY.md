@@ -129,6 +129,7 @@
 ---
 
 * [檔案系統\(file system\)](file-system.md)
+* [NOR與NAND Flash](nor-and-nand-flash.md)
 
 ## 網路 <a id="network"></a>
 
