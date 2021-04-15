@@ -2,7 +2,7 @@
 
 ## 簡介
 
-BIOS限制對於ltanium所針對的大型啟動服務平台來說太過嚴格，為了解決這些問題，Intel創造出了一個「Extensible Firmware Interface \(EFI\)」\[可延伸韌體介面\]，2005年7月，Intel停止了1.10版EFI的開發，並將其貢獻給統一可延伸韌體介面論壇（Unified EFI Forum）推廣與發展，為了突顯這一點，EFI也更名為UEFI（Unified EFI）。
+UEFI\(Unified Extensible Firmware Interface\)， 是一種詳細描述類型介面的標准。這種介面用於作業系統自動從預啟動的操作環境，加載到一種作業系統上。EFI \(Extensible Firmware Interface）是 Intel 為 PC 韌體的體系結構、介面和服務提出的建議標准。其主要目的是為了提供一組在 OS 加載之前（啟動前）在所有平台上一致的、正確指定的啟動服務，被看做是有近20多年歷史的 BIOS 的繼任者。 UEFI是由EFI1.10為基礎發展起來的，它的所有者已不再是Intel，而是一個稱作Unified EFI Form的國際組織。
 
 * UEFI：簡單來說就是改良版的BIOS，但UEFI不能稱為BIOS，在新的主機板看到圖形化介面，以及可以用滑鼠鍵盤操作的”BIOS”畫面，就是UEFI介面。很多人混淆的一點，沒有’UEFI BIOS’。不過為了方便說明與避免混淆，仍會習慣使用”BIOS”代稱，但請不要認為UEFI是某種BIOS。
 
@@ -39,9 +39,14 @@ Secure Boot要求原生UEFI環境，即不能開啟CSM，也就是開啟Secure B
 
 UEFI只能裝在GPT模式的硬碟。
 
-GPT硬碟可支援到18ET，可分割128磁區\(128個C.D.E槽\)。MBR硬碟支援到2TB，最多可分個4個主要磁區\(4個C.D.E槽\)。當使用2TB以上硬碟請用GPT模式，否則MBR只認2TB內容，其他皆會浪費掉。
+GPT，一種新型磁盤模式，與我們常用的MBR磁盤相比更穩定，自糾錯能力更強，一塊磁盤上主分區數量不受限制，硬碟可支援到18ET，可分割128磁區\(128個C.D.E槽\)。
 
-GPT即是EFI的標準，用來替代以MBR開機的BIOS，並UEFI只能裝在GPT上，而Win7的32位元不支援GPT啟動作業系統\(啟動Windows\)，但可以單純讀取GPT硬碟當儲存碟。只有Win7 64位元可以以GPT啟動作業系統，W8之後則不論32、64皆可以。
+MBR，主引導記錄，一種磁盤分區模式。硬碟支援到2TB，最多可分個4個主要磁區\(4個C.D.E槽\)。當使用2TB以上硬碟請用GPT模式，否則MBR只認2TB內容，其他皆會浪費掉。
+
+* BIOS+MBR：可重啟系統，所有系統可支援，不支援大於2T的硬盤。
+* BIOS+GPT：不可重啟系統，可以做資料碟使用，不可引導系統。
+* UEFI+MBR：可重啟系統，同BIOS+MBR 。
+* UEFI+GPT：可重啟系統，可使用大於2T硬盤作為系統盤使用，僅64為系統可用。
 
 ## 純UEFI的限制
 
