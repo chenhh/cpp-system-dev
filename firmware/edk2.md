@@ -1,5 +1,13 @@
 # EDK2
 
+## 簡介
+
+UEFI全名為Unified Extensible Firmware Interface，目前由UEFI協會管理與制定規格。UEFI推出一套稱為EDK（EFI Development Kit，而穩定發佈版稱之為UDK）開放原始碼的開發套件，裡面除了已經定義好的標準外（如C的header file），還有許多被已被開發出的標準程式模組。
+
+### UDK
+
+全名為UEFI Development Kit ，是在做UEFI開發所需要的軟體套件，然後UDK是在EDK2當中比較穩定的release，因為UDK的releases 會透過Intel架構平台測試。
+
 ## Package的概念
 
 在EDK寫UEFI driver的時候沒有模組\(module\)的概念。開發的時候是以 driver\(UEFI的可執行檔\)為單位，並不會考慮一些模組化的問題。 
