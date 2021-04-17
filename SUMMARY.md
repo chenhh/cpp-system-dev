@@ -116,8 +116,6 @@
 * [保護環\(protection rings\)](operating-system/protection-rings.md)
 * [NUMA架構](operating-system/numa.md)
 * [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
-* [BIOS](operating-system/bios.md)
-* [UEFI](operating-system/uefi.md)
 * [中斷\(interrupt\)](operating-system/interrupt.md)
 * [系統呼叫\(system call\)](operating-system/xi-tong-hu-jiao-system-call.md)
 * [Windows API](operating-system/windows-api.md)
@@ -157,4 +155,10 @@
 
 * [平行處理簡介](parallel-processing/parallel-processing-introduction.md)
 * [平行計算簡介](parallel-processing/basic-parallel-computing.md)
+
+## 韌體 <a id="firmware"></a>
+
+* [BIOS](firmware/bios.md)
+* [UEFI](firmware/uefi.md)
+* [EDK2](firmware/edk2.md)
 
