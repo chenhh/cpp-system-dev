@@ -108,6 +108,7 @@
 
 ## 作業系統 <a id="operating-system"></a>
 
+* [開機流程](operating-system/computer-start.md)
 * [記憶體管理\(memory management\)](operating-system/memory-management/README.md)
   * [分頁\(paging\)](operating-system/memory-management/fen-ye-paging.md)
   * [虛擬記憶體\(virtual memory\)](operating-system/memory-management/virtual-memory.md)
