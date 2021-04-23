@@ -126,7 +126,7 @@ chenhh@eva00 tmp $ndisasm -o0x7c00 mbr.raw
 * 第二行就是機器指令，對比上面的二進制檔案，我們可以看到他們是一一對應的。
 * 第三行就是反編譯出來的組語指令：第一部分是一段清除螢幕指令的程式碼，不然螢幕會亂糟糟出現 QEMU 本身的 bios 輸出。第二部分就是為什麼能在螢幕上列印出 hello。第三部分都是 0，其實這不是指令，但如果硬要給他解讀成指令也是可以的。
 
-### 使用組合語言編譯成MBR
+### 使用組合語言編譯MBR
 
 ```cpp
 ; nasm -o mbr.bin mbr.asm
@@ -169,8 +169,4 @@ dd if=mbr.bin of=mbr.raw bs=512 count=1
 # 啟動QEMU
 qemu-system-i386 mbr.raw
 ```
-
-
-
-
 
