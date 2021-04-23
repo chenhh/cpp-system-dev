@@ -154,5 +154,21 @@ times 510-($-$$) db 0
 db 0x55,0xaa
 ```
 
+使用QEMU建立一個空的虛擬硬碟，再將編譯出來的mbr.bin寫入前512位元組，一樣可開機得到相同的結果。
+
+```bash
+# 建立大小為1440K的硬碟
+qemu-img create -f raw mbr.raw 1440K
+
+# 將 mbr.bin 檔案的內容，裝載到 mbr.raw 這個空硬碟
+# 映像檔案的第一扇區
+dd if=mbr.bin of=mbr.raw bs=512 count=1
+
+# 啟動QEMU
+qemu-system-i386 mbr.raw
+```
+
+
+
 執行命令`nasm -o mbr.bin mbr.asm`，可以看到檔案夾下多了一個叫 mbr.bin 的檔案，其內容與mbr.raw一致。
 
