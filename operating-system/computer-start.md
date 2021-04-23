@@ -96,3 +96,31 @@ qemu-system-x86_64 mbr.raw
 
 ![QEMU&#x57F7;&#x884C;mbr.raw&#x7684;&#x7D50;&#x679C;](../.gitbook/assets/qemu_mbr_hello-min.png)
 
+使用`ndisasm -o0x7c00 mbr.raw` 反組譯，且重定位至0x7c00。
+
+```erlang
+chenhh@eva00 tmp $ndisasm -o0x7c00 mbr.raw
+00007C00  B80006            mov ax,0x600
+00007C03  BB0007            mov bx,0x700
+00007C06  B90000            mov cx,0x0
+00007C09  BA4F18            mov dx,0x184f
+00007C0C  CD10              int 0x10
+00007C0E  B800B8            mov ax,0xb800
+00007C11  8EE8              mov gs,ax
+00007C13  65C606000068      mov byte [gs:0x0],0x68
+00007C19  65C606020065      mov byte [gs:0x2],0x65
+00007C1F  65C60604006C      mov byte [gs:0x4],0x6c
+00007C25  65C60606006C      mov byte [gs:0x6],0x6c
+00007C2B  65C60608006F      mov byte [gs:0x8],0x6f
+00007C31  0000              add [bx+si],al
+00007C33  0000              add [bx+si],al
+...
+00007DF9  0000              add [bx+si],al
+00007DFB  0000              add [bx+si],al
+00007DFD  0055AA            add [di-0x56],dl
+```
+
+0x7C00至0x7C0C呼叫系統中斷清除螢幕。0x7C0E至0x7C2B為輸出hello。
+
+* 第一行就是記憶體位址，第一例 00007C00，對應了之前說的 BIOS 會把啟動區的程式碼加載到記憶體 0x7C00 這個位址。
+
