@@ -96,7 +96,7 @@ qemu-system-x86_64 mbr.raw
 
 ![QEMU&#x57F7;&#x884C;mbr.raw&#x7684;&#x7D50;&#x679C;](../.gitbook/assets/qemu_mbr_hello-min.png)
 
-使用`ndisasm -o0x7c00 mbr.raw` 反組譯，且重定位至0x7c00。
+使用`ndisasm -o0x7c00 mbr.raw` 反組譯\(預設為x86 16-bit\)，且重定位至0x7c00。
 
 ```erlang
 chenhh@eva00 tmp $ndisasm -o0x7c00 mbr.raw
@@ -122,5 +122,37 @@ chenhh@eva00 tmp $ndisasm -o0x7c00 mbr.raw
 
 0x7C00至0x7C0C呼叫系統中斷清除螢幕。0x7C0E至0x7C2B為輸出hello。
 
-* 第一行就是記憶體位址，第一例 00007C00，對應了之前說的 BIOS 會把啟動區的程式碼加載到記憶體 0x7C00 這個位址。
+* 第一行就是記憶體位址，第一列 00007C00，對應了之前說的 BIOS 會把啟動區的程式碼加載到記憶體 0x7C00 這個位址。
+* 第二行就是機器指令，對比上面的二進制檔案，我們可以看到他們是一一對應的。
+* 第三行就是反編譯出來的組語指令：第一部分是一段清除螢幕指令的程式碼，不然螢幕會亂糟糟出現 QEMU 本身的 bios 輸出。第二部分就是為什麼能在螢幕上列印出 hello。第三部分都是 0，其實這不是指令，但如果硬要給他解讀成指令也是可以的。
+
+### 使用組合語言編譯成MBR
+
+```cpp
+; nasm -o mbr.bin mbr.asm
+;----BIOS把啟動區加載到記憶體的該位置，所以需設置位址偏移量
+section mbr vstart=0x7c00
+
+;----螢幕中斷，目的是清除螢幕
+mov ax,0x0600
+mov bx,0x0700
+mov cx,0
+mov dx,0x184f
+int 0x10
+
+;----直接往顯示記憶體中寫資料
+mov ax,0xb800
+mov gs,ax
+mov byte [gs:0x00],'h'
+mov byte [gs:0x02],'e'
+mov byte [gs:0x04],'l'
+mov byte [gs:0x06],'l'
+mov byte [gs:0x08],'o'
+
+;----512字節的最後兩位元是啟動區標識
+times 510-($-$$) db 0
+db 0x55,0xaa
+```
+
+執行命令`nasm -o mbr.bin mbr.asm`，可以看到檔案夾下多了一個叫 mbr.bin 的檔案，其內容與mbr.raw一致。
 
