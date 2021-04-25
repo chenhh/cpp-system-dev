@@ -60,3 +60,5 @@ Segment 暫存器（稱為 Segment Selector）則是用來選擇想要使用的 
 
 **在保護模式中，每一個 segment 都有一個 segment descriptor，描述這個 segment 的位置、大小、型態、存取權限等等資料。**Segment 的位置是以「基底位址」來表示，基底位址是一個線性位址。要存取 segment 中的某個位址，需要指定一個 offset 位址，而實際的線性位址則是將 segment 的基底位址加上 offset 就可以得到。
 
+![](../.gitbook/assets/linear_and_logical_address.gif)
+
