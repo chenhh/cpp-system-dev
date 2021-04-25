@@ -260,6 +260,26 @@ jmp $
 ```
 {% endcode %}
 
+### 全域性段描述符表（GDT）
+
+### 段描述符\(segment descriptor\)
+
+真實模式中，CS:IP中的值，只要將將CS段左移 4 位，加上IP位址，就可得到最終的實體位址。
+
+在保護模式下，段基址暫存器中存的資料，被理解為段選擇子\(segment selector\)，根據這個值去我們自己在記憶體中寫好的段描述符表中找，找到對應的段描述符，從中取出段基址。用這個段基址加上偏移位址，最終得到實體位址。
+
+那自然就有兩個問題，一個是段描述符表的結構，決定了我們往記憶體中寫的資料結構是什麼。另一個就是去哪找段描述符表，這個就需要告訴處理器為我們提前預留好的暫存器，也就是 lgdt 指令。
+
+![&#x6BB5;&#x63CF;&#x8FF0;&#x5B50;&#x7D50;&#x69CB;](../.gitbook/assets/segment_descriptor.gif)
+
+![&#x6BB5;&#x9078;&#x64C7;&#x5B50;&#x7D50;&#x69CB;](../.gitbook/assets/segment_selector.gif)
+
+### 段描述表\(segment description table\)
+
+
+
+
+
 
 
 
