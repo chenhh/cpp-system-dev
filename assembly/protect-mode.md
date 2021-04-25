@@ -153,3 +153,29 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 此外，在 Linux 作業系統中還有一種用法：Linux 作業系統的核心部分常常需要使用實體位址，因此在 Linux 中，應用程式和核心是使用不同的分頁目錄。核心的分頁目錄便是將線性記憶體直接對映到實體記憶體中。在這種情形下，就很適合使用 4MB 的分頁模式。不過，要注意一點：4MB 的分頁模式，只有在 Pentium 及以後的處理器才能使用。
 
+## 分段架構\(segment\)
+
+**在保護模式中，分段暫存器是存放 segment selector 的。**共有六個分段暫存器：CS、DS、ES、FS、GS、和 SS，它們的用途和在真實模式中類似（例如，CS 指向程式碼的 segment，而 SS 指向堆疊的 segment）。
+
+Segment selector 由三個欄位組成：索引、Table Indicator（TI）、和 Requested Privilege Level（RPL）。
+
+* 索引是 segment 在 GDT（或 LDT）中的位置，而
+* TI 表示所要使用的 descriptor table（GDT 或 LDT），
+* RPL 則是該 selector 的特權等級。
+
+![](../.gitbook/assets/segment_selector.gif)
+
+索引共有 13 bits，因此在一個 descriptor table 中，最多可以有 8192 個 segment。
+
+**處理器把索引的值乘上 8（一個 segment descriptor 的大小），再加上 GDTR（或 LDTR，根據 TI 的設定）的位址，就得到 segment descriptor 的位址（GDTR 和 LDTR 分別是 GDT 和 LDT 的基底位址**）。
+
+當 TI 為 0 時，會取用 GDT 中的 segment descriptor，而 TI 為 1 時，則會取用 LDT 中的 segment descriptor。
+
+RPL 有 2 bits，範圍可以由 0 至 3（0 的特權等級最高，而 3 最低）。
+
+**處理器不會使用 GDT 的第 0 個位置（稱為 null segment）。因此，可以把所有不會用到的分段暫存器設成 null segment（把索引和 TI 均設為 0），以表示目前沒有使用這個分段暫存器**。如果試圖要存取 null segment，處理器會發出例外。此外，若把 CS 或 SS 設成 null segment，處理器也會發出 general-protection 例外。
+
+在處理器內部，實際上分段暫存器除了 segment selector 的部份外（這部份稱為 Visible Part），還有一個 Hidden Part。這是為了避免處理器在存取邏輯記憶體時，還要到記憶體中讀取 descriptor table 所造成的額外負擔。當一個分段暫存器被指定一個 segment selector 時，處理器會自動讀入 descriptor table 中的一些資料，並把這些資料放到分段暫存器中。如此一來，處理器就不需要每次都去讀取 descriptor table 中的資料了。不過，如果系統上有多個處理器共用同一個 descriptor table 時，則作業系統要負責在 descriptor table 改變時，重新指定分段暫存器，否則暫存器中的資訊可能會是舊的，而導致錯誤的結果。
+
+ 
+
