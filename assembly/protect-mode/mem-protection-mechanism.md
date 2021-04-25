@@ -56,7 +56,35 @@ IA-32 的保護機制，基本上是架構在**「特權等級」上（在 segme
 
 Gate 有四種：call gates、trap gates、interrupt gates、和 task gates。在這裡，只討論 call gates；trap gates 和 interrupt gates 在「中斷／例外處理」中會說明，而在「多工處理」中會說明 task gates。利用 call gate，才可以在不同權限的程式之間來回。
 
+### call gate
 
+![](../../.gitbook/assets/call_gate.gif)
+
+Call gate descriptor 可以在 GDT 或 LDT 中，不過不能在 IDT（Interrupt descriptor table）中。它指出了程式所在的 segment（由 Segment Selector 欄位指定），並指出了程式在該 segment 中的偏移量（程式的進入點），及呼叫者所需要的特權等級（由 DPL 指定）。如果需要堆疊切換，它還指出需要參數的個數。而上面的 P 則是表示 call gate 是否有效。
+
+P 通常是設為 1，表示這是一個有效的 call gate。有時候，在某些特殊的情形下，會想要把 P 設為 0。例如，想要知道這個 call gate 被呼叫了幾次，可以把 P 設為 0，則在呼叫這個 call gate 時，會發出 not-present 例外。在例外處理程式中，把計數加一，再把 P 設為 1，讓程式繼續執行，這樣就可以追蹤這個 call gate 被呼叫的次數了。
+
+用 CALL 命令或 JMP 命令都可以呼叫 call gate。呼叫時，把 segment selector 指向要呼叫的 call gate descriptor，而偏移量還是要指定，但是會被忽略（在 call gate 中有偏移量）。經由 call gate 呼叫時，CPL 和 RPL 都要小於 call gate 的 DPL；也就是說，call gate 的 DPL 指定「可容許的最高權限」。如果呼叫者的 CPL（或 RPL）比 call gate 的 DPL 還小（權限更高），則不能呼叫。
+
+在使用 CALL 命令呼叫 call gate 時，無論目標 segment 是否為 conforming，該 segment（非 call gate）的 DPL 都必須小於或等於呼叫者的 CPL。但若用 JMP 命令呼叫 call gate 時，在目標 segment 是 conforming 時，和使用 CALL 命令呼叫時相同。但是若目標 segment 是 nonconforming，則目標 segment 的 DPL 必須和呼叫者的 CPL 相同，才能呼叫。也就是說，只能用 CALL 命令呼叫權限較高的程式，而不能用 JMP 跳到權限較高的程式碼中。
+
+利用 call gate，可以在同一個程式 segment 中的各個程序設定不同的特權等級。例如，作業系統核心的程式 segment 中，有些程序是可供應用程式呼叫的 API；有些則是內部使用的程序，不希望由應用程式呼叫。這時，就可以把 API 的 call gate 的 DPL 設為 3，而將內部程式的 call gate 的 DPL 設為 1 或 0。
+
+在經由 call gate 呼叫，將控制權轉移到新的程式 segment 之後，CPL 會變成和程式 segment 的 DPL 相同。
+
+### 堆疊切換
+
+為了避免權限較高的程式被權限較低的呼叫者影響，在 CPL 改變時，處理器會進行堆疊切換。每一個 task 對所有用到的特權等級，都要維護分開的堆疊。在 ring 3 中的堆疊指標，是直接存放在 SS 和 ESP 中；而 ring 2、ring 1、ring 0 的堆疊指標（由一個 segment selector 和一個 offset 組成）則存放在 TSS 中。當 CPL 變小時，處理器會載入 TSS 中相對映的堆疊指標，切換到新的堆疊。這三個堆疊指標在程式執行途中是不能改變的。當然，如果作業系統只用到兩個特權等級（例如，只用到 ring 0 和 ring 3），則可以只維護兩個堆疊。在特權等級較高的程序返回到 ring 3 的程序時，會回復原來的 SS 和 ESP。因為在切換特權等級時，會自動進行堆疊切換，所以即使作業系統不使用多工處理的能力，也必須定義一個 TSS，來指定這些堆疊。
+
+作業系統必須負責維護適當的堆疊空間給各個權限使用，並在 TSS 中指定適當的堆疊指標。堆疊的大小必須夠大，至少要能放得下呼叫者的 SS、ESP、CS、EIP，和程序的參數，及程序在執行時所需的區域變數。如果程序是中斷或例外處理程式，則還要能放下 EFLAGS 和錯誤碼。
+
+由於在呼叫權限較高的程序時，會有堆疊切換，因此還必須把呼叫者所推到堆疊中的參數複製到新的堆疊中。在 call gate 中的「參數個數」欄位，就是用來指定參數的個數（最多可達 31 個）。處理器在堆疊切換時，會依序把呼叫者的 SS、ESP、參數、CS、和 EIP 推到新的堆疊中。如果程序所需要的參數超過 31 個，則可以傳入一個指標，指向一塊資料結構，或是利用呼叫者的 SS 和 ESP 來取得呼叫者的堆疊中存放的參數資料。
+
+### 由程序中返回
+
+在程序中，遇到 RET 指令時，會回到呼叫者程序中。近程（在同一 segment 中）的 RET 指令，因為沒有牽涉到權限的改變；因此，處理器只會進行邊界檢查，確保堆疊中存放的返回位址是在 segment 的範圍之內。但遠程的 RET 指令可能會需要在返回時，同時改變 CPL；因此，除了邊界檢查之外，處理器還會檢查返回的目標的 segment 的權限（即該 segment 的 DPL）是否大於或等於目前的 CPL。因為，只有權限較低的程序可以呼叫權限較高的程序，因此在返回時，目標 segment 的權限必然是比較低的。如果不是的話，就表示堆疊中返回位址是不正確的。
+
+在返回時，處理器利用堆疊中存放的 CS 中的 RPL 值來判斷是否需要改變權限。如果 RPL 的值比目前的 CPL 還大（權限較低），則表示在返回時，需要改變權限。如果需要改變權限，則同時也需要切換堆疊。因此，處理器會在載入 CS、EIP 之後，再載入堆疊中存放的 SS、ESP（在呼叫程序時推入堆疊中，參考上節說明）。當然，處理器還是會檢查 SS 和 ESP 是否合法。最後，處理器會檢查各個資料分段暫存器（DS、ES、FS、GS）是否指向 DPL 比新的 CPL 更小（權限更高）的 segment。處理器會把指向 DPL 較小的分段暫存器設為 null selector；不過，指向一個權限較高的 conforming 的程式碼 segment 原本就是合法的，所以如果某個資料分段暫存器是指向 conforming 的程式碼 segment，則不會被設為 null selector。
 
  
 
