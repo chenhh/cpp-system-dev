@@ -35,6 +35,34 @@ IA-32 的保護機制，基本上是架構在**「特權等級」上（在 segme
 
 **特權等級的檢查，是在把 segment selector 載入分段暫存器的時候進行的**。對堆疊 segment 而言，雖然在性質上類似資料 segment，但是堆疊 segment 的 segment selector 在載入 SS 暫存器時，其 CPL 和 segment 的 DPL 必需相同（如同 non-conforming 的程式 segment 一般），否則會導致 general-protection fault（\#GP）。
 
+### 特權指令
+
+有一些系統方面的指令，只有特權等級為 0（權限最高）的程序才可以使用。如果一個 CPL 不為 0 的程序試圖執行這些指令，會導致 general-protection fault（\#GP）。其中的一些指令則可以設定為可在 CPL 不為 0 的程序中執行。
+
+下面列出這些特權指令：
+
+* LGDT － 載入 GDTR。
+* LLDT － 載入 LDTR。
+* LTR － 載入工作暫存器（task register）。
+* LIDT － 載入 IDTR。
+* MOV（控制／除錯暫存器） － 載入或儲存控制／除錯暫存器（CRx 和 DRx）。
+* LMSW － 載入 MSW（Machine Status Word）。
+* CLTS － 清除 CR0 中的 task-switched 旗標。
+* INVD － 將 cache 設為無效，不寫回資料。
+* WBINVD － 將 cache 設為無效，寫回資料。
+* INVLPG － 將 TLB 的 entry 設為無效。
+* HLT － 停止處理器動作。
+* RDMSR － 讀取 MSR（Model-Specific Registers）。
+* WDMSR － 寫入 MSR。
+* RDPMC － 讀取 PMC（Performance-Monitoring Counter）。
+* RDTSC － 讀取 TSC（Time-Stamp Counter）。
+
+把 CR4 的 PCE 旗標（第 4 bit）設為 1，可以使 RDPMC 指令可在任何 CPL 下執行。把 CR4 的 TSD 旗標（第 2 bit）設為 1，則可使 RDTSC 指令可在任何 CPL 下執行。
+
+在 EFLAGS 旗標中的 IOPL（第 12 bit 和第 13 bit），設定存取輸出入位址空間（I/O address space）所需的最低權限。例如，如果 IOPL 設為 1，則只有 CPL 為 0 和 1 的程序可以執行 I/O 指令，和存取 I/O 記憶體。這個旗標只能在 CPL 為 0 的程序中，利用 POPF 或 IRET 命令更改。
+
+ 
+
 ## 控制權轉移
 
 程式可以經由執行 JMP、CALL、RET、INT n、和 IRET 指令來轉移控制權。在處理器發生例外（exception）、或是中斷（interrupt）、及 IRET 指令是比較特別的（參考「中斷／例外處理」）。
@@ -115,6 +143,63 @@ P 通常是設為 1，表示這是一個有效的 call gate。有時候，在某
 存取 GDT、LDT、或 IDT 的內容。
 
 呼叫權限較高的程序，或是發生中斷（或例外）時，存取內部的堆疊。
+
+## 邊界檢查
+
+邊界檢查是用來確保所有對 segment 的存取動作，都在 segment 的有效範圍內。一個 segment 的有效範圍，由 segment descriptor 中的參數來決定。決定有效範圍的方式如下：
+
+若 B = 0，則範圍的最大值 MAX 為 FFFFH；若 B = 1，則 MAX 為 FFFFFFFFH。
+
+若 G = 0，則有效邊界 LIMIT 即為 descriptor 中的邊界值，即有效邊界可以從 0 到 FFFFFH。若 G = 1，則有效邊界的最左端 12 bit 不被檢查，即有效邊界可以從 FFFH 到 FFFFFFFFH；也就是說，若邊界值是 0，有效邊界 LIMIT 則是 FFFH，若邊界值是 1，則 LIMIT 是 1FFFH。
+
+若 segment 是資料 segment，而且其 E = 1，則有效範圍是 LIMIT + 1 到 MAX。若 E = 0 或 segment 是程式碼的 segment，則有效範圍是 0 到 LIMIT。
+
+任何試圖存取在有效範圍之外的動作，都會導致例外（exception）。所以，試圖在 LIMIT - 1 的地方讀取一個 word（16 bit），也會導致例外。
+
+除了對一般的 segment 有邊界檢查之外，對 GDT 和 IDT 也會進行邊界檢查。在 GDTR 和 IDTR 中存放的邊界值可以避免存取到 GDT 和 IDT 外面的值。同樣的，在 LDTR 和工作暫存器（task register）中也有存放從 segment descriptor 中讀取的邊界值，所以對 LDT 和 TSS 也會進行邊界檢查。
+
+## 型態檢查
+
+型態檢查是用來避免對 segment（或 gate，gate 是一種系統 segment）進行不適當的動作，例如把資料 segment 當成程式執行。Segment 的型態由 S 旗標和型態位元決定（參考「記憶體管理」的「分段架構」）。
+
+型態檢查有下面幾種（這裡只是舉一些例子）：
+
+分段暫存器的檢查：
+
+* 只有程式碼的 segment selector 能被載入到 CS 中。
+* 不能讀取的程式 segment selector（R = 0）不能載入到 DS、ES、FS、GS 中。
+
+只有能寫入的資料 segment selector（W = 1）被載入到 SS 中。
+
+不能把 null segment（GDT 的第 0 個 segment descriptor）載入到 CS 或 SS 中。
+
+LDTR 或工作暫存器的檢查：
+
+只有 LDT 的 segment selector 能被載入到 LDTR 中。
+
+只有 TSS 的 segment selector 能被載入到工作暫存器中。
+
+存取 segment 中的資料時的檢查：
+
+不能把資料寫入一個可執行的 segment（程式碼 segment）。
+
+不能把資料寫入 W = 0（不允許寫入）的資料 segment。
+
+不能讀取 R = 0（不允許讀取）的程式碼 segment 中的資料。
+
+不能對 null segment 進行存取。
+
+指令中有分段暫存器時的檢查：
+
+跨段的（far）CALL 或 JMP 指令，只能到程式碼 segment、call gate、task gate、或是 TSS。
+
+載入一些系統暫存器的指令（如 LLDT、LTR、LAR、LSL）所參考的 segment descriptor 的型態必須相符。
+
+IDT 的 entry 必須是 interrupt gate、trap gate、或是 task gate。
+
+ 
+
+
 
  
 
