@@ -177,5 +177,45 @@ RPL 有 2 bits，範圍可以由 0 至 3（0 的特權等級最高，而 3 最�
 
 在處理器內部，實際上分段暫存器除了 segment selector 的部份外（這部份稱為 Visible Part），還有一個 Hidden Part。這是為了避免處理器在存取邏輯記憶體時，還要到記憶體中讀取 descriptor table 所造成的額外負擔。當一個分段暫存器被指定一個 segment selector 時，處理器會自動讀入 descriptor table 中的一些資料，並把這些資料放到分段暫存器中。如此一來，處理器就不需要每次都去讀取 descriptor table 中的資料了。不過，如果系統上有多個處理器共用同一個 descriptor table 時，則作業系統要負責在 descriptor table 改變時，重新指定分段暫存器，否則暫存器中的資訊可能會是舊的，而導致錯誤的結果。
 
+### Segment Descriptor
+
+Segement Descriptor 存放在 GDT 或 LDT 中，是描述一個 segment 的資料結構。每一個 segment descriptor 都是 8 bytes。
+
+![](../.gitbook/assets/segment_descriptor.gif)
+
+在 Segment Descriptor 中，基底位址（共 32 bits）被分為三個部份，而分段邊界（共 20 bits）則被分為兩個部份。
+
+* **分段邊界表示一個 segment 的大小**，但是因為它只有 20 bits，所以用 G 來表示它的單位。
+  * 當 G 為 0 時，大小是以 byte 為單位，即 segment 最大可以到 1MB。
+  * 當 G 為 1 時，則 segment 的大小是以 4KB 為單位，即 segment 的大小最小是 4KB，最大是 4GB。在以 4KB 為單位時，位址最右邊的 12 bits 在測試 segment 邊界時會被忽略（例如，即使把分段邊界設為 0，在位址 0 到 4095 仍然是合法的）。如果程式試圖存取在 segment 邊界之外的資料，則會產生例外。這樣可以保護其它的 segment 不會被不正確的程式所影響。
+* **P 是用來指示 segment 是否存在記憶體中**。
+  * 如果 P = 0，則表示 segment 目前不在記憶中；反之，若 P = 1，則表示 segment 在記憶體中。
+  * 當把一個 P = 0 的 segment descriptor 載入到分段暫存器中的時候，處理器會發出一個 segment-not-present 的例外。
+  * 記憶體管理程式可以利用這個特性，來進行虛擬記憶體管理。這提供了一個不使用分頁功能，也可以進行虛擬記憶體管理的方式。當 P = 0 時，segment descriptor 中的低字組（在上面標示為 0 的字組）可供系統程式自由使用，而高字組（標示為 4 的字組）的 bit 0 ~ bit 7 和 bit 16 ~ bit 31 也都可以供系統程式使用。作業系統可以利用這些空間來存放相關的資訊，例如分段在 swap file 中的位置等等。
+* Segment descriptor 的高字組中的第 20 個 bit 是可供系統程式自由使用的 bit，作業系統可以在這裡存放相關的資訊。第 21 個 bit 則保留，一定要設為 0。
+* D/B 在不同的狀況下，有不同的意義。**當 segment 是一個可執行的程式碼的 segment，則這個旗標叫 D**。
+  * D = 0 表示在這個 segment 中的程式內定使用 16-bit 的位址，而 D = 1 表示在這個 segment 中的程式內定使用 32-bit 的位址。
+  * **若 segment 是一個堆疊或是資料的 segment ，則這個旗標叫 B**。B = 0 表示這是一個 16-bit 的 segment，最大值為 FFFFH，而 B = 1 則表示這是一個 32-bit 的 segment，最大值為 FFFFFFFFH。
+
+## 分段的型態
+
+在 segment descriptor 中的 **S 旗標，在 S = 0 時表示 segment 是一個系統 segment（如 LDT），而 S = 1 時則表示這是一個一般的程式／資料 segment。在 S = 1 時，型態的最左邊的 bit（即第 11 個 bit）為 0 表示這是一個資料 segment，否則表示這是一個程式 segment**。
+
+資料 segment 存放程式所用的資料，而堆疊 segment 也算是一種資料 segment。
+
+資料 segment 的型態位元，由右至左分別稱為 A、W、和 E（分別是第 8、9、10 bit）。A 是 accessed，而 W 是 Write-enable，E 是 expand-direction。
+
+* A 位元若設為 0，則在對這個 segment 進行任何存取動作之後，處理器會把 A 設為 1。這個功能可以用在虛擬記憶體管理中，判斷一個 segment 是否需要更新；也可以用來做 debug 的用途。
+* W 位元若設為 1，才可以把資料寫入 segment 中。所以，不希望被意外變更的 segment，可以把它的 W 設為 0。不過，若把一個唯讀（W = 0）的 segment 載入 SS 中，會導致 General-protection 的例外。
+* 而 E 位元是 segment「擴展」的方向。一般的 segment（E = 0）是由下往上的，即其偏移量 offset 是由 0 至 segment 的邊界。但是有時候可能會需要由上往下的 segment，例如堆疊 segment 若由上往下會更有彈性（可以動態改變大小），這時就可以把 E 設為 1。E 設為 1 的時候，segment 的有效範圍會是由 segment 的邊界到 segment 的最大值（在 16-bit 的 segment 為 FFFFH，而 32-bit 的 segment 為 FFFFFFFH）。
+
+在程式碼 segment 中，型態位元由右至左分別稱為 A（Accessed）、R（Read-enable）、和 C（Conforming）。
+
+* 這裡的 A 位元和資料 segment 的 A 位元完全相同。
+* **R 位元則是指出 segment 是否可讀取**。程式碼 segment 可以是只能執行，但是不能讀取。若 R = 0，則不能讀取 segment 裡面的程式（但還是可以執行），若 R = 1，則可以讀取 segment 裡面的程式。
+* **C 位元為 1 時，則允許特權等級（CPL）較低（CPL 數字較大）的 segment（裡面的程式）直接執行這個 segment（以原來的 CPL）**。若 C = 0，則不允許 CPL 較低的 segment 執行這個 segment（除非經由 call gate 或 task gate）註：CPL 較高的 segment 永遠不能直接執行 CPL 較低的 segment，即使 CPL 較低的 segment 把 C 設為 1 也不行。）
+
+系統 segment（S = 0）則有很多種，種類同樣是由型態位元決定。例如，有些 segment 是存放 LDT 的，有些是存放 gate 的。系統 segment 的型態位元如下表所示：
+
  
 
