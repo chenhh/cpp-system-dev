@@ -94,3 +94,17 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 ![](../.gitbook/assets/paging_entity.gif)
 
+## 設定分頁功能
+
+在控制暫存器（control registers）中，有三個和分頁功能有關的旗標：
+
+* PG（CR0 的 bit 31）
+* PSE（CR4 的 bit 4，在 Pentium 和以後的處理器才有）
+*  PAE（CR4 的 bit 5，在 Pentium Pro 和 Pentium II 以後的處理器才有）
+
+
+
+* PG（paging）旗標設為 1 時，就會開啟分頁功能。
+* PSE（page size extensions）旗標設為 1 時，才可以使用 4MB 的分頁大小（否則就只能使用 4KB 的分頁大小）。
+* 而 PAE（physical address extension）是 P6 家族新增的功能，可以支援到 64GB 的實體記憶體。
+
