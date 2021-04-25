@@ -16,6 +16,7 @@
 * [暫存器\(register\)](assembly/register.md)
 * [保護模式\(protect mode\)](assembly/protect-mode/README.md)
   * [記憶體保護機制](assembly/protect-mode/mem-protection-mechanism.md)
+  * [中斷與例外處理](assembly/protect-mode/zhong-duan-yu-li-wai-chu-li.md)
 * [大端與小端\(big endian and little endian\)](assembly/big-endian-and-little-endian.md)
 * [組合語言格式\(Intel, AT&T格式\)](assembly/assembly-style.md)
 
