@@ -32,5 +32,7 @@ Abort：這種例外是非常嚴重的錯誤，沒有辦法返回原程式繼續
 
 因為在中斷或（有些）例外發生時，原程式必須能繼續執行，因此，中斷和例外一定是在指令和指令中間發生，而不會在指令進行的途中發生。
 
+[https://www.csie.ntu.edu.tw/~wcchen/asm98/asm/proj/b85506061/chap4/overview.html](https://www.csie.ntu.edu.tw/~wcchen/asm98/asm/proj/b85506061/chap4/overview.html)
+
 
 
