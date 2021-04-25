@@ -223,15 +223,20 @@ SELECTOR_VIDEO	equ	0x0003<<3
 
 protect_mode:
 ;進入32位
+	; 載入GDT
 	lgdt [lgdt_value]
+	; 開啟A20
 	in al,0x92
 	or al,0000_0010b
 	out 0x92,al
-	cli
+	cli ;禁止中斷
+	;將CR0的PE位置設為1
 	mov eax,cr0
 	or eax,1
 	mov cr0,eax
 	
+	;此時已經進入保護模式了，
+	; 段基址暫存器的意義已經變了，所以跳轉指令變成
 	jmp dword SELECTOR_CODE:main
 	
 [bits 32]
