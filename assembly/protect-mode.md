@@ -247,3 +247,11 @@ Segement Descriptor 存放在 GDT 或 LDT 中，是描述一個 segment 的資�
 
 在將 GDTR 存放到記憶體中的時候（使用 SGDT 指令），會在記憶體中存放一個 48-bit pseudo-descriptor。因為這個 pseudo-descriptor 是由一個 16 bit 的邊界值和 32 bit 的基底位址所組成的，因此，在存放 GDTR 時，要注意對齊的問題。要避免在某些狀況下（CPL = 3 且 EFLAGS 中的 AC = 1 時）發生 alignment check fault，最好是把 pseudo-descriptor 放在「奇數位址」，即除以 4 會餘 2 的位址。這樣，16 bit 的邊界會對齊在 2 的倍數，而 32 bit 的基底位址也會對齊在 4 的倍數，就不會發生 alignment check fault 了。在存放 IDTR 時，也要和存放 GDTR 時一樣。而存放 LDTR 或工作暫存器（task register）時，則要對齊在 4 的倍數上。
 
+## Segment 的規劃
+
+Segment 的彈性很大，可以應用在各種環境中。例如，在簡單的單工作業系統或是嵌入式系統中，可以把所有的 Segment（程式 segment、資料 segment、堆疊 segment 等等）的基底位址都定在 0000000H，大小則定為 4GB。
+
+而在比較複雜的系統上，可以把程式 segment 和資料 segment 分開（不重疊），甚至有多個不同的 segment。例如，在多工作業系統中，可以把一個（segment descriptor 在 GDT 中的）segment 分配給一個 process，在該 process 中再以 LDT 來分配區域性的 segment（如程式 segment、資料 segment 等等）。即使是在單工作業系統中，區分適當的 segment 也會有些好處。例如，segment 的保護機制（參考「保護機制」的「邊界和型態檢查」），可以加強系統的強固性，也可以幫助程式設計師找出程式中的錯誤。
+
+有些系統的 segment（例如：各種 gate、TSS、LDT 等）也是很重要的。把這些系統的 segment 和一般的 segment 分開，也可以避免程式意外破壞了這些系統 segment 的內容。當然，這樣就必須把修改這些系統 segment 內容獨立成為作業系統的 API，可能會稍微影響效率（經由作業系統提供的 API 來改變這些資料，總是比直接修改慢一點）。
+
