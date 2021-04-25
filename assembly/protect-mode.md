@@ -235,5 +235,15 @@ Segement Descriptor 存放在 GDT 或 LDT 中，是描述一個 segment 的資�
 | 1 | 1 | 1 | 0 | 32 bit Interrupt Gate |
 | 1 | 1 | 1 | 1 | 32 bit Trap Gate |
 
- 
+ 從上表可以可以看出，除了 LDT 和 Task Gate 之外（這兩者沒有 16 bit 和 32 bit 之分），bit 11 為 1 的均為 32 bit，而 bit 11 為 0 者為 16 bit，且其它 bit 完全相同。
+
+## Segment Descriptor Table
+
+系統中有兩種 Descriptor Table－GDT（Global Descriptor Table）和 LDT（Local Descriptor Table），每個 Descriptor Table 可以存放 8192 個 Segment Descriptors。**系統中一定要有一個 GDT，而 LDT 就可以有很多個，也可以不要 LDT。在系統中，GDT 可以被所有的程式和工作（task）所使用，而一個程式可能會有自己的 LDT**。
+
+**GDT 的基底位址存放在 GDTR 中，是一個線性位址**，也就是說，GDT 不算是一個 segment。在 GDTR 中除了存放 GDT 的基底位址外，也存放 GDT 的邊界。GDT 的邊界是以 byte 為單位的，但是因為一個 segment descriptor 總是 8 bytes 長，所以 GDT 的邊界應該設成 8N-1 的形式。
+
+**LDT 則和 GDT 不同。LDT 存放在一個系統 segment 中**，所以對使用者而言，只需要以一個 segment selector 就可以表示出一個 LDT 的位址和邊界了（當然，這個 segment selector 一定要指向 GDT 中的 segment descriptor）。不過，為了效率的因素，處理器在載入 LDTR 的時候，會自動載入它的線性基底位址和大小、屬性等等資訊。在多工環境下，每個工作可以有自己的 LDT，所以在工作切換時，會自動載入正確的值到 LDTR 中。
+
+在將 GDTR 存放到記憶體中的時候（使用 SGDT 指令），會在記憶體中存放一個 48-bit pseudo-descriptor。因為這個 pseudo-descriptor 是由一個 16 bit 的邊界值和 32 bit 的基底位址所組成的，因此，在存放 GDTR 時，要注意對齊的問題。要避免在某些狀況下（CPL = 3 且 EFLAGS 中的 AC = 1 時）發生 alignment check fault，最好是把 pseudo-descriptor 放在「奇數位址」，即除以 4 會餘 2 的位址。這樣，16 bit 的邊界會對齊在 2 的倍數，而 32 bit 的基底位址也會對齊在 4 的倍數，就不會發生 alignment check fault 了。在存放 IDTR 時，也要和存放 GDTR 時一樣。而存放 LDTR 或工作暫存器（task register）時，則要對齊在 4 的倍數上。
 
