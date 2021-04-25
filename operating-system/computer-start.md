@@ -170,3 +170,92 @@ dd if=mbr.bin of=mbr.raw bs=512 count=1
 qemu-system-i386 mbr.raw
 ```
 
+## 從真實模式到保護模式
+
+BIOS 通過載入並跳轉到 0x7C00（IBM系統訂定） 把控制權轉交給了作業系統的MBR，然後MBR 裡做的事就是通過載入LOADER 程式。
+
+Intel 8086 是1978 年所設計的 16 位微處理器晶片，為 x86 架構的始祖。緊接著 Intel 又推出了第一款 32 位元的處理器 Intel 80286（很快被淘汰，80386更經典一些），這款處理器由於和之前有很多不同的“保護”特性，所以稱為保護模式，也是與此同時，之前的 8086 這個 16 位元處理器才有了真實模式的叫法。保護模式至少是 32 位的，而真實模式是 16 位的（即使一個 32 位的處理器也有真實模式）。
+
+### 真實模式與保護模式的區別
+
+* 真實模式 16 位元，保護模式 32 位  元。
+* 真實模式下的位址是段暫存器位址偏移4位+偏移位址得到實體位址。保護模式下段暫存器存入了段選擇子，在段描述符表中尋找段基址，再加上偏移位址得到實體位址（開啟分頁下為邏輯位址）  。
+* 就是真實模式定址空間是 1M，保護模式是 4G  。
+* 段描述符表記錄了段的許可權，改變了真實模式下可以隨意存取所有記憶體的問題（這也是保護這兩個字的體現）。
+
+### 進入保護模式
+
+進入保護模式有三步：
+
+* 開啟 A20
+* 載入GDT \(Global Descriptor Table\)
+* 將 CR0 的 PE位置設為 1
+
+此時已經進入保護模式了，段基址暫存器的意義已經改變。
+
+{% code title="" %}
+```c
+section loader vstart=0x900
+
+jmp protect_mode
+
+gdt:
+;0描述符
+	dd	0x00000000
+	dd	0x00000000
+;1描述符(4GB程式碼段描述符)
+	dd	0x0000ffff
+	dd	0x00cf9800
+;2描述符(4GB資料段描述符)
+	dd	0x0000ffff
+	dd	0x00cf9200
+;3描述符(28Kb的影片段描述符)
+	dd	0x80000007
+	dd	0x00c0920b
+
+lgdt_value:
+	dw $-gdt-1	;高16位表示表的最後一個位元組的偏移（表的大小-1） 
+	dd gdt		;低32位表示起始位置（GDT的實體位址）
+
+SELECTOR_CODE	equ	0x0001<<3
+SELECTOR_DATA	equ	0x0002<<3
+SELECTOR_VIDEO	equ	0x0003<<3
+
+protect_mode:
+;進入32位
+	lgdt [lgdt_value]
+	in al,0x92
+	or al,0000_0010b
+	out 0x92,al
+	cli
+	mov eax,cr0
+	or eax,1
+	mov cr0,eax
+	
+	jmp dword SELECTOR_CODE:main
+	
+[bits 32]
+;正式進入32位
+main:
+mov ax,SELECTOR_DATA
+mov ds,ax
+mov es,ax
+mov ss,ax
+mov esp,LOADER_STACK_TOP
+mov ax,SELECTOR_VIDEO
+mov gs,ax
+
+mov byte [gs:0xa0],'3'
+mov byte [gs:0xa2],'2'
+mov byte [gs:0xa4],'m'
+mov byte [gs:0xa6],'o'
+mov byte [gs:0xa8],'d'
+
+jmp $
+```
+{% endcode %}
+
+
+
+
+
