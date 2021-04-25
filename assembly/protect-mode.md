@@ -62,3 +62,9 @@ Segment 暫存器（稱為 Segment Selector）則是用來選擇想要使用的 
 
 ![](../.gitbook/assets/linear_and_logical_address.gif)
 
+上圖中，顯示出 segment 的 segment descriptor 是存放在 Global Descriptor Table（GDT）或 Local Descriptor Table（LDT）中。GDT 和 LDT 都是由 segment descriptor 所組成的陣列。Segment selector 則可以視為這個陣列的 index。
+
+GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的基底位址則放在 LDTR 中（LDTR 也是一個暫存器）。
+
+分段架構可以有效地解決多工環境中，程式和資料的重定位（Reallocation）問題。利用分段架構，為程式和資料分別指定一個 segment，程式和資料都可以從 00000000H 開始取用，而不受程式和資料在記憶體中的位址影響。同時，分段架構也可以避免錯誤的程式意外地存取到不該存取的位址。
+
