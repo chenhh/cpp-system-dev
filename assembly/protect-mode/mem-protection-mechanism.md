@@ -35,6 +35,27 @@ IA-32 的保護機制，基本上是架構在**「特權等級」上（在 segme
 
 **特權等級的檢查，是在把 segment selector 載入分段暫存器的時候進行的**。對堆疊 segment 而言，雖然在性質上類似資料 segment，但是堆疊 segment 的 segment selector 在載入 SS 暫存器時，其 CPL 和 segment 的 DPL 必需相同（如同 non-conforming 的程式 segment 一般），否則會導致 general-protection fault（\#GP）。
 
+## 控制權轉移
+
+程式可以經由執行 JMP、CALL、RET、INT n、和 IRET 指令來轉移控制權。在處理器發生例外（exception）、或是中斷（interrupt）、及 IRET 指令是比較特別的（參考「中斷／例外處理」）。
+
+**除了中斷和例外之外，只有 JMP、CALL 和 RET 可以進行跨 segment 的跳躍**。在同一個 segment 中的跳躍（如 near 的 JMP、CALL、RET 和各個條件分支指令）並不會有任何限制。**但是在跨 segment 的跳躍時，就會檢查相關的權限是否允許進行跳躍**。跨 segment 的跳躍有以下幾種情形：
+
+* 直接跳躍到另一個程式 segment
+* 經由 gate
+
+直接跳躍到另一個程式 segment，當使用 CALL 或 JMP 直接跳躍到另一個程式 segment 時，會檢查目前的 CPL、目標 segment descriptor 的 DPL、目標 segment selector 的 RPL、和目標 segment descriptor 的 C 旗標。如果 C 旗標是 0，表示目標 segment 是一個 nonconforming 的程式 segment。在跳躍到 nonconforming 的 segment 時，CPL 一定要和目標的 DPL 相同，而且 RPL 一定要小於或等於 CPL，否則會導致 general-protection fault（\#GP）。而且，在跳躍到 nonconforming 的 segment 時，CPL 並不會改變，即使 RPL 比較小也是一樣。
+
+如果 C 旗標是 1，表示目標 segment 是一個 conforming 的程式 segment。在跳躍到 conforming 的程式 segment 中時，CPL 可以大於（權力較低）或等於 DPL；只有在 CPL 小於 DPL 時，才會導致 general-protection fault（\#GP），而 RPL 則沒有任何影響。即使是在跳躍到 DPL 比較高的 conforming 的 segment 時，CPL 也不會改變，且因為 CPL 沒有改變，也不會進行堆疊切換（stack-switch）。
+
+在作業系統中，可以把一些不會使用系統保護的部分的 API（例如，大部分的數學函式、和例外處理程式），設成 conforming 的 segment。這樣，一般的應用程式就可以直接使用這些 API。在呼叫這些 segment 時，CPL 並不會改變，可以避免在一個應用程式呼叫一個 DPL 權力較高的 segment 時，以較高的權力改變了某些應用程式不能改變或存取的地方。
+
+大部分其它的程式 segment 都應該設定成 nonconforming。
+
+經由 gate：如果一個應用程式無法呼叫權限（DPL）較高的程式 segment，那麼要怎麼讓程式呼叫系統的 API（通常權限較高）呢？答案是：經由 gate 呼叫。Gate 是一種系統 segment，而它的 segment descriptor 稱為 gate descriptor。
+
+Gate 有四種：call gates、trap gates、interrupt gates、和 task gates。在這裡，只討論 call gates；trap gates 和 interrupt gates 在「中斷／例外處理」中會說明，而在「多工處理」中會說明 task gates。利用 call gate，才可以在不同權限的程式之間來回。
+
 
 
  
