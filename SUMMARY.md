@@ -14,7 +14,7 @@
 * [連結器\(linker\)](assembly/linker/README.md)
   * [靜態連結\(static linking\)](assembly/linker/static-linking.md)
 * [暫存器\(register\)](assembly/register.md)
-* [真實與保護模式\(real and protect mode\)](assembly/real-and-protect-mode.md)
+* [保護模式\(protect mode\)](assembly/protect-mode.md)
 * [大端與小端\(big endian and little endian\)](assembly/big-endian-and-little-endian.md)
 * [組合語言格式\(Intel, AT&T格式\)](assembly/assembly-style.md)
 
