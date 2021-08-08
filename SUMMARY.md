@@ -165,3 +165,7 @@
 * [UEFI](firmware/uefi.md)
 * [EDK2](firmware/edk2.md)
 
+## rust語言
+
+* [簡介](rust-yu-yan/introduction.md)
+
