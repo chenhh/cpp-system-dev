@@ -167,5 +167,5 @@
 
 ## rust語言
 
-* [簡介](rust-yu-yan/introduction.md)
+* [Rust簡介](rust-yu-yan/introduction.md)
 
