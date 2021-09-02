@@ -139,7 +139,7 @@ fn main() {
 }
 ```
 
-## 整數溢位
+### 整數溢位
 
 在C語言中，對於無符號類型，算數運算永遠不會overflow，如果超過表示範圍，則自動捨棄高位資料。對於有符號類型，如果發生了overflow，標準規定這是undefined behavior，也就是說隨便怎麼處理都可以。
 
@@ -170,17 +170,31 @@ Rust編譯器還提供了一個獨立的編譯開關供我們使用，通過這�
 $ rustc -C overflow-checks=no test.rs
 ```
 
-如果在某些場景下，使用者確實需要更精細地自主控制整數溢出的行為，可以調用標準庫中的checked\_\*、saturating\_\*和wrapping\_\*系列函數。
+如果在某些場景下，使用者確實需要更精細地自主控制整數溢出的行為，可以調用標準庫中的[checked\_\*](https://doc.rust-lang.org/std/primitive.i32.html#method.checked_add)、[saturating\_\*](https://doc.rust-lang.org/std/primitive.i32.html#method.saturating_add)和wrapping\_\*系列函數。
 
 ```rust
 fn main() {
     let i = 100_i8;
+    // checked_add在overflow時傳回None
     println!("checked {:?}", i.checked_add(i));
+    // saturating_add在加法後若overflow會傳回類型最大值
     println!("saturating {:?}", i.saturating_add(i));
+    //  直接拋棄已經溢出的最高位元，將剩下的部分返回。
     println!("wrapping {:?}", i.wrapping_add(i));
 }
 // checked None
 // saturating 127
 // wrapping -56
+```
+
+標準庫還提供了一個叫作[`std::num::Wrapping<T>`](https://doc.rust-lang.org/std/num/struct.Wrapping.html)的類型。它重載了基本的運算子，可以被當成普通整數使用。凡是被它包裹起來的整數，任何時候出現溢出都是截斷行為。
+
+```rust
+use std::num::Wrapping;
+fn main() {
+    let big = Wrapping(std::u32::MAX);
+    let sum = big + Wrapping(2_u32);
+    println!("{}", sum.0);
+}
 ```
 
