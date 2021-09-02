@@ -183,3 +183,14 @@ fn main() {
 // 程式退出才會回收
 ```
 
+Rust禁止在聲明static變數的時候調用普通函數，或者利用語句塊調用其他非const程式碼，而調用const fn是允許的。
+
+```rust
+fn main() {
+    // 可確定的常量才可宣告為static
+    static array: [i32; 3] = [1, 2, 3];
+    // 這樣是不允許的，因為vec長度會變動
+    //static vec : Vec<i32> = { let mut v = Vec::new(); v.push(1); v };
+}
+```
+

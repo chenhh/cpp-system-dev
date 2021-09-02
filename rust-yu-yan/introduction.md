@@ -57,5 +57,21 @@ Rust語言每個相對複雜一點的新功能，都要經歷如下步驟才算�
 
 在2017年下半年，Rust設計組又提出了一個基於epoch的演進策略（後來也被稱為edition）。它要解決的問題是，如何讓Rust更平穩地進化。比如，有時某些新功能確實需要一定程度上破壞相容性。。簡單來說就是讓Rust的相容性保證是一個有時限的長度，而不是永久。Rust設計組很可能會在不久的將來發佈一個2018edition，把之前的版本叫作2015 edition。在這個版本的進化過程中，就可以實施一些不相容的改變。
 
+## Rust能夠解決以及可能出現的bug
 
+以下是Rust程式可以出現的bugs：
+
+* deadlock
+* logic bug
+* memory leak
+* fail to call destructors （出現循環引用的時候）
+* race condition
+* overflow integer
+
+以下是Rust程式在safe域裡面不可能出現的bug：
+
+* data race
+* undefined behavior \(如use-after-free, dangling-pointer, double-free, access violation\)
+
+unsafe域裡面一切皆有可能（包括safe與unsafe的結合）。因為真正的程式總會有各種困難的問題，不可能通過語言層面解決。但是Rust通過區分safe和unsafe將問題進行隔離。
 
