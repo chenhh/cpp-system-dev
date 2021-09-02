@@ -139,3 +139,48 @@ fn main() {
 }
 ```
 
+## 整數溢位
+
+在C語言中，對於無符號類型，算數運算永遠不會overflow，如果超過表示範圍，則自動捨棄高位資料。對於有符號類型，如果發生了overflow，標準規定這是undefined behavior，也就是說隨便怎麼處理都可以。
+
+未定義行為有利於編譯器做一些更激進的性能優化，但是這樣的規定有可能導致在某些極端場景下，產生詭異的bug。
+
+Rust在這個問題上選擇的處理方式為：
+
+* 在debug模式下編譯器會自動插入整數溢出檢查，一旦發生溢出，則會引發panic；
+* 在release模式下，不檢查整數溢出，而是採用自動捨棄高位的方式。
+
+```rust
+fn arithmetic(m: i8, n: i8) {
+    // 加法運算,有溢出風險, i8最大值為127
+    println!("{}", m + n);
+}
+fn main() {
+    let m: i8 = 120;
+    let n: i8 = 120;
+    arithmetic(m, n);
+}
+// debug模式會產生panic!
+// release模式會使用自動截斷，輸出-16
+```
+
+Rust編譯器還提供了一個獨立的編譯開關供我們使用，通過這個開關，可以設置溢出時的處理策略。
+
+```bash
+$ rustc -C overflow-checks=no test.rs
+```
+
+如果在某些場景下，使用者確實需要更精細地自主控制整數溢出的行為，可以調用標準庫中的checked\_\*、saturating\_\*和wrapping\_\*系列函數。
+
+```rust
+fn main() {
+    let i = 100_i8;
+    println!("checked {:?}", i.checked_add(i));
+    println!("saturating {:?}", i.saturating_add(i));
+    println!("wrapping {:?}", i.wrapping_add(i));
+}
+// checked None
+// saturating 127
+// wrapping -56
+```
+
