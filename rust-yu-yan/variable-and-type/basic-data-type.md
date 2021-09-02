@@ -126,3 +126,16 @@ fn main() {
 }
 ```
 
+在Rust中，我們可以為任何一個類型增加\(實作\)方法，整數也不例外。如std中對所有整數類型都有實作[pow](https://doc.rust-lang.org/std/primitive.i32.html#method.pow)方法。
+
+```rust
+
+fn main() {
+    let x: i32 = 9;
+    println!("9 power 3 = {}", x.pow(3));
+    
+    // 可以不使用變數，直接對整數調用函數
+    println!("9 power 3 = {}", 9_i32.pow(3));
+}
+```
+
