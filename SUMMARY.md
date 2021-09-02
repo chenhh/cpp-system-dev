@@ -168,4 +168,5 @@
 ## rust語言
 
 * [Rust簡介](rust-yu-yan/introduction.md)
+* [變數與類型](rust-yu-yan/variable-and-type.md)
 
