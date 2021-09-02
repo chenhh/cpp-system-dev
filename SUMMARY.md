@@ -169,7 +169,7 @@
 
 * [Rust簡介](rust-yu-yan/introduction.md)
 * [crate與mod](rust-yu-yan/crate-and-mod.md)
-* [變數與類型](rust-yu-yan/variable-and-type.md)
-* [基本資料類型](rust-yu-yan/basic-data-type.md)
+* [變數與類型](rust-yu-yan/variable-and-type/README.md)
+  * [基本資料類型](rust-yu-yan/variable-and-type/basic-data-type.md)
 * [巨集](rust-yu-yan/macro.md)
 
