@@ -165,11 +165,12 @@
 * [UEFI](firmware/uefi.md)
 * [EDK2](firmware/edk2.md)
 
-## rust語言
+## rust語言 <a id="rust-language"></a>
 
-* [Rust簡介](rust-yu-yan/introduction.md)
-* [crate與mod](rust-yu-yan/crate-and-mod.md)
-* [變數與類型](rust-yu-yan/variable-and-type/README.md)
-  * [基本資料類型](rust-yu-yan/variable-and-type/basic-data-type.md)
-* [巨集](rust-yu-yan/macro.md)
+* [Rust簡介](rust-language/introduction.md)
+* [crate與mod](rust-language/crate-and-mod.md)
+* [變數與類型](rust-language/variable-and-type/README.md)
+  * [基本資料類型](rust-language/variable-and-type/basic-data-type.md)
+  * [複合資料類型](rust-language/variable-and-type/compounded-data-type.md)
+* [巨集](rust-language/macro.md)
 
