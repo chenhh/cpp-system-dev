@@ -216,8 +216,8 @@ fn main() {
 
 ```rust
 pub enum FpCategory {
-    Nan,
-    Infinite,
+    Nan,       // 不是數字(not a number)
+    Infinite,  // 無窮大
     Zero,      // 數值為0
     Subnormal, // 浮點數計算式為(-1)^s*M*2^e
     Normal,    // 正常狀態的浮點數, (-1)^s*(1+M)*2^e
@@ -235,13 +235,16 @@ pub enum FpCategory {
 ```rust
 fn main() {
     // 變數 small 初始化為一個非常小的浮點數
-    let mut small = std::f32::EPSILON;
+    let mut small = f32::EPSILON;
     // 不斷迴圈,讓 small 越來越趨近於 0,直到最後等於0的狀態
     // 浮數數狀態會由normal->subnormal-> zero
     while small > 0.0 {
         small = small / 2.0;
+        // f32.classify()傳回浮點數的狀態
         println!("{} {:?}", small, small.classify());
     }
 }
 ```
+
+Infinite和Nan是帶來更多麻煩的特殊狀態。Infinite代表的是“無窮大”，Nan代表的是“不是數字”（not a number）。
 
