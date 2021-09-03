@@ -275,9 +275,7 @@ fn main() {
 }
 ```
 
-NaN這個特殊值有個特殊的麻煩，主要問題還在於它不具備“全序”\(total order\)的特點。
-
-
+NaN這個特殊值有個特殊的麻煩，主要問題還在於它不具備“全序”\(total order\)的特點。一個數字可以不等於自己。因為NaN的存在，浮點數是不具備“全序關係”（total order）的。關於“全序”和“偏序”的問題與 PartialOrd和Ord這兩個trait有關。
 
 ```rust
 fn main() {
