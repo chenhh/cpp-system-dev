@@ -232,3 +232,16 @@ pub enum FpCategory {
 
 為了減少0與最小數位和最小數位與次小數位之間步長的突然下跌，subnormal規定：當指數位全0的時候，指數表示為-126而不是-127（和指數為最低位為1一致）。然而公式改成（-1）^s\*M\*2^e，M不再+1，這樣最小的數字就變成2^（-23）\*2^（-126），次小的數字變成2^（-22）\*2^（-126），每兩個相鄰subnormal數字之差都是2^（-23）\*2^（-126），避免了突然降到0。在這種狀態下，這個浮點數就處於了Subnormal狀態，處於這種狀態下的浮點數表示精度比Normal狀態下的精度低一點。
 
+```rust
+fn main() {
+    // 變數 small 初始化為一個非常小的浮點數
+    let mut small = std::f32::EPSILON;
+    // 不斷迴圈,讓 small 越來越趨近於 0,直到最後等於0的狀態
+    // 浮數數狀態會由normal->subnormal-> zero
+    while small > 0.0 {
+        small = small / 2.0;
+        println!("{} {:?}", small, small.classify());
+    }
+}
+```
+
