@@ -81,6 +81,50 @@ fn main() {
     // 下麵是簡略寫法,等同於 Point { x: x, y: y },同名字的相對應
     let p = Point { x, y };
     println!("Point is at {} {}", p.x, p.y);
+
+    // 訪問結構體內部的元素，也是使用“點”加變數名的方式。
+    // 當然，也可以使用“模式匹配”功能
+    // 聲明了px 和 py,分別綁定到成員 x 和成員 y
+    let Point { x: px, y: py } = p;
+    println!("Point is at {} {}", px, py);
+    // 同理,在模式匹配的時候,如果新的變數名剛好和成員名字相同,可以使用簡寫方式
+    let Point { x, y } = p;
+    println!("Point is at {} {}", x, y);
 }
+```
+
+Rust設計了一個語法糖，允許用一種簡化的語法賦值使用另外一個struct的部分成員。
+
+```cpp
+#[derive(Debug)]
+struct Point3d {
+    x: i32,
+    y: i32,
+    z: i32,
+}
+fn default() -> Point3d {
+    Point3d { x: 0, y: 0, z: 0 }
+}
+fn main() {
+    // 可以使用default()函數初始化其他的元素
+    // ..expr 這樣的語法,只能放在初始設定式中,所有成員的最後最多只能有一個
+    let origin = Point3d { x: 5, ..default() };
+    let point = Point3d {
+        z: 1,
+        x: 2,
+        ..origin
+    };
+
+    println!("{:?}, {:?}", origin, point);
+}
+```
+
+struct內部成員也可以是空：
+
+```cpp
+//以下三種都可以,內部可以沒有成員
+struct Foo1;
+struct Foo2();
+struct Foo3{}
 ```
 
