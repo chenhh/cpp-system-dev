@@ -226,9 +226,13 @@ pub enum FpCategory {
 
 ![IEEE754 &#x55AE;&#x7CBE;&#x5EA6;&#x6D6E;&#x9EDE;&#x6578;&#x3002;](../../.gitbook/assets/ieee754_single-precision-min.png)
 
+### normal狀態
+
 在IEEE 754標準中，規定了浮點數的二進位表達方式：`x=（-1）^sign *（1+fraction）* 2^exponent`。其中sign\(s\)是符號位元，fraction\(M\)是分數\(fraction\)，exponent\(e\)是指數。分數M是一個\[0，1）範圍內的二進位表示的小數。
 
 以32位浮點為例，如果只有normal形式的話，0表示為所有位數全0，則最小的非零正數將是尾數最後一位元為1的數字，就是（1+ 2^（-23））\*2^（-127），而次小的數字為（1+2^（-22））\*2^（-127），這兩個數字的差距為2^（-23）\*2^（-127）=2^（-150），然而最小的數字和0之間的差距有（1+2^（-23））\*2^（-127），約等於2^（-127），**也就是說，數字在漸漸減少到0的過程中突然降到了0。**
+
+### **subnormal狀態**
 
 為了減少0與最小數位和最小數位與次小數位之間步長的突然下跌，subnormal規定：當指數位全0的時候，指數表示為-126而不是-127（和指數為最低位為1一致）。然而公式改成（-1）^s\*M\*2^e，M不再+1，這樣最小的數字就變成2^（-23）\*2^（-126），次小的數字變成2^（-22）\*2^（-126），每兩個相鄰subnormal數字之差都是2^（-23）\*2^（-126），避免了突然降到0。在這種狀態下，這個浮點數就處於了Subnormal狀態，處於這種狀態下的浮點數表示精度比Normal狀態下的精度低一點。
 
@@ -246,5 +250,42 @@ fn main() {
 }
 ```
 
+### infinite與Nan狀態
+
 Infinite和Nan是帶來更多麻煩的特殊狀態。Infinite代表的是“無窮大”，Nan代表的是“不是數字”（not a number）。
+
+非0数除以0值，得到的是inf，0除以0得到的是NaN。
+
+```rust
+fn main() {
+    let x = 1.0f32 / 0.0; // infinity
+    let y = 0.0f32 / 0.0; // Nan
+    println!("{} {:?}", x, x.classify());
+    println!("{} {:?}", y, y.classify());
+}
+```
+
+對inf做一些數學運算的時候，它的結果可能與你期望的不一致。
+
+```rust
+fn main() {
+    let inf = std::f32::INFINITY;
+    // NaN 0 NaN
+    println!("{} {} {}", inf * 0.0, 1.0 / inf, inf / inf);
+}
+```
+
+NaN這個特殊值有個特殊的麻煩，主要問題還在於它不具備“全序”\(total order\)的特點。
+
+
+
+```rust
+fn main() {
+    let nan = std::f32::NAN;
+    // false false false, 不滿足三一律
+    println!("{} {} {}", nan < nan, nan > nan, nan == nan);
+}
+```
+
+
 
