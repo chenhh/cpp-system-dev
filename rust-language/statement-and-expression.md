@@ -334,3 +334,7 @@ fn main() {
 }
 ```
 
+## for迴圈
+
+Rust中的for迴圈實際上是許多其他語言中的for-each迴圈。Rust中沒有類似C/C++的三段式for迴圈語句。
+
