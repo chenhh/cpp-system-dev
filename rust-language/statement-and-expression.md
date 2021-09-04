@@ -35,7 +35,63 @@ fn main() {
 }
 ```
 
+x+y、x-y這些都是算數運算運算式，它們都有自己的值和類型。常見的整數、浮點數類型都支援這幾種運算式。它們還可以被重載，讓自訂的類型也支援這幾種運算式。
+
+Rust的比較運算子包括：等於（==）、不等於（！=）、小於（&lt;）、大於（&gt;）、小於等於（&lt;=）、大於等於（&gt;=）。比較運算子的兩邊必須是同類型的，並滿足PartialEq約束。比較運算式的類型是bool。另外，Rust禁止連續比較。
+
+```rust
+fn main() {
+    let (a, b, c) = (true, true, false);
+    // error: comparison operators cannot be chained
+    //   a == b == c;
+    a == b && b == c;
+}
+```
 
 
 
+### bitwise運算子
+
+```rust
+fn main() {
+    let num1: u8 = 0b_1010_1010;
+    let num2: u8 = 0b_1111_0000;
+    println!("{:08b}", !num1);       //01010101
+    println!("{:08b}", num1 & num2); //10100000
+    println!("{:08b}", num1 | num2); //11111010
+    println!("{:08b}", num1 ^ num2); //01011010
+    println!("{:08b}", num1 << 4);   //10100000
+    println!("{:08b}", num1 >> 4);   //00001010
+}
+```
+
+### logical運算子
+
+取反運算子\(!\)既支援“邏輯取反”也支援“按位元取反”，它們是同一個運算子，根據類型決定執行哪個操作。如果被運算元是bool類型，那麼就是邏輯取反；如果被運算元是其他數字類型，那麼就是按位元取反。
+
+bool類型既支援“邏輯AND”、“邏輯OR”，也支援“按位元AND”、“按位元OR”。它們的區別在於，“邏輯AND”、“邏輯OR”具備“短路”功能。
+
+```rust
+fn f1() -> bool {
+    println!("Call f1");
+    true
+}
+fn f2() -> bool {
+    println!("Call f2");
+    false
+}
+fn main() {
+    // call f2, call f1, Bit AND: false
+    println!("Bit AND: {}\n", f2() & f1()); 
+    
+    // call f2, Logic AND: false (f1因為短路沒有被執行)
+    println!("Logic AND: {}\n", f2() && f1()); 
+    
+    // call f1, call f2, bit OR: true
+    println!("Bit OR: {}\n", f1() | f2());
+    
+    // call f1, logic OR: true (f2因為短路沒有被執行)
+    println!("Logic OR: {}\n", f1() || f2());
+}
+```
 
