@@ -222,7 +222,35 @@ fn main() {
     let m2 = Message::ChangeColor(10, 2, 2);
     let m3 = Message::Move { x: 10, y: 20 };
     let m4 = Message::Write("hello world".to_string());
+
+    // 8 bytes, 4 byte保存標記，4 bypes為max(sizeof(i32), sizeof(f32))    
+    println!("Size of Number: {}", std::mem::size_of::<Number>());
+    // 32 bytes
+    println!("Size of Message: {}", std::mem::size_of::<Message>());
+
+}
+```
+
+```rust
+enum Number {
+    Int(i32),
+    Float(f32),
 }
 
+// match必須列出所有的enum分支，或者用_處理所有其它可能出現的分支，
+// 否則編譯會出現 not covered錯誤
+fn read_num(num: &Number) {
+    match num {
+        &Number::Int(value) => println!("Integer {}", value),
+        &Number::Float(value) => println!("Float {}", value),
+        // _ => println!("other type")
+    }
+}
+fn main() {
+    let n: Number = Number::Int(10);
+    // 此處因為將變數傳入function後不需再返回，
+    //  因此不使用borrow直接用move將所有權轉移也可以
+    read_num(&n);
+}
 ```
 
