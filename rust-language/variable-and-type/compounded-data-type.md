@@ -231,6 +231,8 @@ fn main() {
 }
 ```
 
+enum常用在match表達式。
+
 ```rust
 enum Number {
     Int(i32),
@@ -251,6 +253,49 @@ fn main() {
     // 此處因為將變數傳入function後不需再返回，
     //  因此不使用borrow直接用move將所有權轉移也可以
     read_num(&n);
+}
+```
+
+Rust的enum與C/C++的enum和union都不一樣。它是一種更安全的類型，可以被稱為“tagged union”。從C語言的視角來看Rust的enum類型，重寫上面這段程式碼，它的語義類似這樣：
+
+```c
+#include <stdio.h>
+#include <stdint.h>
+ // C 語言類比 Rust 的 enum
+struct Number {
+  enum {
+    Int,
+    Float
+  }
+  tag;
+  union {
+    int32_t int_value;
+    float float_value;
+  }
+  value;
+};
+void read_num(struct Number * num) {
+  switch (num -> tag) {
+  case Int:
+    printf("Integer %d", num -> value.int_value);
+    break;
+  case Float:
+    printf("Float %f", num -> value.float_value);
+    break;
+  default:
+    printf("data error");
+    break;
+  }
+}
+int main() {
+  struct Number n = {
+    tag: Int,
+    value: {
+      int_value: 10
+    }
+  };
+  read_num( & n);
+  return 0;
 }
 ```
 
