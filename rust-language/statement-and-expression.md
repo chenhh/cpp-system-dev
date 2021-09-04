@@ -235,6 +235,17 @@ fn main() {
 }
 ```
 
+與if結構一樣，loop結構也可以作為運算式的一部分。
+
+```rust
+fn main() {
+    let v = loop {
+        break 10;
+    };
+    println!("{}", v);
+}
+```
+
 ### break, continue
 
 * continue；語句表示本次迴圈內，後面的語句不再執行，直接進入下一輪迴圈。
