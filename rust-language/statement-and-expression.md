@@ -246,6 +246,16 @@ fn main() {
 }
 ```
 
+在loop內部break的後面可以跟一個運算式，這個運算式就是最終的loop運算式的值。如果一個loop永遠不返回，那麼它的類型就是“發散類型”。
+
+```rust
+fn main() {
+    let v = loop {};
+    // warning: unreachable statement
+    println!("{:?}", v);
+}
+```
+
 ### break, continue
 
 * continue；語句表示本次迴圈內，後面的語句不再執行，直接進入下一輪迴圈。
