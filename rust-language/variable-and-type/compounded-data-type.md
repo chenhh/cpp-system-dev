@@ -317,7 +317,7 @@ fn main() {
 }
 ```
 
-### 標午庫內的Option&lt;T&gt;
+### 標準庫內的Option&lt;T&gt;
 
 Rust的core與std庫中有一個極其常用的enum類型[Option&lt;T&gt;](https://doc.rust-lang.org/core/option/index.html)，它的定義如下：
 
@@ -331,4 +331,41 @@ enum Option<T> {
 由於它實在是太常用，標準庫將Option以及它的成員Some、None都加入到了Prelude中，使用者甚至不需要use語句聲明就可以直接使用。
 
 它表示的含義是“類型T的值要麼存在、要麼不存在”。比如Option&lt;i32&gt;表達的意思就是“可以是一個i32類型的值，或者沒有任何值”。
+
+## 類型遞迴定義
+
+Rust裡面的複合資料類型是允許遞迴定義的。比如struct裡面嵌套同樣的struct類型，但是直接嵌套是不行的。
+
+```rust
+struct Recursive {
+    data: i32,
+    // 不可直接遞迴定義，會出現編譯錯誤
+    rec: Recursive, 
+}
+
+/* 
+error[E0072]: recursive type `Recursive` has infinite size
+--> test.rs:2:1
+|
+2 | struct Recursive {
+| ^^^^^^^^^^^^^^^^ recursive type has infinite size
+3 | data: i32,
+4 | rec: Recursive,
+| -------------- recursive without indirection
+|
+= help: insert indirection (e.g., a `Box`, `Rc`, or `&`) at some point to make
+`Recursive` representable
+*/
+```
+
+。Rust是允許使用者手工控制記憶體佈局的語言。直接使用類型遞迴定義的問題在於，當編譯器計算Recursive這個類型大小的時候：`size_of::<Recursive>() == 4 + size_of::<Recursive>()` 這個方程在實數範圍內無解。
+
+解決辦法很簡單，用指標間接引用就可以了，因為指標的大小是固定的\(32-bit或64-bit\)。
+
+```rust
+struct Recursive {
+    data: i32,
+    rec: Box<Recursive>,
+}
+```
 
