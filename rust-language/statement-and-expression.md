@@ -235,6 +235,34 @@ fn main() {
 }
 ```
 
+### break, continue
+
 * continue；語句表示本次迴圈內，後面的語句不再執行，直接進入下一輪迴圈。
 * break；語句表示跳出迴圈，不再繼續。
+
+break語句和continue語句還可以在多重迴圈中選擇跳出到哪一層的迴圈。
+
+```rust
+fn main() {
+    // A counter variable
+    let mut m = 1;
+    let n = 1;
+    // 使用lifetime label
+    'a: loop {
+        if m < 100 {
+            m += 1;
+        } else {
+            // 使用lifetime label
+            'b: loop {
+                if m + n > 50 {
+                    println!("break");
+                    break 'a;
+                } else {
+                    continue 'a;
+                }
+            }
+        }
+    }
+}
+```
 
