@@ -338,3 +338,15 @@ fn main() {
 
 Rust中的for迴圈實際上是許多其他語言中的for-each迴圈。Rust中沒有類似C/C++的三段式for迴圈語句。
 
+```rust
+fn main() {
+    let array = [1, 2, 3, 4, 5];
+    for i in array {
+        println!("The number is {}", i);
+        if i == 3{
+            break;
+        }
+    }
+}
+```
+
