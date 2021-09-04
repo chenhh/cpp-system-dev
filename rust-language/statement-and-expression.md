@@ -175,3 +175,66 @@ fn my_func() -> i32 {
 }
 ```
 
+## if-else
+
+if-else運算式的構成方式為：以if關鍵字開頭，後面跟上條件運算式，後續是結果語句塊，最後是可選的else塊。條件運算式的類型必須是bool。
+
+```rust
+fn main() {
+    let n = 10;
+
+    // 在if語句中，後續的結果語句塊要求一定要用大括弧包起來，不能省略，
+    // 以便明確指出該if語句塊的作用範圍。
+    // 條件表達式不需用括號, 編譯器會給warning
+    // 所有的分支應有相同的回傳值
+    if n < 0 {
+        print!("{} is negative", n);
+    } else if n > 0 {
+        print!("{} is positive", n);
+    } else {
+        print!("{} is zero", n);
+    }
+}
+```
+
+if-else結構還可以當運算式使用，因此沒有C/C++中三元運算子?:。
+
+```rust
+fn main() {
+    let n = 10;
+    let x: i32 = if n >=5 { 1 } else { 10 };
+    //--------------- ------^ -------- ^
+    //------------------- 這兩個地方不要加分號
+    println!("{}", x);
+}
+```
+
+## loop \(無窮迴圈\)
+
+在Rust中，使用loop表示一個無限迴圈。loop{}和while true{}迴圈的區別在於，相比於其他的許多語言，Rust語言要做更多的靜態分析。loop和while true語句在執行時沒有什麼區別，它們主要是會影響編譯器內部的靜態分析結果。
+
+```rust
+fn main() {
+    let mut count = 0u32;
+    println!("Let's count until infinity!");
+    // 無限迴圈
+    loop {
+        count += 1;
+        if count == 3 {
+            println!("three");
+            // 不再繼續執行後面的程式碼,跳轉到loop開頭繼續迴圈
+            continue;
+        }
+        println!("{}", count);
+        if count == 5 {
+            println!("OK, that's enough");
+            // 跳出迴圈
+            break;
+        }
+    }
+}
+```
+
+* continue；語句表示本次迴圈內，後面的語句不再執行，直接進入下一輪迴圈。
+* break；語句表示跳出迴圈，不再繼續。
+
