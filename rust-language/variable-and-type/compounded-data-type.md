@@ -198,6 +198,8 @@ fn main() {
 
 enum類型在Rust中代表的就是多個成員的OR關係（同時間只有一個成員可被使用）。
 
+在Rust中，enum和struct為內部成員創建了新的名字空間。如果要訪問內部成員，可以使用：：符號。因此，不同的enum中重名的元素也不會互相衝突。
+
 與C/C++中的枚舉相比，Rust中的enum要強大得多，它可以為每個成員指定附屬的類型資訊。
 
 ```rust
@@ -298,4 +300,35 @@ int main() {
   return 0;
 }
 ```
+
+如果我們用C語言來類比，就需要程式設計師自己來保證讀寫的時候標記和資料類型是匹配的，編譯器無法自動檢查。當然，上面這個模擬只是為了通俗地解釋Rust的enum類型的基本工作原理，在實際中，enum的記憶體佈局未必是這個樣子，編譯器有許多優化，可以保證語義正確的同時減少記憶體使用，並加快執行速度。
+
+可以手動指定每個變體自己的標記值如下。
+
+```rust
+fn main() {
+    enum Animal {
+        dog = 1,
+        cat = 200,
+        tiger,
+    }
+    let x = Animal::tiger as isize;
+    println!("{}", x); // 201
+}
+```
+
+### 標午庫內的Option&lt;T&gt;
+
+Rust的core與std庫中有一個極其常用的enum類型[Option&lt;T&gt;](https://doc.rust-lang.org/core/option/index.html)，它的定義如下：
+
+```rust
+enum Option<T> {
+    None,        // 沒有值
+    Some(T),     // 型別T有值
+}
+```
+
+由於它實在是太常用，標準庫將Option以及它的成員Some、None都加入到了Prelude中，使用者甚至不需要use語句聲明就可以直接使用。
+
+它表示的含義是“類型T的值要麼存在、要麼不存在”。比如Option&lt;i32&gt;表達的意思就是“可以是一個i32類型的值，或者沒有任何值”。
 
