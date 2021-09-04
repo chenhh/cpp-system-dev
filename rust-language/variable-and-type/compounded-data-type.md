@@ -58,7 +58,7 @@ assert(sizeof(emp) != 0);
 
 struct與tuple類似，也可以把多個類型組合到一起，作為新的類型。**區別在於，struct每個元素都有自己的名字**。
 
-```cpp
+```rust
 // struct宣告
 // 每個元素之間採用逗號分開，最後一個逗號可以省略不寫。
 // 類型在冒號後面，但是不能使用自動類型推導功能，必須顯式指定。
@@ -95,7 +95,7 @@ fn main() {
 
 Rust設計了一個語法糖，允許用一種簡化的語法賦值使用另外一個struct的部分成員。
 
-```cpp
+```rust
 #[derive(Debug)]
 struct Point3d {
     x: i32,
@@ -126,5 +126,103 @@ struct內部成員也可以是空：
 struct Foo1;
 struct Foo2();
 struct Foo3{}
+```
+
+## tuple struct
+
+tuple struct就像是tuple和struct的混合。區別在於，tuple struct有名字，而它們的成員沒有名字。
+
+```rust
+// tuple struct
+#[derive(Debug)]
+struct Color(i32, i32, i32);
+
+#[derive(Debug)]
+struct Point(i32, i32, i32);
+
+// 等價的struct
+// struct Color{
+//     0: i32,
+//     1: i32,
+//     2: i32,
+// }; 
+// struct Point { 0: i32,
+//     1: i32,
+//     2: i32,
+// };
+
+fn main(){
+    // tuple struct可用tuple方式初始化
+    let v1 = Color(0, 1, 2);
+    // tuple struct也可用struct方式初始化
+    let v2 = Point{0: 10, 1: 12, 2: 13};
+    println!("v1={:?}", v1);
+    println!("v2={:?}", v2);
+}
+```
+
+tuple struct有一個特別有用的場景，那就是當它只包含一個元素的時候，就是所謂的newtype idiom。因為它實際上讓我們非常方便地在一個類型的基礎上創建了一個新的類型。
+
+```rust
+fn main() {
+    // tuple struct, Inches為i32的新類型
+    struct Inches(i32);
+    
+    fn f1(value: Inches) {}
+    fn f2(value: i32) {}
+    let v: i32 = 0;
+    // 因為Inches類型和i32是不同的類型，函式呼叫參數不匹配。
+    // f1(v); // compile error, mismatched types'
+    f2(v);
+}
+```
+
+通過關鍵字type，我們可以創建一個新的類型名稱，但是這個類型不是全新的類型，而只是一個具體類型的別名。在編譯器看來，這個別名與原先的具體類型是一模一樣的。
+
+而使用tuple struct做包裝，則是創造了一個全新的類型，它跟被包裝的類型不能發生隱式類型轉換，可以具有不同的方法，滿足不同的trait，完全按需求而定。
+
+```rust
+fn main() {
+    // 使用type做alias明確指定I為i32的別名
+    type I = i32;
+    fn f1(v: I) {}
+    fn f2(v: i32) {}
+    let v: i32 = 0;
+    // 編譯器知道I為i32的別名，可編譯成功
+    f1(v);
+    f2(v);
+}
+```
+
+## enum
+
+enum類型在Rust中代表的就是多個成員的OR關係（同時間只有一個成員可被使用）。
+
+與C/C++中的枚舉相比，Rust中的enum要強大得多，它可以為每個成員指定附屬的類型資訊。
+
+```rust
+// Number為整數或浮點數
+enum Number {
+    Int(i32),
+    Float(f32),
+}
+
+// enum的元素可為複合型別
+enum Message {
+    Quit,                       // 沒有資料
+    ChangeColor(i32, i32, i32), // struct tuple
+    Move { x: i32, y: i32 },    // struct
+    Write(String),              // struct tuple
+}
+
+fn main() {
+    let a: Number = Number::Int(10);
+    let b = Number::Float(10.2);
+    let m1 = Message::Quit;
+    let m2 = Message::ChangeColor(10, 2, 2);
+    let m3 = Message::Move { x: 10, y: 20 };
+    let m4 = Message::Write("hello world".to_string());
+}
+
 ```
 
