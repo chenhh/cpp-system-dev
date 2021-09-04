@@ -287,3 +287,50 @@ fn main() {
 }
 ```
 
+## while
+
+while語句是帶條件判斷的迴圈語句。其語法是while關鍵字後跟條件判斷語句，最後是結果語句塊。如果條件滿足，則持續迴圈執行結果語句塊。
+
+```rust
+fn main() {
+    // A counter variable
+    let mut n = 1;
+    // Loop while `n` is less than 101
+    while n < 101 {
+        if n % 15 == 0 {
+            println!("fizzbuzz");
+        } else if n % 3 == 0 {
+            println!("fizz");
+        } else if n % 5 == 0 {
+            println!("buzz");
+        } else {
+            println!("{}", n);
+        }
+        // Increment counter
+        n += 1;
+    }
+}
+```
+
+loop{}與while true{}的區別如下例所示。
+
+```rust
+fn main() {
+    let x;
+    loop {
+        x = 1;
+        break;
+    }
+    println!("{}", x); // 1
+
+    // 以下會出現compile error
+    // 因為while需要條件判斷，因此y可能沒有初始化
+    let y;
+    while true {
+        y = 1;
+        break;
+    }
+    println!("{}", y);
+}
+```
+
