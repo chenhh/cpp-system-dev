@@ -174,5 +174,6 @@
   * [複合資料類型](rust-language/variable-and-type/compounded-data-type.md)
 * [語句與運算式](rust-language/statement-and-expression.md)
 * [函數](rust-language/function.md)
+* [trait](rust-language/trait.md)
 * [巨集](rust-language/macro.md)
 
