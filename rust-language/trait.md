@@ -153,3 +153,18 @@ fn main() {
 }
 ```
 
+在標準庫中就有一些這樣的例子。Box的一系列方法`Box::into_raw(b:Self)`,`Box::leak(b:Self)`，以及Rc的一系列方法`Rc::try_unwrap(this:Self)`,`Rc::downgrade(this:&Self)`，都是這種情況。
+
+它們的receiver不是self關鍵字，這樣設計的目的是強制使用者用`Rc::downgrade(&obj)`的形式調用，而禁止`obj.downgrade()`形式的調用。**這樣程式碼表達出來的意思更清晰，不會因為`Rc<T>`裡面的成員方法和T裡面的成員方法重名而造成誤解問題**。
+
+trait中也可以定義靜態函數。下面以標準庫中的`std::default::Default` trait為例，介紹靜態函數的相關用法
+
+```rust
+// 上面這個trait中包含了一個default()函數，它是一個無參數的函數，
+// 返回的類型是實現該trait的具體類型。Rust中沒有“構造函數”的概念。
+// Default trait實際上可以看作一個針對無參數構造函數的統一抽象。
+pub trait Default {
+    fn default() -> Self;
+}
+```
+
