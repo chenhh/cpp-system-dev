@@ -135,7 +135,30 @@ fn main() {
 
 * panic！以及基於它實現的各種函數/巨集，比如unimplemented！、unreachable！；
 * 無窮迴圈loop{}；
-* 行程退出函數std：：process：：exit以及類似的libc中的exec一類函數。
+* 行程退出函數std::process::exit以及類似的libc中的exec一類函數。
+
+## main函數
+
+以C語言為例，主函數的原型一般允許定義成以下幾種形式：
+
+```c
+int main(void);
+int main();
+int main(int argc, char **argv);
+int main(int argc, char *argv[]);
+int main(int argc, char **argv, char **env);
+```
+
+Rust的設計稍微有點不一樣，傳遞參數和返回狀態碼都由單獨的API來完成：
+
+```rust
+fn main() {
+    for arg in std::env::args() {
+        println!("Arg: {}", arg);
+    }
+    std::process::exit(0);
+}
+```
 
 
 
