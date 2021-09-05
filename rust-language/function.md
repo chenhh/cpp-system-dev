@@ -175,7 +175,9 @@ Arg: opt3
 
 ### 讀取環境變數
 
-如果要讀取環境變數，可以用`std::env::var()`以及`std::env::vars()`函數獲得。
+如果要讀取環境變數，可以用[`std::env::var()`](https://doc.rust-lang.org/std/env/fn.var.html)以及`std::env::vars()`函數獲得。
+
+var\(\)函數可以接受一個字串類型參數，用於查找當前環境變數中是否存在這個名字的環境變數，vars\(\)函數不攜帶參數，可以返回所有的環境變數。
 
 
 
