@@ -193,5 +193,21 @@ fn main() {
 }
 ```
 
+## const fn
 
+函數可以用const關鍵字修飾，這樣的函數可以在編譯階段被編譯器執行，返回值也被視為編譯期常量。
+
+```rust
+const fn cube(num: usize) -> usize {
+    num * num * num
+}
+fn main() {
+    // const fn才能用於初始化const
+    const DIM: usize = cube(2);
+    // 因為DIM在編譯期已決定，因此可用於初始化array
+    const ARR: [i32; DIM] = [0; DIM];
+    // [0, 0, 0, 0, 0, 0, 0, 0]
+    println!("{:?}", ARR);
+}
+```
 
