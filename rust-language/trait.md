@@ -130,3 +130,26 @@ fn main() {
 
 ```
 
+### 靜態方法
+
+沒有receiver參數的方法（第一個參數不是self參數的方法）稱作“靜態方法”。靜態方法可以通過`Type::FunctionName()`的方式調用。
+
+需要注意的是，即便我們的第一個參數是Self相關類型，只要變數名字不是self，就不能使用小數點的語法調用函數。
+
+```rust
+// struct tuple
+struct T(i32);
+impl T {
+    // 這是一個靜態方法，
+    // 因為第一個參數的名字不是self
+    fn func(this: &Self) {
+        println! {"value {}", this.0};
+    }
+}
+fn main() {
+    let x = T(42);
+    // x.func(); 小數點方式調用是不合法的
+    T::func(&x);
+}
+```
+
