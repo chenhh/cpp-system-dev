@@ -201,3 +201,7 @@ fn main() {
 }
 ```
 
+即使實作的類型不是在當前的專案中聲明的，我們依然可以為它增加一些成員方法。
+
+但我們也不是隨隨便便就可以這麼做的，Rust對此有一個規定。在聲明trait和impl trait的時候，**Rust規定了一個Coherence Rule（一致性規則）或稱為Orphan Rule（孤兒規則）：impl塊要麼與trait的聲明在同一個的crate中，要麼與類型的聲明在同一個crate中**。
+
