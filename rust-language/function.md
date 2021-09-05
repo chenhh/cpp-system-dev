@@ -1,5 +1,7 @@
 # 函數
 
+## 函數結構
+
 Rust的函數使用關鍵字fn開頭。函數可以有一系列的輸入參數，還有一個返回類型。函數體包含一系列的語句（或者運算式）。函數返回可以使用return語句，也可以使用運算式。
 
 ```rust
@@ -14,17 +16,58 @@ fn add1(t: (i32, i32)) -> i32 {
 fn add2((x, y): (i32, i32)) -> i32 {
     x + y
 }
+
+// Rust編寫的可執行程式的入口就是fn main()函數。
+fn main() {
+    let p = (1, 3);
+    // 函數名稱可設定給變數使用
+    // func 是一個區域變數
+    let func = add2;
+    // func 可以被當成普通函數一樣被調用
+    println!("evaluation output {}", func(p)); // 4
+}
 ```
 
 函數體內部是一個運算式，這個運算式的值就是函數的返回值。也可以寫`return x+y；`這樣的語句作為返回值，效果是一樣的。
 
 函數也可以不寫返回類型，在這種情況下，編譯器會認為返回類型是`unit()`。
 
+## 函數簽名
+
+在Rust中，每一個函數都具有自己單獨的類型，但是這個類型可以自動轉換到fn類型。雖然add1和add2有同樣的參數類型和同樣的返回數值型別，但它們是不同類型，所以這裡報錯了。
+
+修復方案是讓func的類型為通用的fn類型即可。
+
+```rust
+fn add1(t: (i32, i32)) -> i32 {
+    t.0 + t.1
+}
+fn add2((x, y): (i32, i32)) -> i32 {
+    x + y
+}
+fn main() {
+    // 原始寫法：先讓 func 指向 add1, 無法轉成add2
+    // let mut func = add1;
+    
+     // 寫法一,用 as 類型轉換
+    let mut func = add1 as fn((i32,i32))->i32;
+    // 寫法二,用顯式類型標記
+    // let mut func : fn((i32,i32))->i32 = add1;
+    
+    // 再重新賦值,讓 func 指向 add2, 只有寫法1,2能使用
+    // different `fn` items always have unique types,
+    // even if their signatures are the same
+    func = add2;
+    
+    println!("{}", func((1,2)));
+}
+```
 
 
 
 
-Rust編寫的可執行程式的入口就是fn main\(\)函數。
+
+
 
 
 
