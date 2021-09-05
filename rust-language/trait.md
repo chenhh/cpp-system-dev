@@ -215,3 +215,53 @@ fn main() {
 
 同理，如果是匿名impl，那麼這個impl塊必須與類型本身存在於同一個crate中。
 
+## OOP語言的Interface與trait的區別
+
+許多初學者會用自帶GC的語言中的“Interface”、抽象基類來理解trait這個概念，但是實際上它們有很大的不同。
+
+Rust是一種使用者可以對記憶體有精確控制能力的強類型語言。我們可以自由指定一個變數是在堆疊裡面，還是在堆裡面，變數和指標也是不同的類型。
+
+類型是有大小（Size）的。有些類型的大小是在編譯階段可以確定的，有些類型的大小是編譯階段無法確定的。目前版本的Rust規定，在函數參數傳遞、返回值傳遞等地方，都要求這個類型在編譯階段有確定的大小。否則，編譯器就不知道該如何生成程式碼了。
+
+而trait本身既不是具體類型，也不是指標類型，它只是定義了針對類型的、抽象的“約束”。不同的類型可以實現同一個trait，滿足同一個trait的類型可能具有不同的大小。因此，trait在編譯階段沒有固定大小，目前我們不能直接使用trait作為執行個體變數、參數、返回值。
+
+## 完整函式呼叫語法\(Fully Qualified Syntax\)
+
+Fully Qualified Syntax提供一種無歧義的函式呼叫語法，允許程式師精確地指定想調用的是那個函數。以前也叫UFCS（universal function call syntax），也就是所謂的“通用函式呼叫語法”。
+
+這個語法可以允許使用類似的寫法精確調用任何方法，包括成員方法和靜態方法。其他一切函式呼叫語法都是它的某種簡略形式。它的具體寫法為`<T asTraitName>::item`。
+
+
+
+```rust
+trait Cook {
+    fn start(&self);
+}
+trait Wash {
+    fn start(&self);
+}
+struct Chef;
+impl Cook for Chef {
+    fn start(&self) {
+        println!("Cook::start");
+    }
+}
+impl Wash for Chef {
+    fn start(&self) {
+        println!("Wash::start");
+    }
+}
+fn main() {
+    let me = Chef;
+    //  無法分別是Cook或Wash traits的start
+    // me.start();
+    // 函數名字使用更完整的path來指定,
+    // 同時,self參數需要顯式傳遞
+    <dyn Cook>::start(&me);     // Cook::start
+    <Chef as Cook>::start(&me); // Cook::start
+    <Chef as Wash>::start(&me); // Wash::start
+}
+```
+
+
+
