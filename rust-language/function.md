@@ -100,3 +100,14 @@ fn main() {
 }
 ```
 
+## 發散函數\(diverging function\)
+
+Rust支援一種特殊的發散函數（Diverging functions），它的返回類型是驚嘆號！。如果一個函數根本就不能正常返回，那麼它可以這樣寫：
+
+```rust
+// 若函數必定無法正常返回時，回傳值為發散函數
+fn diverges() -> ! {
+    panic!("This function never returns!");
+}
+```
+
