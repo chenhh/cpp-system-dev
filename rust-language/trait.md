@@ -271,3 +271,29 @@ fn main() {
 
 需要注意的是，通過小數點語法調用方法調用，有一個“隱藏著”的“取引用”步驟。雖然我們看起來原始程式碼長的是這個樣子me.start\(\)，但是大家心裡要清楚，真正傳遞給start\(\)方法的參數是&me而不是me，這一步是編譯器自動幫我們做的。不論這個方法接受的self參數究竟是Self、&Self還是&mut Self，最終在源碼上，我們都是統一的寫法：variable.method\(\)。而如果用UFCS語法來調用這個方法，我們就不能讓編譯器幫我們自動取引用了，必須手動寫清楚。
 
+成員方法和普通函數其實沒什麼本質區別，只是多了一層名稱空間而已。
+
+```rust
+struct T(usize);
+// membership function
+impl T {
+    fn get1(&self) -> usize {
+        self.0
+    }
+    fn get2(&self) -> usize {
+        self.0
+    }
+}
+// function
+fn get3(t: &T) -> usize {
+    t.0
+}
+fn check_type(_: fn(&T) -> usize) {}
+fn main() {
+    // get1、get2和get3都可以自動轉成fn（&T）→usize類型
+    check_type(T::get1);
+    check_type(T::get2);
+    check_type(get3);
+}
+```
+
