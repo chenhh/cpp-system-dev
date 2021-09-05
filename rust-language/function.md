@@ -36,13 +36,17 @@ fn main() {
 
 在Rust中，每一個函數都具有自己單獨的類型，但是這個類型可以自動轉換到fn類型。雖然add1和add2有同樣的參數類型和同樣的返回數值型別，但它們是不同類型，所以這裡報錯了。
 
-修復方案是讓func的類型為通用的fn類型即可。
+修復方案是讓func的類型為通用的fn類型即可。但是，我們不能在參數、返回數值型別不同\(參數與返回數值必須都是相同的類型\)的情況下作類型轉換。
 
 ```rust
 fn add1(t: (i32, i32)) -> i32 {
     t.0 + t.1
 }
 fn add2((x, y): (i32, i32)) -> i32 {
+    x + y
+}
+// 傳入參數不是tuple，不能轉換
+fn add3(x: i32, y: i32) -> i32 {
     x + y
 }
 fn main() {
@@ -59,15 +63,40 @@ fn main() {
     // even if their signatures are the same
     func = add2;
     
+    // 傳入的參數類型不相同，無法轉換
+    //func = add3;
+    
     println!("{}", func((1,2)));
 }
 ```
 
+## 函數內可定義元件
 
+Rust的函數體內也允許定義其他item，包括靜態變數、常量、函數、trait、類型、模組等。
 
+當你需要一些item僅在此函數內有用的時候，可以把它們直接定義到函數體內，以避免污染外部的命名空間。
 
-
-
-
-
+```rust
+fn test_inner() {
+    // 定義靜態變數
+    static INNER_STATIC: i64 = 42;
+    // 函數內部定義的函數
+    fn internal_incr(x: i64) -> i64 {
+        x + 1
+    }
+    struct InnerTemp(i64);
+    impl InnerTemp {
+        fn incr(&mut self) {
+            self.0 = internal_incr(self.0);
+        }
+    }
+    // 函數體,執行語句
+    let mut t = InnerTemp(INNER_STATIC);
+    t.incr();
+    println!("{}", t.0);
+}
+fn main() {
+    test_inner();
+}
+```
 
