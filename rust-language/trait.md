@@ -92,3 +92,41 @@ impl Circle {
 }
 ```
 
+### 為trait實現trait
+
+```rust
+trait Shape {
+    fn area(&self) -> f64;
+}
+trait Round {
+    fn get_radius(&self) -> f64;
+}
+struct Circle {
+    radius: f64,
+}
+impl Round for Circle {
+    fn get_radius(&self) -> f64 {
+        self.radius
+    }
+}
+// 注意這裡是 impl Trait for Trait
+// Round不是類型而是trait，因此要加dyn
+impl Shape for dyn Round {
+    fn area(&self) -> f64 {
+        std::f64::consts::PI * self.get_radius() * self.get_radius()
+    }
+}
+fn main() {
+    // Circle實現trait Round, 而trait Round實現Shape
+    // 但是Circle不可直接使用Shape的method, 
+    // 因為self的類型不同
+    let c = Circle { radius: 2f64 };
+    // 編譯錯誤
+    // c.area();
+    let b = Box::new(Circle { radius: 4f64 }) as Box<dyn Round>;
+    // 編譯正確
+    b.area();
+}
+
+```
+
