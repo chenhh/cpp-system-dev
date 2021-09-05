@@ -297,7 +297,7 @@ fn main() {
 }
 ```
 
-## trait約束和繼承
+## trait約束
 
 Rust的trait的另外一個大用處是，作為泛型約束使用，**即限定只有實現給定trait的類型才可被調用**。
 
@@ -322,4 +322,20 @@ fn main() {
     my_print(['a', 'b', 'c'])
 }
 ```
+
+## trait繼承
+
+```rust
+// trait允許繼承
+trait Base {}
+trait Derived: Base {}
+struct T;
+// 由於Derived繼承Base，因此impl時，
+// 必須同時實現Base與Derived
+impl Base for T {}
+impl Derived for T {}
+fn main() {}
+```
+
+這表示Derived trait繼承了Base trait。它表達的意思是，滿足Derived的類型，必然也滿足Base trait。所以，我們在針對一個具體類型implDerived的時候，編譯器也會要求我們同時impl Base。
 
