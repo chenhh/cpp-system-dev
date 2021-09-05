@@ -22,3 +22,8 @@ Rust中Self（大寫S）和self（小寫s）都是關鍵字，大寫S的是類�
 * trait中沒有receiver參數的函數，我們稱為“靜態函數”（static function），可以通過類型加雙冒號：：的方式來調用。
 * **在Rust中，函數和方法沒有本質區別**。
 
+對於第一個self參數，常見的類型有`self:Self`、`self:&Self`、`self:&mut Self`等類型。對於以上這些類型，Rust提供了一種簡化的寫法，我們可以將參數簡寫為`self`、`&self`、`&mut self`。
+
+self參數只能用在第一個參數的位置。請注意“變數self”和“類型Self”的大小寫不同。
+
+1. 
