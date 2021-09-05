@@ -166,5 +166,15 @@ trait中也可以定義靜態函數。下面以標準庫中的`std::default::Def
 pub trait Default {
     fn default() -> Self;
 }
+
+impl<T> Default for Vec<T> {
+        fn default() -> Vec<T> {
+            Vec::new()
+        }
+    }
 ```
+
+跟C++相比，在Rust中，定義靜態函數沒必要使用static關鍵字，因為它把self參數顯式在參數列表中列出來了。
+
+作為對比，C++裡面成員方法預設可以訪問this指標，因此它需要用static關鍵字來標記靜態方法。Rust不採取這個設計，主要原因是self參數的類型變化太多，不同寫法語義差別很大，選擇顯式聲明self參數更方便指定它的類型。
 
