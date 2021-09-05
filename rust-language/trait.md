@@ -178,3 +178,26 @@ impl<T> Default for Vec<T> {
 
 作為對比，C++裡面成員方法預設可以訪問this指標，因此它需要用static關鍵字來標記靜態方法。Rust不採取這個設計，主要原因是self參數的類型變化太多，不同寫法語義差別很大，選擇顯式聲明self參數更方便指定它的類型。
 
+## 擴展類型方法
+
+我們還可以利用trait給其他的類型添加成員方法，哪怕這個類型不是我們自己寫的。
+
+比如，我們可以為內置類型i32添加一個方法：
+
+```rust
+trait Double {
+    fn double(&self) -> Self;
+}
+// 為內建類型實現trait
+impl Double for i32 {
+    fn double(&self) -> i32 {
+        *self * 2
+    }
+}
+fn main() {
+    // 可以像成员方法一样调用
+    let x: i32 = 10.double();
+    println!("{}", x);
+}
+```
+
