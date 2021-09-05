@@ -329,6 +329,7 @@ fn main() {
 // trait允許繼承
 trait Base {}
 trait Derived: Base {}
+// 等同於 trait Derived where Self: Base{}
 struct T;
 // 由於Derived繼承Base，因此impl時，
 // 必須同時實現Base與Derived
@@ -338,4 +339,14 @@ fn main() {}
 ```
 
 這表示Derived trait繼承了Base trait。它表達的意思是，滿足Derived的類型，必然也滿足Base trait。所以，我們在針對一個具體類型implDerived的時候，編譯器也會要求我們同時impl Base。
+
+在標準庫中，很多trait之間都有繼承關係。
+
+```rust
+trait Eq: PartialEq<Self> {}
+trait Copy: Clone {}
+trait Ord: Eq + PartialOrd<Self> {}
+trait FnMut<Args>: FnOnce<Args> {}
+trait Fn<Args>: FnMut<Args> {}
+```
 
