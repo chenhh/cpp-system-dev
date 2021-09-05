@@ -26,4 +26,17 @@ Rust中Self（大寫S）和self（小寫s）都是關鍵字，大寫S的是類�
 
 self參數只能用在第一個參數的位置。請注意“變數self”和“類型Self”的大小寫不同。
 
-1. 
+```rust
+trait T {
+    fn method1(self: Self);
+    fn method2(self: &Self);
+    fn method3(self: &mut Self);
+}
+// 上下兩種寫法等價
+trait T {
+    fn method1(self);
+    fn method2(&self);
+    fn method3(&mut self);
+}
+```
+
