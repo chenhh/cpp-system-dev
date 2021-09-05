@@ -297,3 +297,29 @@ fn main() {
 }
 ```
 
+## trait約束和繼承
+
+Rust的trait的另外一個大用處是，作為泛型約束使用，**即限定只有實現給定trait的類型才可被調用**。
+
+```rust
+use std::fmt::Debug;
+
+// 限定實現Debug的類別T
+fn my_print<T: Debug>(x: T) {
+    println!("The value is {:?}.", x);
+}
+// 等價寫法，用where將限制放到後面
+fn my_print<T>(x: T)
+where
+    T: Debug,
+{
+    println!("The value is {:?}.", x);
+}
+fn main() {
+    my_print("Hello");
+    my_print(41_i32);
+    my_print(true);
+    my_print(['a', 'b', 'c'])
+}
+```
+
