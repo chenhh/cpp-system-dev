@@ -111,3 +111,31 @@ fn diverges() -> ! {
 }
 ```
 
+因為panic！會直接導致堆疊展開，所以這個函式呼叫後面的程式碼都不會繼續執行，它的返回類型就是一個特殊的！符號，這種函數也叫作發散函數。
+
+發散類型的最大特點就是，它可以被轉換為任意一個類型，因此可以存在於任何編譯器檢查類型需要匹配的語句，例如if-else區塊。
+
+```rust
+fn diverges() -> ! {
+    panic!("This function never returns!");
+}
+
+fn main() {
+    let x: bool = diverges();
+    let y: String = diverges();
+    let p = if x {
+        panic!("error");
+    } else {
+        100
+    };
+}
+```
+
+在Rust中，有以下這些情況永遠不會返回，它們的類型就是！。
+
+* panic！以及基於它實現的各種函數/巨集，比如unimplemented！、unreachable！；
+* 無窮迴圈loop{}；
+* 行程退出函數std：：process：：exit以及類似的libc中的exec一類函數。
+
+
+
