@@ -76,6 +76,9 @@ fn main() {
     let c = Circle { radius: 2_f64 };
     // 第一個參數名字是 self,可以使用小數點語法調用
     println!("The area is {}", c.area());
+    
+    // 內在方法等價寫法
+    println!("The area is {}", Circle::area(&c));
 }
 ```
 
@@ -127,7 +130,6 @@ fn main() {
     // 編譯正確
     b.area();
 }
-
 ```
 
 ### 靜態方法
@@ -262,6 +264,8 @@ fn main() {
     <Chef as Wash>::start(&me); // Wash::start
 }
 ```
+
+由此我們也可以看到，**所謂的“成員方法”也沒什麼特殊之處，它跟普通的靜態方法的唯一區別是，第一個參數是self，而這個self只是一個普通的函數參數而已**。
 
 
 
