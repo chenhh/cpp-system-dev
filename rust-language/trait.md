@@ -203,5 +203,15 @@ fn main() {
 
 即使實作的類型不是在當前的專案中聲明的，我們依然可以為它增加一些成員方法。
 
+### 孤兒規則\(orphan rule\)
+
 但我們也不是隨隨便便就可以這麼做的，Rust對此有一個規定。在聲明trait和impl trait的時候，**Rust規定了一個Coherence Rule（一致性規則）或稱為Orphan Rule（孤兒規則）：impl塊要麼與trait的聲明在同一個的crate中，要麼與類型的聲明在同一個crate中**。
+
+也就是說，如果trait來自於外部crate，而且類型也來自於外部crate，編譯器不允許你為這個類型impl這個trait。**它們之中必須至少有一個是在當前crate中定義的**。
+
+因為在其他的crate中，一個類型沒有實現一個trait，很可能是有意的設計。如果我們在使用其他的crate的時候，強行把它們“配對”，是會製造出bug的。
+
+比如說，我們寫了一個程式，引用了外部庫lib1和lib2，lib1中聲明了一個trait T，lib2中聲明了一個struct S，我們不能在自己的程式中針對S實現T。這也意味著，上游開發者在給別人寫庫的時候，尤其要注意，一些比較常見的標準庫中的trait，如Display Debug ToString Default等，應該盡可能地提供好。否則，使用這個庫的下游開發者是沒辦法幫我們把這些trait實現的。
+
+同理，如果是匿名impl，那麼這個impl塊必須與類型本身存在於同一個crate中。
 
