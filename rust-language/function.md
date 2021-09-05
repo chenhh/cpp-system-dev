@@ -160,5 +160,36 @@ fn main() {
 }
 ```
 
+編譯後，執行檔加上幾個參數可得到以下結果：
+
+```bash
+$ test -opt1 opt2 -- opt3
+Arg: test
+Arg: -opt1
+Arg: opt2
+Arg: --
+Arg: opt3
+```
+
+每個被空格分開的字串都是一個參數。行程可以在任何時候調用`exit()`直接退出，退出時候的錯誤碼由`exit()`函數的參數指定。
+
+### 讀取環境變數
+
+如果要讀取環境變數，可以用`std::env::var()`以及`std::env::vars()`函數獲得。
+
+
+
+```bash
+fn main() {
+    for arg in std::env::args() {
+        match std::env::var(&arg) {
+            Ok(val) => println!("{}: {:?}", &arg, val),
+            Err(e) => println!("couldn't find environment {}, {}", &arg, e),
+        }
+    }
+    println!("All environment varible count {}", std::env::vars().count());
+}
+```
+
 
 
