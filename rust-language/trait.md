@@ -385,5 +385,17 @@ impl PartialEq for Foo { ... }
 
 
 
+## trait別名
 
+跟type alias類似的，trait也可以起別名（trait alias）。假如在某些場景下，我們有一個比較複雜的trait：
+
+```rust
+pub trait Service {
+    type Request;
+    type Response;
+    type Error;
+    type Future: Future<Item = Self::Response, Error = Self::Error>;
+    fn call(&self, req: Self::Request) -> Self::Future;
+}
+```
 
