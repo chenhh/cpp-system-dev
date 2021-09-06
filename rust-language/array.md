@@ -42,3 +42,14 @@ fn main() {
 }
 ```
 
+### 陣列比較
+
+```rust
+fn main() {
+    let v1 = [1, 2, 3];
+    let v2 = [1, 2, 4];
+    // element-wise comparison
+    println!("{:?}", v1 < v2);
+}
+```
+
