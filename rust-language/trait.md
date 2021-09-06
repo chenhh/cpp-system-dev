@@ -399,3 +399,12 @@ pub trait Service {
 }
 ```
 
+每次使用這個trait的時候都需要攜帶一堆的關聯類型參數。為了避、免這樣的麻煩，在已經確定了關聯類型的場景下，我們可以為它取一個別名：
+
+```rust
+trait HttpService =
+    Service<Request = http::Request, 
+            Response = http::Response, 
+            Error = http::Error>;
+```
+
