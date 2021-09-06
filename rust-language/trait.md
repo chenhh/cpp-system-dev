@@ -350,3 +350,40 @@ trait FnMut<Args>: FnOnce<Args> {}
 trait Fn<Args>: FnMut<Args> {}
 ```
 
+## Derive指令
+
+Rust裡面為類型impl某些trait的時候，邏輯是非常機械化的。為許多類型重複而單調地impl某些trait，是非常枯燥的事情。為此，Rust提供了一個特殊的attribute，它可以幫我們自動impl某些trait。
+
+```rust
+/* 在你希望impl trait的類型前面寫#[derive（…）]，
+ * 括弧裡面是你希望impl的trait的名字。這樣寫了之後，
+ * 編譯器就幫你自動加上了impl塊
+*/
+#[derive(Copy, Clone, Default, Debug, Hash, PartialEq, Eq, PartialOrd, Ord)]
+struct Foo {
+    data: i32,
+}
+fn main() {
+    let v1 = Foo { data: 0 };
+    let v2 = v1;
+    println!("{:?}", v2);
+}
+/* derive指令自動完成以下的內容
+impl Copy for Foo { ... }
+impl Clone for Foo { ... }
+impl Default for Foo { ... }
+impl Debug for Foo { ... }
+impl Hash for Foo { ... }
+impl PartialEq for Foo { ... }
+......
+*/
+```
+
+這些trait都是標準庫內部的較特殊的trait，它們可能包含有成員方法，但是成員方法的邏輯有一個簡單而一致的“範本”可以使用，編譯器就機械化地重複這個範本，幫我們實現這個預設邏輯。當然我們也可以手動實現。
+
+目前，Rust支援的可以自動derive的trait有以下這些：`Debug`、`Clone`、`Copy`、`Hash`、`RustcEncodable`、`RustcDecodable`、`PartialEq`、`Eq`、`ParialOrd`、`Ord`、`Default`、`FromPrimitive`、`Send`、`Sync`。
+
+
+
+
+
