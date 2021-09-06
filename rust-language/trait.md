@@ -408,3 +408,121 @@ trait HttpService =
             Error = http::Error>;
 ```
 
+## 標準庫常用traits
+
+### Display, Debug
+
+```rust
+// std::fmt::Display
+pub trait Display {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error>;
+} // std::fmt::Debug
+pub trait Debug {
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error>;
+}
+```
+
+它們的主要用處就是用在類似println！這樣的地方。
+
+只有實現了Display trait的類型，才能用`{}`格式控制列印出來；只有實現了Debug trait的類型，才能用`{:?}{#?}`格式控制列印出來。
+
+Display假定了這個類型可以用utf-8格式的字串表示，它是準備給最終用戶看的，並不是所有類型都應該或者能夠實現這個trait。這個trait的fmt應該如何格式化字串，完全取決於程式師自己，編譯器不提供自動derive的功能。
+
+標準庫中還有一個常用trait叫作`std::string::ToString`，對於所有實現了Display trait的類型，都自動實現了這個ToString trait。它包含了一個方法`to_string（&self）->String`。任何一個實現了Display trait的類型，我們都可以對它調用`to_string()`方法格式化出一個字串。
+
+Debug則是主要為了調試使用，建議所有的作為API的“公開”類型都應該實現這個trait，以方便調試。它列印出來的字串不是以“美觀易讀”為標準，**編譯器提供了自動derive的功能**。
+
+### PartialOrd/Ord/PartialEq/Eq
+
+因為浮點數中存在Nan，因此浮點數滿足偏序非而全序\(Nan不滿足三一律，IEEE754規定\)，所以浮點數無法排序。
+
+因此，Rust設計了兩個trait來描述這樣的狀態:一個是`std::cmp::PartialOrd`，表示“偏序”，一個是`std::cmp::Ord`，表示“全序”。
+
+
+
+```rust
+// 偏序 trait
+pub trait PartialOrd<Rhs: ?Sized = Self>: PartialEq<Rhs> {
+    fn partial_cmp(&self, other: &Rhs) -> Option<Ordering>;
+    fn lt(&self, other: &Rhs) -> bool {}
+    fn le(&self, other: &Rhs) -> bool {}
+    fn gt(&self, other: &Rhs) -> bool {}
+    fn ge(&self, other: &Rhs) -> bool {}
+}
+// 全序trait
+pub trait Ord: Eq + PartialOrd<Self> {
+    fn cmp(&self, other: &Self) -> Ordering;
+}
+```
+
+partial\_cmp函數的返回數值型別是`Option<Ordering>`。只有Ord trait裡面的cmp函數才能返回一個確定的Ordering。f32和f64類型都只實現了PartialOrd，而沒有實現Ord。
+
+這個設計是優點，而不是缺點，它讓我們盡可能地在更早的階段發現錯誤，而不是留到執行時再去debug。
+
+```rust
+fn main() {
+    let int_vec = [1_i32, 2, 3];
+    let biggest_int = int_vec.iter().max();
+    // 編譯錯誤，浮點數不滿足全序，無法排序
+    let float_vec = [1.0_f32, 2.0, 3.0];
+    // let biggest_float = float_vec.iter().max();
+}
+```
+
+Rust中的PartialOrd trait實際上就是C++20中即將加入的three-waycomparison運算子&lt;=&gt;。同理，PartialEq和Eq兩個trait也就可以理解了，它們的作用是比較相等關係，與排序關係非常類似。
+
+### Sized
+
+```rust
+#[lang = "sized"]
+#[rustc_on_unimplemented = "`{Self}` does not have a constant size known at
+compile-time"]
+#[fundamental] // for Default, for example, which requires that `[T]: !Default` be evaluatable
+pub trait Sized {
+    // Empty.
+}
+```
+
+這個trait定義在`std::marker`模組中，它沒有任何的成員方法。它有\#\[lang="sized"\]屬性，說明它與普通trait不同，編譯器對它有特殊的處理。
+
+用戶也不能針對自己的類型impl這個trait。**一個類型是否滿足Sized約束是完全由編譯器推導的，用戶無權指定**。
+
+在C/C++這一類的語言中，大部分變數、參數、返回值都應該是編譯階段固定大小的。**在Rust中，但凡編譯階段能確定大小的類型，都滿足Sized約束。**
+
+那還有什麼類型是不滿足Sized約束的呢？比如C語言裡的不定長陣列（Variable-length Array）。不定長陣列的長度在編譯階段是未知的，是在執行階段才確定下來的。Rust裡面也有類似的類型\[T\]。在Rust中VLA類型已經通過了RFC設計，只是暫時還沒有實現而已。
+
+不定長類型在使用的時候有一些限制，比如不能用它作為函數的返回類型，而必須將這個類型藏到指標背後才可以。但它作為一個類型，依然是有意義的，我們可以為它添加成員方法，用它產生實體泛型參數，等等。
+
+Rust中對於動態大小類型專門有一個名詞Dynamic Sized Type。我們後面將會看到的\[T\]，str以及dyn Trait都是DST。
+
+### Default
+
+Rust裡面並沒有C++裡面的“構造函數”的概念。它只提供了類似C語言的各種複合類型各自的初始化語法。主要原因在於，**相比普通函數，構造函數本身並沒有提供什麼額外的抽象能力。所以Rust裡面推薦使用普通的靜態函數作為類型的“構造器”**。
+
+如String類型的構造方法非常多如下：
+
+```rust
+fn new() -> String
+fn with_capacity(capacity: usize) -> String
+fn from_utf8(vec: Vec<u8>) -> Result<String, FromUtf8Error>
+fn from_utf8_lossy<'a>(v: &'a [u8]) -> Cow<'a, str>
+fn from_utf16(v: &[u16]) -> Result<String, FromUtf16Error>
+fn from_utf16_lossy(v: &[u16]) -> String
+unsafe fn from_raw_parts(buf: *mut u8, length: usize, capacity: usize) -> String
+unsafe fn from_utf8_unchecked(bytes: Vec<u8>) -> String
+```
+
+這些方法接受的參數各異，錯誤處理方式也各異，強行將它們統一到同名字的構造函數重載中不是什麼好主意。
+
+不過，對於那種無參數、無錯誤處理的簡單情況，標準庫中提供了Default trait來做這個統一抽象。
+
+```rust
+trait Default {
+    fn default() -> Self;
+}
+```
+
+它只包含一個“靜態函數”default\(\)返回Self類型。標準庫中很多類型都實現了這個trait，它相當於提供了一個類型的預設值。
+
+在Rust中，單詞new並不是一個關鍵字。所以我們可以看到，很多類型中都使用了new作為函數名，用於命名那種最常用的創建新物件的情況。因為這些new函數差別甚大，所以並沒有一個trait來對這些new函數做一個統一抽象。
+
