@@ -237,3 +237,29 @@ fn main() {
 * 如果希望某個類型可以執行“索引”讀操作，就需要該類型實現`std::ops::Index` trait；
 * 如果希望某個類型可以執行“索引”寫操作，就需要該類型實現`std::ops::IndexMut` trait。
 
+對於陣列類型，如果使用usize作為索引類型執行讀取操作，實際執行的是標準庫中的以下程式碼。如果index超過了陣列的真實長度範圍，會執行panic！操作，導致執行緒abort。使用Range等類型做Index操作的執行流程與此類似。
+
+```rust
+impl<T> ops::Index<usize> for [T] {
+    type Output = T;
+    // 每次從array取值都會檢查是否超出邊界
+    fn index(&self, index: usize) -> &T {
+        assert!(index < self.len());
+        unsafe { self.get_unchecked(index) }
+    }
+}
+```
+
+為了防止索引操作導致程式崩潰，如果我們不確定使用的“索引”是否合法，應該使用get\(\)方法調用來獲取陣列中的元素，這個方法不會引起panic！，它的返回類型是Option&lt;T&gt;：
+
+```rust
+fn main() {
+    let v = [10i32, 20, 30, 40, 50];
+    let first = v.get(0);   // Some(10), 可用first.unwrap()取值
+    let tenth = v.get(10);  // None
+    println!("{:?} {:?}", first, tenth);
+}
+```
+
+
+
