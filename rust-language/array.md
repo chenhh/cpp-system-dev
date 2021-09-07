@@ -191,3 +191,30 @@ fn main() {
 * `std::ops::RangeTo`代表沒有起始只有結束的範圍，語法為`..end`，對有符號數的含義是`（-∞，end）`，對無符號數的含義是`[0，end）`；
 * `std::ops::RangeFull`代表沒有上下限制的範圍，語法為..，對有符號數的含義是`（-∞，+∞）`，對無符號數的含義是`[0，+∞）`。
 
+```rust
+fn print_slice(arr: &[i32]) {
+    println!("Length: {}", arr.len());
+    for item in arr {
+        print!("{}\t", item);
+    }
+    println!("");
+}
+fn main() {
+    let arr: [i32; 5] = [1, 2, 3, 4, 5];
+    print_slice(&arr[..]); // full range
+    let slice = &arr[2..]; // RangeFrom
+    print_slice(slice);
+    let slice2 = &slice[..2]; // RangeTo
+    print_slice(slice2);
+}
+```
+
+在許多時候，使用陣列的一部分切片作為被操作物件在函數間傳遞，既保證了效率（避免直接複製大陣列），又能保證將所需要執行的操作限制在一個可控制的範圍內（有長度資訊，有越界檢查），還能控制其讀寫許可權，非常有用。
+
+雖然左閉右開區間是最常用的寫法，然而，在有些情況下，這種語法不足以處理邊界問題。比如，我們希望產生一個i32類型的從0到i32::MAX的範圍，就無法表示。因為按語法，我們應該寫0..（i32::MAX+1），然而（i32::MAX+1）已經溢出了。所以，Rust還提供了一種左閉右閉區間的語法，它使用這種語法來表示..=。
+
+閉區間對應的標準庫中的類型是：
+
+* `std::ops::RangeInclusive`，語法為`start..=end`，含義是`[start, end]`。
+* `std::ops::RangeToInclusive`，語法為`..=end`，對有符號數的含義是`（-∞, end]`，對無符號數的含義是`[0, end]`。
+
