@@ -131,3 +131,40 @@ fn main() {
 }
 ```
 
+對於DST類型，Rust有如下限制：
+
+* 只能通過指標來間接創建和操作DST類型，`&[T]Box<[T]>`可以，`[T]`不可以；
+* 區域變數和函數參數的類型不能是DST類型，因為區域變數和函數參數必須在編譯階段知道它的大小，因為目前unsized rvalue功能還沒有實現；
+* enum中不能包含DST類型，struct中只有最後一個元素可以是DST，其他地方不行，如果包含有DST類型，那麼這個結構體也就成了DST類型。
+
+Rust設計出DST類型，使得類型暫時系統更完善，也有助於消除一些C/C++中容易出現的bug。這一設計的好處有：·
+
+* 首先，DST類型雖然有一些限制條件，但我們依然可以把它當成合法的類型看待，比如，可以為這樣的類型實現trait、添加方法、用在泛型參數中等；
+* 胖指標的設計，避免了陣列類型作為參數傳遞時自動退化為裸指標類型，丟失了長度資訊的問題，保證了類型安全；
+* 這一設計依然保持了與“所有權”“生命週期”等概念相容的特點。陣列切片不只是提供了“陣列到指標”的安全轉換，配合上Range功能，它還能提供陣列的局部切片功能。
+
+## Range
+
+Rust中的Range代表一個“區間”，一個“範圍”，它有內置的語法支援，就是兩個小數點..。
+
+```rust
+fn main() {
+    // r是一個Range<i32>,中間是兩個點,代表[1,10)這個區間
+    let r = 1..10;
+    for i in r {
+        print!("{:?}\t", i);
+    }
+}
+```
+
+在begin..end這個語法中，前面是閉區間，後面是開區間。這個語法實際上生成的是一個[`std::ops::Range<_>`](https://doc.rust-lang.org/std/ops/struct.Range.html)類型的變數。
+
+```rust
+pub struct Range<Idx> {
+    /// The lower bound of the range (inclusive).
+    pub start: Idx,
+    /// The upper bound of the range (exclusive).
+    pub end: Idx,
+}
+```
+
