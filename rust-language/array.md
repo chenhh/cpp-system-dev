@@ -53,3 +53,26 @@ fn main() {
 }
 ```
 
+### 遍歷操作
+
+```rust
+fn main() {
+    let v = [0_i32; 10];
+    for i in &v {
+        println!("{:?}", i);
+    }
+}
+```
+
+## 多維陣列
+
+```rust
+fn main() {
+    // 3 * 2 array
+    let v: [[i32; 2]; 3] = [[0, 0], [0, 0], [0, 0]];
+    for i in &v {
+        println!("{:?}", i);
+    }
+}
+```
+
