@@ -218,3 +218,22 @@ fn main() {
 * `std::ops::RangeInclusive`，語法為`start..=end`，含義是`[start, end]`。
 * `std::ops::RangeToInclusive`，語法為`..=end`，對有符號數的含義是`（-∞, end]`，對無符號數的含義是`[0, end]`。
 
+## 邊界檢查\(boundary check\)
+
+```rust
+fn main() {
+    let v = [10i32, 20, 30, 40, 50];
+    // 索引值在執行時決定，可能越界
+    let index: usize = std::env::args()
+        .nth(1)
+        .map(|x| x.parse().unwrap_or(0))
+        .unwrap_or(0);
+    println!("{:?}", v[index]);
+}
+```
+
+在Rust中，“索引”操作也是一個通用的運算子，是可以自行擴展的。
+
+* 如果希望某個類型可以執行“索引”讀操作，就需要該類型實現`std::ops::Index` trait；
+* 如果希望某個類型可以執行“索引”寫操作，就需要該類型實現`std::ops::IndexMut` trait。
+
