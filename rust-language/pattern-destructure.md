@@ -100,5 +100,16 @@ fn print(x: Direction) {
 }
 ```
 
+正因為如此，在多個專案之間有依賴關係的時候，在上游的一個庫中對enum增加成員，是一個破壞相容性的改動。因為增加成員後，很可能會導致下游的使用者match語句編譯不過。為解決這個問題，Rust提供了一個叫作non\_exhaustive的功能（目前還沒有穩定）。
+
+```rust
+#[non_exhaustive]
+pub enum Error {
+    NotFound,
+    PermissionDenied,
+    ConnectionRefused,
+}
+```
+
 
 
