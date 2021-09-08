@@ -117,5 +117,19 @@ pub enum Error {
 
 除了在match中表示未捕捉到的所有狀態之外，**底線還能用在模式匹配的各種地方，用來表示一個預留位置，雖然匹配到了但是忽略它的值的情況**：
 
+```rust
+struct P(f32, f32, f32);
+fn calc(arg: P) -> f32 {
+    // 模式解構, 匹配 tuple struct,
+    // 但是忽略第二個成員的值
+    let P(x, _, y) = arg;
+    x * x + y * y
+}
+fn main() {
+    let t = P(1.0, 2.0, 3.0);
+    println!("{}", calc(t));  // 10
+}
+```
+
 
 
