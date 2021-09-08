@@ -75,6 +75,30 @@ fn main() {
     let x = Direction::East;
     print(x);
 }
-
 ```
+
+Rust要求match需要對所有情況做完整的、無遺漏的匹配，如果漏掉了某些情況，是不能編譯通過的。exhaustive意思是無遺漏的、窮盡的、徹底的、全面的。exhaustive是Rust模式匹配的重要特點。
+
+```rust
+fn print(x: Direction) {
+    match x {
+        Direction::East => {
+            println!("East");
+        }
+        Direction::West => {
+            println!("West");
+        }
+        Direction::South => {
+            println!("South");
+        }
+        // 因此沒有列出Direction::North，
+        // 可用_捕抓未列出的所有狀態
+        _ => {
+            println!("Other");
+        }
+    }
+}
+```
+
+
 
