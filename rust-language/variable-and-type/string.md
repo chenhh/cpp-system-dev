@@ -100,3 +100,18 @@ fn main() {
 }
 ```
 
+Rust的記憶體管理方式和C++有很大的相似之處。如果用C++來對比，Rust的String類型類似於std::string，而Rust的&str類型類似於std::string\_view。
+
+```cpp
+#include <iostream>
+#include <string>
+#include <string_view>
+
+int main() {
+    std::string s = "Hello world";
+    std::string_view v( & s[5], 5);
+    std::cout << "Size of string_view:" << sizeof(v) << "\n" <<
+        "Value: " << v << std::endl;
+}
+```
+
