@@ -58,13 +58,13 @@ fn main() {
 }
 ```
 
-&str為胖指標：
+&str為胖指標，它內部實際上包含了一個指向字串片段頭部的指標和一個長度。所以，它跟C/C++的字串不同：C/C++裡面的字串以'\0'結尾，而Rust的字串是可以中間包含'\0'字元的。
 
 ```rust
 fn main() {
     // &str為fat pointer，2個usize，第一個存ptr address, 第二個存array長度
-    println!("Size of pointer: {}", std::mem::size_of::<*const ()>()); //8
-    println!("Size of &str : {}", std::mem::size_of::<&str>()); //16
+    println!("Size of pointer: {}", std::mem::size_of::<*const ()>()); // 8
+    println!("Size of &str : {}", std::mem::size_of::<&str>());        // 16
 }
 ```
 
