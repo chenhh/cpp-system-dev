@@ -218,3 +218,19 @@ fn main() {
 }
 ```
 
+match可用`..`表示前閉後開區間，或是`..=`表示閉區間：
+
+```rust
+fn category(x: char) {
+    match x {
+        'a'..='z' => println!("lowercase"),
+        'A'..='Z' => println!("uppercase"),
+        _ => println!("something else"),
+    }
+}
+fn main() {
+    let x = 'c';
+    category(x); // lowercase
+}
+```
+
