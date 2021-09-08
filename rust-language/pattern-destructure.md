@@ -15,6 +15,11 @@ let (head, center, tail) = tuple;    // 解構tuple至各變數
 ```
 
 ```rust
+/* 我們首先構造了一個T2類型的變數x，
+ * 它內部又嵌套包含了其他的結構體。
+ * 實際上，我們完全可以一次性解構多個層次，
+ * 直接把這個物件內部深處的元素拆解出來
+*/
 // struct tuple
 struct T1(i32, char);
 // struct
@@ -35,5 +40,41 @@ fn main() {
     } = x;
     println!("{} {} {}", value1, value2, value3);
 }
+```
+
+Rust的“模式解構”功能不僅出現在let語句中，還可以出現在match、if let、while let、函式呼叫、閉包調用等情景中。而match具有功能最強大的模式匹配。
+
+## match
+
+```rust
+enum Direction {
+    East,
+    West,
+    South,
+    North,
+}
+fn print(x: Direction) {
+    // 因此match列舉了所有enum的狀態，
+    // 所以不必加上_的例外處理
+    match x {
+        Direction::East => {
+            println!("East");
+        }
+        Direction::West => {
+            println!("West");
+        }
+        Direction::South => {
+            println!("South");
+        }
+        Direction::North => {
+            println!("North");
+        }
+    }
+}
+fn main() {
+    let x = Direction::East;
+    print(x);
+}
+
 ```
 
