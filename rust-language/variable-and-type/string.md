@@ -92,9 +92,9 @@ fn capitalize(substr: &mut str) {
     substr.make_ascii_uppercase();
 }
 fn main() {
-    // s的類型為String
+    // s的類型為mut String
     let mut s = String::from("Hello World");
-    // 傳進函數時，String自動轉為&mut str
+    // 傳進函數時， mut String自動轉為&mut str
     capitalize(&mut s);
     println!("{}", s);    // HELLO WORLD
 }
