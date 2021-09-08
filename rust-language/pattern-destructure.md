@@ -286,5 +286,32 @@ fn main() {
 }
 ```
 
+### match的變數綁定
+
+我們可以使用@符號綁定變數。@符號前面是新聲明的變數，後面是需要匹配的模式。
+
+```rust
+fn main() {
+    let x = 1;
+    match x {
+        // 以變數以代表匹配到的值
+        e @ 1..=5 => println!("got a range element {}", e),
+        _ => println!("anything"),
+    }
+}
+```
+
+如果在使用@的同時使用\|，需要保證在每個條件上都綁定這個名字：
+
+```rust
+fn main() {
+    let x = 5;
+    match x {
+        e @ 1..=5 | e @ 8..=10 => println!("got a range element {}", e),
+        _ => println!("anything"),
+    }
+}
+```
+
 
 
