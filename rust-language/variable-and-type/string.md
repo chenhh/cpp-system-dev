@@ -11,7 +11,7 @@ str是Rust的內置類型。&str是對str的借用。**Rust的字串內部預設
 ```rust
 fn main() {
     // 因為字串是 UTF-8 串流，所以並不支援使用索引來存取
-    let s = "hello";
+    let s: &str = "hello";
     println!("The first letter of s is {}", s[0]); // ERROR!!!
 }
 ```
@@ -22,7 +22,7 @@ fn main() {
 
 ```rust
 fn main() {
-    let hachiko = "忠犬ハチ公";
+    let hachiko: &str = "忠犬ハチ公";
 
     for b in hachiko.as_bytes() {
         print!("{}, ", b);
@@ -44,6 +44,19 @@ fn main() {
 ```
 
 它的時間複雜度是O（n），因為utf-8是變長編碼，如果我們不從頭開始過一遍，根本不知道第n個字元的位址在什麼地方。但是，綜合來看，選擇utf-8作為內部預設編碼格式是缺陷最少的一種方式了。相比其他的編碼格式，它有相當多的優點。
+
+\[T\]是DST類型，對應的str是DST類型。&\[T\]是陣列切片類型，對應的&str是字串切片類型：
+
+```rust
+fn main() {
+    let hachiko: &str = "hello";
+    // substr中取range可行是因為hackiko中存放的都是ascii字元
+    // 如果存放的是utf8的字串的話，range取法會有問題, 
+    // 因為range是取bytes而不是chars
+    let substr : &str = &hachiko[2..];
+    println!("{}", substr);
+}
+```
 
 
 
