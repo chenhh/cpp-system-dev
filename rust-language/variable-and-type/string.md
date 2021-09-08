@@ -58,5 +58,15 @@ fn main() {
 }
 ```
 
+&str為胖指標：
+
+```rust
+fn main() {
+    // &str為fat pointer，2個usize，第一個存ptr address, 第二個存array長度
+    println!("Size of pointer: {}", std::mem::size_of::<*const ()>()); //8
+    println!("Size of &str : {}", std::mem::size_of::<&str>()); //16
+}
+```
+
 
 
