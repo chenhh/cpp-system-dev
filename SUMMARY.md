@@ -175,6 +175,7 @@
   * [陣列](rust-language/variable-and-type/array.md)
   * [字串](rust-language/variable-and-type/string.md)
 * [語句與運算式](rust-language/statement-and-expression.md)
+* [模式解構\(pattern destructure\)](rust-language/pattern-destructure.md)
 * [函數](rust-language/function.md)
 * [trait](rust-language/trait.md)
 * [巨集](rust-language/macro.md)
