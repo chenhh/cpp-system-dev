@@ -234,7 +234,7 @@ fn main() {
 }
 ```
 
-### 匹配看守\(match guard\)
+## 匹配看守\(match guard\)
 
 可以使用if作為“匹配看守”（match guards）。當匹配成功且符合if條件，才執行後面的語句。
 
@@ -286,7 +286,7 @@ fn main() {
 }
 ```
 
-### match的變數綁定
+## match的變數綁定
 
 我們可以使用@符號綁定變數。@符號前面是新聲明的變數，後面是需要匹配的模式。
 
@@ -313,5 +313,48 @@ fn main() {
 }
 ```
 
+## ref關鍵字
 
+如果我們需要綁定的是被匹配物件的引用，則可以使用ref關鍵字。之所以在某些時候需要使用ref，是因為模式匹配的時候有可能發生變數的所有權轉移，**使用ref就是為了避免出現所有權轉移**。
+
+```rust
+fn main() {
+    let x = 5_i32;
+    match x {
+        // 此時 r 的類型是 `&i32`
+        ref r => println!("Got a reference to {}", r),
+    }
+}
+```
+
+### ref關鍵字和引用符號&的關係
+
+* ref是“模式”的一部分，它只能出現在賦值號左邊；
+* 而&符號是借用運算子，是運算式的一部分，它只能出現在賦值號右邊。
+
+為了搞清楚這些變數綁定的分別是什麼類型，我們可以把變數的類型資訊列印出來看看。有兩種方案：
+
+* 利用編譯器的錯誤資訊來幫我們理解；
+* 利用標準庫裡面的intrinsic函數列印。
+
+```rust
+// 目前只能在nightly channel執行
+#![feature(core_intrinsics)]
+
+fn print_type_name<T>(_arg: &T) {
+    unsafe {
+        println!("{}", std::intrinsics::type_name::<T>());
+    }
+}
+
+fn main() {
+    let x = 5_i32;      // i32
+    let x = &5_i32;     // &i32
+    print_type_name(&x);
+    let ref x = 5_i32;  // &32
+    print_type_name(&x);
+    let ref x = &5_i32; // &&32
+    print_type_name(&x);
+}
+```
 
