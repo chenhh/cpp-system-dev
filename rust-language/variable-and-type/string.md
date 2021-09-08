@@ -85,3 +85,18 @@ fn main() {
 }
 ```
 
+Strin類型實現了`Deref<Target=str>`的trait。所以在很多情況下，&String類型可以被編譯器自動轉換為&str類型。
+
+```rust
+fn capitalize(substr: &mut str) {
+    substr.make_ascii_uppercase();
+}
+fn main() {
+    // s的類型為String
+    let mut s = String::from("Hello World");
+    // 傳進函數時，String自動轉為&mut str
+    capitalize(&mut s);
+    println!("{}", s);    // HELLO WORLD
+}
+```
+
