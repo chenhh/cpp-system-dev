@@ -6,7 +6,7 @@ Rust的字串有點複雜，主要是跟所有權有關。Rust的字串涉及兩
 
 ## &str
 
-str是Rust的內置類型。&str是對str的借用。**Rust的字串內部預設是使用utf-8編碼格式的。而內置的char類型是4位元組長度的，存儲的內容是Unicode Scalar Value**。所以，Rust裡面的字串不能視為char類型的陣列，而更接近u8類型的陣列。
+str是Rust的內置類型，不可修改指向的字串。&str是對str的借用。**Rust的字串內部預設是使用utf-8編碼格式的。而內置的char類型是4位元組長度的，存儲的內容是Unicode Scalar Value**。所以，Rust裡面的字串不能視為char類型的陣列，而更接近u8類型的陣列。
 
 ```rust
 fn main() {
@@ -68,5 +68,20 @@ fn main() {
 }
 ```
 
+## String
 
+String類型。它跟&str類型的主要區別是，它有管理記憶體空間的權力。**&str類型是對一塊字串區間的借用，它對所指向的記憶體空間沒有所有權，哪怕&mut str也一樣**。
+
+```rust
+fn main() {
+    // String類型在堆上動態申請了一塊記憶體空間，
+    // 它有權對這塊記憶體空間進行擴容，
+    // 內部實現類似於std::Vec<u8>類型。
+    // 所以我們可以把這個類型作為容納字串的容器使用。
+    let mut s = String::from("Hello");
+    s.push(' ');
+    s.push_str("World.");
+    println!("{}", s);
+}
+```
 
