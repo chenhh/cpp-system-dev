@@ -236,5 +236,55 @@ fn main() {
 
 ### 匹配看守\(match guard\)
 
+可以使用if作為“匹配看守”（match guards）。當匹配成功且符合if條件，才執行後面的語句。
+
+```rust
+enum OptionalInt {
+    Value(i32),
+    Missing,
+}
+fn main() {
+    let x = OptionalInt::Value(5);
+    match x {
+        OptionalInt::Value(i) if i > 5 => println!("Got an int bigger than five!"),
+        OptionalInt::Value(..) => println!("Got an int!"),
+        OptionalInt::Missing => println!("No such luck."),
+    }
+}
+```
+
+在對變數的“值”進行匹配的時候，編譯器依然會保證“完整無遺漏”檢查。但是這個檢查目前做得並不是很完美，某些情況下會發生誤報的情況，因為畢竟編譯器內部並沒有一個完整的數學解算功能。
+
+```rust
+fn main() {
+    let x = 10;
+    
+    match x {
+        i if i > 5 => println!("bigger than five"),
+        i if i <= 5 => println!("small or equal to five"),
+        _ => unreachable!(),    // 必須加上此分支，否則會出現編譯錯誤
+    }
+}
+```
+
+編譯器會保證match的所有分支合起來一定覆蓋了目標的所有可能取值範圍，但是並不會保證各個分支是否會有重疊的情況（畢竟編譯器不想做成一個完整的數學解算器）。如果不同分支覆蓋範圍出現了重疊，各個分支之間的先後順序就有影響。
+
+```rust
+fn intersect(arg: i32) {
+    match arg {
+        // 如果我們進行匹配的值同時符合好幾條分支，
+        // 那麼總會執行第一條匹配成功的分支，忽略其他分支
+        i if i < 0 => println!("case 1"),
+        i if i < 10 => println!("case 2"),
+        i if i * i < 1000 => println!("case 3"),
+        _ => println!("default case"),
+    }
+}
+fn main() {
+    let x = -1;
+    intersect(x);   // case 1
+}
+```
+
 
 
