@@ -113,6 +113,31 @@ pub enum Error {
 
 上游庫作者可以用一個叫作“non\_exhaustive”的attribute來標記一個enum或者struct，這樣在另外一個項目中使用這個類型的時候，無論如何都沒辦法在match運算式中通過列舉所有的成員實現完整匹配，必須使用底線才能完成編譯。這樣，以後上游庫裡面為這個類型添加新成員的時候，就不會導致下游專案中的編譯錯誤了因為它已經存在一個預設分支匹配其他情況。
 
+### match可做為表達式
+
+```rust
+enum Direction {
+    East,
+    West,
+    South,
+    North,
+}
+fn direction_to_int(x: Direction) -> i32 {
+    // 參數x傳入後，直接match傳回傳(注意match後無分號)
+    match x {
+        Direction::East => 10,
+        Direction::West => 20,
+        Direction::South => 30,
+        Direction::North => 40,
+    }
+}
+fn main() {
+    let x = Direction::East;
+    let s = direction_to_int(x);
+    println!("{}", s);  // 10
+}
+```
+
 ## 底線\(underline\)可表示省略單個元素
 
 除了在match中表示未捕捉到的所有狀態之外，**底線還能用在模式匹配的各種地方，用來表示一個預留位置，雖然匹配到了但是忽略它的值的情況**：
@@ -174,7 +199,22 @@ fn main() {
     // ..也可表示省略給定區間中的所有元素
     let (a, .., b) = x;
     println!("{}, {}", a, b); // 1, 4
-    
+}
+```
+
+Match可以匹配值，且可以使用或運算子\|來匹配多個條件：
+
+```rust
+fn category(x: i32) {
+    match x {
+        -1 | 1 => println!("true"),
+        0 => println!("false"),
+        _ => println!("error"),
+    }
+}
+fn main() {
+    let x = 1;
+    category(x);    // true
 }
 ```
 
