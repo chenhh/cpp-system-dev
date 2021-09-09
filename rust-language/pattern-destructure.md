@@ -8,6 +8,12 @@ Rust中模式解構功能設計得非常美觀，它的原則是：構造和解�
 
 * “Destructure”的意思是把原來的結構肢解為單獨的、局部的、原始的部分；
 * “Destructor”是指“解構器”，是一個與“構造器”相對應的概念，是在物件被銷毀的時候調用的。
+* Rust的“模式解構”功能不僅出現在match語句中，還可以出現在let、if-let、while-let、函式呼叫、閉包調用等情景中；
+* Rust的“模式解構”功能可以應用於各種資料類型，包括但不限於tuple、struct、enum等，暫時在穩定版中不支援slice的模式匹配；
+* Rust的“模式解構”功能要求“無遺漏”的分析（exhaustive case analysis），確保不會因為不小心而漏掉某些情況；
+* Rust的“模式解構”與Rust的核心所有權管理功能完全相容。
+
+
 
 ```rust
 let tuple = (1_i32, false, 3f32);    // 建構tuple
@@ -386,4 +392,33 @@ let mut x: &mut i32;
 
 * 第1處mut，**代表這個變數x本身可變，因此它能夠重新綁定到另外一個變數上去**，具體到這個示例來說，就是指標的指向可以變化。
 * 第2處mut，修飾的是指標，**代表這個指標對於所指向的記憶體具有修改能力**，因此我們可以用\*x=1；這樣的語句，改變它所指向的記憶體的值。
+
+## if let, while let關鍵字
+
+Rust不僅能在match運算式中執行“模式解構”，在let語句中，也可以應用同樣的模式。Rust還提供了if-let語法糖。它的語法為`if let PATTERN=EXPRESSION{BODY}`。後面可以跟一個可選的else分支。
+
+```rust
+// 原始寫法，從Some中取出x傳入函數
+match optVal {
+    Some(x) => {
+        doSomethingWith(x);
+    }
+    _ => {}
+}
+
+// 簡化寫法一
+// 首先判斷它一定是 Some(_)
+if optVal.is_some() { 
+    // 然後取出內部的資料
+    let x = optVal.unwrap(); 
+    doSomethingWith(x);
+}
+
+// 簡化寫法二，使用if let
+if let Some(x) = optVal {
+    doSomethingWith(x);
+}
+```
+
+這其實是一個簡單的語法糖，其背後執行的程式碼與match運算式相比，並無效率上的差別。它跟match的區別是：match一定要完整匹配，if-let只匹配感興趣的某個特定的分支，這種情況下的寫法比match簡單點。同理，while-let與if-let一樣，提供了在while語句中使用“模式解構”的能力，此處就不再舉例。
 
