@@ -1,6 +1,6 @@
 # 所有權與移動\(ownership and move\)
 
-## 所有權
+## 所有權\(ownership\)
 
 “所有權”代表著以下意義：
 
@@ -37,5 +37,22 @@ fn main() {
 
 在Rust裡面，不可以做“設定運算子重載”，若需要“深複製” \(deep copy\)（指的是對於複雜結構中所有元素的複製，而不是單純以共享指標指向該結構），必須手工調用clone方法。這個clone方法來自於std:clone::Clone這個trait。clone方法裡面的行為是可以自訂的。
 
+## 移動語意\(move\)
 
+一個變數可以把它擁有的值轉移給另外一個變數，稱為“所有權轉移”。設定陳述式、函式呼叫、函數返回等，都有可能導致所有權轉移。
+
+```rust
+fn create() -> String {
+    let s = String::from("hello");
+    return s; // 所有權轉移,從函數內部移動到外部
+}
+fn consume(s: String) {
+    // 所有權轉移,從函數外部移動到內部
+    println!("{}", s);
+}
+fn main() {
+    let s = create();
+    consume(s);
+}
+```
 
