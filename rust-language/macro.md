@@ -84,8 +84,13 @@ macro_rules! hashmap {
     // 語法定義的識別字以$開頭，類型支援item、block、stmt、
     // pat、expr、ty、itent、path、tt。
     // 我們的需求是需要一個運算式，一個“=>”識別字，再跟一個運算式。
+    
+    // 現在我們希望在宏裡面，可以支援重複多個這樣的語法元素。
+    // 我們可以使用+模式和*模式來完成。類似規則運算式的概念，
+    // +代表一個或者多個重複，*代表零個或者多個重複。 
     ($( $key: expr => $val: expr ),*) => {{
         let mut map = ::std::collections::HashMap::new();
+        // 最後，我們在語法擴展的部分也使用*符號，將輸入部分擴展為多條insert語句。
         $( map.insert($key, $val); )*
         map
     }}
@@ -94,6 +99,16 @@ fn main() {
     let counts = hashmap!['A' => 0, 'C' => 0, 'G' => 0, 'T' => 0];
     println!("{:?}", counts);
 }
+```
+
+一個自訂的巨集就誕生了。如果我們想檢查一下巨集展開的情況是否正確，可以使用如下rustc的內部命令：
+
+```rust
+// error: the option `Z` is only accepted on the nightly compiler
+rustc -Z unstable-options --pretty=expanded temp.rs
+
+// 從nightly-2021-07-28版本後，要改成
+rustc -Zunpretty=expanded temp.rs
 ```
 
 
