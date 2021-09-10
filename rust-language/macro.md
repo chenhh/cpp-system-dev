@@ -111,6 +111,30 @@ rustc -Z unstable-options --pretty=expanded temp.rs
 rustc -Zunpretty=expanded temp.rs
 ```
 
+巨集展開後的內容如下：
+
+```rust
+fn main() {
+    let counts = {
+        let mut map = ::std::collections::HashMap::new();
+        map.insert('A', 0);
+        map.insert('C', 0);
+        map.insert('G', 0);
+        map.insert('T', 0);
+        map
+    };
+    {
+        ::std::io::_print(
+            match match (&counts,) {
+                (arg0,) => [::core::fmt::ArgumentV1::new(arg0, ::core::fmt::Debug::fmt)],
+            } {
+                ref args => unsafe { ::core::fmt::Arguments::new_v1(&["", "\n"], args) },
+            },
+        );
+    };
+}
+```
+
 
 
 
