@@ -51,7 +51,52 @@ fn main() {
 add_impl! { usize u8 u16 u32 u64 isize i8 i16 i32 i64 f32 f64 }
 ```
 
-## 　實現語法擴展
+## 實現語法擴展
+
+某些情況下，我們可以使用宏來設計比較方便的“語法糖”，而不必使用編譯器內部硬編碼來實現。比如初始化一個動態陣列，我們可以使用方便的vec！巨集：
+
+```rust
+let v = vec![1, 2, 3, 4, 5];
+```
+
+我們可以充分發揮自己的想像力，通過自訂巨集來增加語言的表達能力，甚至自訂DSL（Domain Specific Language）。
+
+## 自定義巨集
+
+自訂巨集有兩種實現方式：
+
+* 標準庫提供的macro\_rules！巨集（範例巨集）實現。
+*  通過提供編譯器擴展來實現。
+
+編譯器擴展只能在不穩定版本中使用。它的API正在重新設計中，還沒有正式定稿，這就是所謂的macro 2.0。
+
+## 範例巨集
+
+macro\_rules！是標準庫中為我們提供的一個編寫簡單巨集的小工具，它本身也是用編譯器擴展來實現的。它可以提供一種“示範型”（by example）巨集編寫方式。
+
+以下範例提供一個hashmap！巨集，實現如下初始化HashMap的功能：
+
+```rust
+// 在大括弧裡面，我們定義巨集的使用語法，以及它展開後的形態
+macro_rules! hashmap {
+    // 定義方式類似match語句的語法，expander=>{transcriber}。
+    // 左邊的是巨集擴展的語法定義，後面是巨集擴展的轉換機制
+    // 語法定義的識別字以$開頭，類型支援item、block、stmt、
+    // pat、expr、ty、itent、path、tt。
+    // 我們的需求是需要一個運算式，一個“=>”識別字，再跟一個運算式。
+    ($( $key: expr => $val: expr ),*) => {{
+        let mut map = ::std::collections::HashMap::new();
+        $( map.insert($key, $val); )*
+        map
+    }}
+}
+fn main() {
+    let counts = hashmap!['A' => 0, 'C' => 0, 'G' => 0, 'T' => 0];
+    println!("{:?}", counts);
+}
+```
+
+
 
 
 
