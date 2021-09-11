@@ -18,3 +18,35 @@ pub trait Drop {
 }
 ```
 
+Drop trait允許在物件即將消亡之時，自行調用指定程式碼。我們來寫一個自帶解構函數的類型。
+
+```rust
+struct D(i32);
+impl Drop for D {
+    fn drop(&mut self) {
+        println!("destruct {}", self.0);
+    }
+}
+fn main() {
+    let _x = D(1);
+    println!("construct 1");
+    {
+        let _y = D(2);
+        println!("construct 2");
+        println!("exit inner scope");
+        // _y生命週期結束，呼叫dtor
+    }
+    println!("exit main function");
+    // 離開主函數後，_x的生命週期結束，呼叫dtor
+}
+
+/*
+construct 1
+construct 2
+exit inner scope
+destruct 2
+exit main function
+destruct 1
+*/
+```
+
