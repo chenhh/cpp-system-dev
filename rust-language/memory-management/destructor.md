@@ -106,6 +106,84 @@ drop函數不需要任何的函數體，只需要參數為“值傳遞”即可�
 
 函數體本身其實根本不重要，**重要的是把變數的所有權move進入這個函數體中，函式呼叫結束的時候該變數的生命週期結束，變數的解構函數會自動調用，管理的記憶體空間也會自然釋放**。這個過程完全符合前面講的生命週期、move語義，無須編譯器做特殊處理。事實上，我們完全可以自己寫一個類似的函數來實現同樣的效果，只要保證參數傳遞是move語義即可。
 
+因此，對於Copy類型的變數，對它調用std::mem::drop函數是沒有意義的。
+
+```rust
+use std::mem::drop;
+fn main() {
+    let x = 1_i32;
+    println!("before drop {}", x);
+    // 基本類型因為有實現copy trait
+    // 因此變數傳入drop時是copy而不是move
+    // 因此不會解構
+    drop(x);    
+    println!("after drop {}", x);
+}
+```
+
+變數遮蔽（Shadowing）不會導致變數生命週期提前結束，它不等同於drop。
+
+```rust
+use std::ops::Drop;
+struct D(i32);
+impl Drop for D {
+    fn drop(&mut self) {
+        println!("destructor for {}", self.0);
+    }
+}
+fn main() {
+    let x = D(1);
+    println!("construct first variable");
+    let x = D(2);
+    println!("construct second variable");
+}
+
+/*
+construct first variable
+construct second variable
+destructor for 2
+destructor for 1
+*/
+```
+
+這裡函式呼叫的順序為：
+
+* 先創建第一個x，再創建第二個x
+* 退出函數的時候，先解構第二個x，再解構第一個x。
+
+由此可見，在第二個x出現的時候，雖然將第一個x遮蔽起來了，但是第一個x的生命週期並未結束，它依然存在，直到函數退出。這也說明了，雖然這兩個變數綁定了同一個名字，但在編譯器內部依然將它們視為兩個不同的變數。
+
+另外還有一個小問題需要注意，那就是底線這個特殊符號。請注意：如果你用底線來綁定一個變數，那麼這個變數會當場執行解構，而不是等到當前語句塊結束的時候再執行。底線是特殊符號，不是普通識別字。
+
+```rust
+use std::ops::Drop;
+struct D(i32);
+impl Drop for D {
+    fn drop(&mut self) {
+        println!("destructor for {}", self.0);
+    }
+}
+fn main() {
+    let _x = D(1);
+    let _ = D(2);   // 立即解構
+    let _y = D(3);
+}
+
+/*
+destructor for 2
+destructor for 3
+destructor for 1
+*/
+```
+
+之所以是這樣的結果，是因為用底線綁定的那個變數當場就執行了解構，而其他兩個變數等到語句塊結束了才執行解構，而且解構順序和初始化順序剛好相反。所以，如果需要利用RAII實現某個變數的解構函數在退出作用域的時候完成某些功能，千萬不要用底線來綁定這個變數。
+
+最後，要注意區分，`std::mem::drop()`函數和`std::ops::Drop::drop()`方法。
+
+1. `std::mem::drop()`函數是一個獨立的函數，不是某個類型的成員方法，它由程式設計師主動調用，作用是使變數的生命週期提前結束；
+2. `std::ops::Drop::drop()`方法是一個trait中定義的方法，當變數的生命週期結束的時候，編譯器會自動調用，手動調用是不允許的。
+3. `std::mem::drop<T>（_x:T）`的參數類型是`T`，採用的是move語義；`std::ops::Drop::drop（&mut self）`的參數類型是&mut Self，採用的是可變借用。在解構函式呼叫過程中，我們還有機會讀取或者修改此物件的屬性。
+
 ## Question：如果在變數生命週期結束後，出現異常，變數的解構函數是否會執行?
 
 \[todo\]
