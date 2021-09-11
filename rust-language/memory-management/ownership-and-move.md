@@ -168,3 +168,12 @@ fn main() {
 
 Rust裡面還有一個保留關鍵字box（注意是小寫）。它可以用於把變數“裝箱”到堆上。目前這個語法依然是unstable狀態，需要打開feature gate才能使用。
 
+## clone與copy trait
+
+Rust中的Copy是一個特殊的trait，它給類型提供了“複製”語義。在Rust標準庫裡面，還有一個跟它很相近的trait，叫作Clone \(copy繼承自clone trait\)。很容易把這兩者混淆。
+
+```rust
+//  std::marker::Copy
+pub trait Copy: Clone { }
+```
+
