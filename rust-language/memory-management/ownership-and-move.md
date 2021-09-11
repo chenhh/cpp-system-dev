@@ -106,3 +106,25 @@ fn main() {
 
 Rust中，在普通變數綁定、函數傳參、模式匹配等場景下，凡是實現了`std::marker::Copy` trait的類型，都會執行copy語義。**基本類型，比如整數、浮點數、字元、bool等，都實現了Copy trait，因此具備copy語義。對於自訂類型，預設是沒有實現Copy trait的，但是我們可以手動實現**。
 
+```rust
+struct Foo {
+    data: i32,
+}
+// Copy繼承了Clone，我們要實現Copy trait必須同時實現Clone trait。
+impl Clone for Foo {
+    fn clone(&self) -> Foo {
+        Foo { data: self.data }
+    }
+}
+impl Copy for Foo {}
+fn main() {
+    let v1 = Foo { data: 0 };
+    // 實現copy trait後，=運算子為複製語言
+    let v2 = v1;
+    let v3 = &v1;
+    println!("{:?}", v1.data);
+    // v3指向v1相同的地址，而v2是copy
+    println!("{:p}, {:p}, {:p}", &v1, &v2, v3);
+}
+```
+
