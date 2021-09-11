@@ -177,6 +177,17 @@ Rust中的[std::marker::Copy](https://doc.rust-lang.org/std/marker/trait.Copy.ht
 pub trait Copy: Clone { }
 ```
 
+* Copy內部沒有方法，Clone內部有兩個方法。
+* **Copy trait是給編譯器用的**，告訴編譯器這個類型預設採用copy語義，而不是move語義。
+* **Clone trait是給程式設計師用的**，我們必須手動調用clone方法，它才能發揮作用。
+* Copy trait不是想實現就能實現的，它對類型是有要求的，有些類型不可能impl Copy。而Clone trait則沒有什麼前提條件，任何類型都可以實現（unsized類型除外，因為無法使用unsized類型作為返回值）。
+* Copy trait規定了這個類型在執行變數綁定、函數參數傳遞、函數返回等場景下的操作方式。即這個類型在這種場景下，必然執行的是“簡單記憶體複製”操作，這是由編譯器保證的，程式師無法控制。
+* Clone trait裡面的clone方法究竟會執行什麼操作，則是取決於程式師自己寫的邏輯。一般情況下，clone方法應該執行一個“深複製”操作，但這不是強制性的。
+* 如果你確實不需要Clone trait執行其他自訂操作（絕大多數情況都是這樣），編譯器提供了一個工具，我們可以在一個類型上添加`#[derive（Clone）]`，來讓編譯器幫我們自動生成那些重複的程式碼。_編譯器自動生成的clone方法非常機械，就是依次調用每個成員的clone方法_。
+* Rust語言規定了在`T：Copy` \(類型必須有實現copy\)的情況下，Clone trait代表的含義。即：當某變數`t：T`符合`T：Copy`時，它調用`t.clone（）`方法的含義必須等同於“簡單記憶體複製”。也就是說，clone的行為必須等同於`let x=std::ptr::read(&t);`，也等同於`let x=t;`。當`T:Copy`時，我們不要在Clone trait裡面亂寫自己的邏輯。所以，當我們需要指定一個類型是Copy的時候，最好使用`#[derive（Copy，Clone）]`方式，避免手動實現Clone導致錯誤。
+
+### 
+
 ### copy的含意
 
 Copy的全名是`std::marker::Copy`。請大家注意，[std::marker](https://doc.rust-lang.org/std/marker/index.html)模組裡面所有的trait都是特殊的trait。目前穩定的有四個，它們是Copy、Send、Sized、Sync、\(目前多了一個unpin\)。
@@ -239,4 +250,17 @@ lone方法一般用於“基於語義的複製”操作。所以，它做什麼�
 雖然Rust中的clone方法一般是用來執行複製操作的，但是如果在自訂的clone函數中做點別的什麼工作，編譯器也沒辦法禁止。你可以根據需要在clone函數中編寫任意的邏輯。
 
 **但是有一條規則需要注意：對於實現了copy的類型，它的clone方法應該跟copy語義相容，等同於按位元組複製**。
+
+## 自動derive
+
+絕大多數情況下，實現Copy Clone這樣的trait都是一個重複而無聊的工作。因此，Rust提供了一個attribute，讓我們可以利用編譯器自動生成這部分程式碼。
+
+```rust
+#[derive(Copy, Clone)]
+struct MyStruct(i32);
+```
+
+這裡的derive會讓編譯器幫我們自動生成impl Copy和impl Clone這樣的程式碼。自動生成的clone方法，會依次調用每個成員的clone方法。通過derive方式自動實現Copy和手工實現Copy有微小的區別。
+
+當類型具有泛型參數的時候，比如`struct MyStruct<T>{}`，通過derive自動生成的程式碼會自動添加一個T：Copy的約束。目前，只有一部分固定的特殊trait可以通過derive來自動實現。將來Rust會允許自訂的derive行為，讓我們自己的trait也可以通過derive的方式自動實現。
 
