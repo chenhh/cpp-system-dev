@@ -219,3 +219,16 @@ fn main() {
 }
 ```
 
+### Clone的含意
+
+Clone的全名是std::clone::Clone。它的完整聲明如下：
+
+```rust
+pub trait Clone: Sized {
+    fn clone(&self) -> Self;
+    fn clone_from(&mut self, source: &Self) {
+        *self = source.clone()
+    }
+}
+```
+
