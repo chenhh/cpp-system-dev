@@ -58,7 +58,57 @@ destruct 1
 
 在創建變數的時候獲取某種資源，在變數生命週期結束的時候釋放資源，是一種常見的設計模式。這裡的資源，不僅可以包括記憶體，還可以包括其他向作業系統申請的資源。比如我們經常用到的File類型，會在創建和使用的過程中向作業系統申請打開檔案，在它的解構函數中就會去釋放檔案。所以，RAII手法是比GC更通用的資源管理手段，GC只能管理記憶體，RAII可以管理各種資源。
 
+```rust
+use std::fs::File;
+use std::io::Read;
+fn main() {
+    // 在File的解構函數中已經定義如果退出時，會自動關檔
+    let f = File::open("/target/file/path");
+    if f.is_err() {
+        println!("file is not exist.");
+        return;
+    }
+    let mut f = f.unwrap();
+    let mut content = String::new();
+    let result = f.read_to_string(&mut content);
+    if result.is_err() {
+        println!("read file error.");
+        return;
+    }
+    println!("{}", result.unwrap());
+}
+```
+
+再比如標準庫中的各種複雜資料結構（如Vec, LinkedList, HashMap等），它們管理了很多在堆上動態分配的記憶體。它們也是利用“解構函數”這個功能，在生命終結之前釋放了申請的記憶體空間，因此無須像C語言那樣手動調用free函數
+
+## 主動解構
+
+一般情況下，區域變數的生命週期是從它的聲明開始，到當前語句塊結束。然而，我們也可以手動提前結束它的生命週期。請注意，**使用者主動調用解構函數是非法的**，我們怎樣才能讓區域變數在語句塊結束前提前終止生命週期呢？辦法是調用標準庫中的[`std::mem::drop`](https://doc.rust-lang.org/std/mem/fn.drop.html)函數。
+
+```rust
+use std::mem::drop;
+fn main() {
+    let mut v = vec![1, 2, 3]; // <--- v的生命週期開始
+    // v.drop();    // 非法的操作
+    drop(v); // ---> v的生命週期結束
+    v.push(4); // 錯誤的調用
+}
+```
+
+標準庫中的std::mem::drop函數是Rust中最簡單的函數，因為它的實現為“空”：
+
+```rust
+#[inline]
+pub fn drop<T>(_x: T) {}
+```
+
+drop函數不需要任何的函數體，只需要參數為“值傳遞”即可。**將物件的所有權移入函數中，什麼都不用做，編譯器就會自動釋放掉這個物件了**。因為這個drop函數的關鍵在於使用move語義把參數傳進來，使得變數的所有權從調用方移動到drop函數體內，**參數類型一定要是T，而不是&T或者其他參考類型**。
+
+函數體本身其實根本不重要，**重要的是把變數的所有權move進入這個函數體中，函式呼叫結束的時候該變數的生命週期結束，變數的解構函數會自動調用，管理的記憶體空間也會自然釋放**。這個過程完全符合前面講的生命週期、move語義，無須編譯器做特殊處理。事實上，我們完全可以自己寫一個類似的函數來實現同樣的效果，只要保證參數傳遞是move語義即可。
+
 ## Question：如果在變數生命週期結束後，出現異常，變數的解構函數是否會執行?
+
+\[todo\]
 
 
 
