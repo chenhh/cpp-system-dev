@@ -170,10 +170,29 @@ Rust裡面還有一個保留關鍵字box（注意是小寫）。它可以用於�
 
 ## clone與copy trait
 
-Rust中的Copy是一個特殊的trait，它給類型提供了“複製”語義。在Rust標準庫裡面，還有一個跟它很相近的trait，叫作Clone \(copy繼承自clone trait\)。很容易把這兩者混淆。
+Rust中的[std::marker::Copy](https://doc.rust-lang.org/std/marker/trait.Copy.html)是一個特殊的trait，它給類型提供了“複製”語義。在Rust標準庫裡面，還有一個跟它很相近的trait，叫作[std::clone::Clone](https://doc.rust-lang.org/std/clone/trait.Clone.html) \(copy繼承自clone trait\)。很容易把這兩者混淆。
 
 ```rust
 //  std::marker::Copy
 pub trait Copy: Clone { }
 ```
+
+### copy的含意
+
+Copy的全名是`std::marker::Copy`。請大家注意，[std::marker](https://doc.rust-lang.org/std/marker/index.html)模組裡面所有的trait都是特殊的trait。目前穩定的有四個，它們是Copy、Send、Sized、Sync、\(目前多了一個unpin\)。
+
+**它們的特殊之處在於:它們是跟編譯器密切綁定的，impl這些trait對編譯器的行為有重要影響**。在編譯器眼裡，它們與其他的trait不一樣。**這幾個trait內部都沒有方法，它們的唯一任務是給類型打一個“標記”，表明它符合某種約定——這些約定會影響編譯器的靜態檢查以及程式碼生成**。
+
+Copy這個trait在編譯器的眼裡代表的是什麼意思呢？簡單點總結就是，如果一個類型impl了Copy trait，意味著任何時候，我們都可以通過簡單的記憶體複製（在C語言裡按位元組複製memcpy）實現該類型的複製，並且不會產生任何記憶體安全問題。**一旦一個類型實現了Copy trait，那麼它在變數綁定、函數參數傳遞、函數返回值傳遞等場景下，都是copy語義，而不再是預設的move語義**。
+
+下面用最簡單的設定陳述式`x=y`來說明move語義和copy語義的根本區別。
+
+* move語義是“剪切、粘貼”操作，變數`y`把所有權遞交給了`x`之後，`y`就徹底失效了，後面繼續使用`y`就會出編譯錯誤。
+* 而copy語義是“複製、粘貼”操作，變數`y`把所有權遞交給了`x`之後，它自己還留了一個副本，在這句設定陳述式之後，`x`和`y`依然都可以繼續使用。
+
+**在Rust裡，move語義和copy語義具體執行的操作，是不允許由程式師自訂的，這是它和C++的巨大區別**。這裡沒有賦值構造函數或者設定運算子重載。**move語義或者copy語義都是執行的memcpy，無法更改，這個過程中絕對不存在其他副作用**。
+
+當然，這裡一直談的是“語義”，而沒有涉及編譯器優化。從語義的角度，我們要講清楚，什麼樣的程式碼在編譯器看來是合法的，什麼樣的程式碼是非法的。如果考慮後端優化，在許多情況下，不必要的記憶體複製實際上已經徹底優化掉了，大家不必擔心執行效率的問題。也沒有必要每次都把move或者copy操作與具體的組譯代碼聯繫起來，因為場景不同，優化結果不同，生成的程式碼也是不同的。大家只需記住的是語義。
+
+
 
