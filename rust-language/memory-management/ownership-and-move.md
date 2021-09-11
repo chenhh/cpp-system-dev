@@ -128,3 +128,22 @@ fn main() {
 }
 ```
 
+編譯通過。現在Foo類型也擁有了複製語義。在執行變數綁定、函數參數傳遞的時候，原來的變數不會失效，而是會新開闢一塊記憶體，將原來的資料複製過來。
+
+絕大部分情況下，實現Copy trait和Clone trait是一個非常機械化的、重複性的工作，clone方法的函數體要對每個成員調用一下clone方法。**Rust提供了一個編譯器擴展derive attribute，來幫我們寫這些程式碼，其使用方式為`#[derive（Copy，Clone）]`。只要一個類型的所有成員都具有Clone trait，我們就可以使用這種方法來讓編譯器幫我們實現Clone trait了**。
+
+```rust
+// 由編譯器自動實現Foo的copy與clone trait
+#[derive(Copy, Clone)]
+struct Foo {
+    data: i32,
+}
+fn main() {
+    let v1 = Foo { data: 0 };
+    let v2 = v1;
+    println!("{:?}", v1.data);
+}
+```
+
+
+
