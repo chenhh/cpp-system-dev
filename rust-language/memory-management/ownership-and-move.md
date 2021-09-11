@@ -145,5 +145,9 @@ fn main() {
 }
 ```
 
+## Box類型
+
+Box類型是Rust中一種常用的指針類型。它代表“擁有所有權的指針”，類似於C++裡面的`unique_ptr`（嚴格來說，`unique_ptr<T>`更像`Option<Box<T>>`）。
+
 
 
