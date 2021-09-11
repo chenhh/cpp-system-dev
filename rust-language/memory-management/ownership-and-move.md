@@ -147,7 +147,26 @@ fn main() {
 
 ## Box類型
 
+[std::boxed::Box](https://doc.rust-lang.org/std/boxed/struct.Box.html)
+
 Box類型是Rust中一種常用的指針類型。它代表“擁有所有權的指針”，類似於C++裡面的`unique_ptr`（嚴格來說，`unique_ptr<T>`更像`Option<Box<T>>`）。
+
+```rust
+struct T {
+    value: i32,
+}
+fn main() {
+    // 使用new method建構Box物件, p為box pointer
+    let p = Box::new(T { value: 1 });
+    println!("{}", p.value);
+}
+```
+
+**Box類型永遠執行的是move語義，不能是copy語義。Rust中的copy語義就是淺複製。對於Box這樣的類型而言，淺複製必然會造成二次釋放問題**。
+
+對於Rust裡面的所有變數，在使用前一定要合理初始化，否則會出現編譯錯誤。對於`Box<T>/&T/&mut T`這樣的類型，合理初始化意味著它一定指向了某個具體的物件，不可能是空。如果使用者確實需要“可能為空的”指標，必須使用類型`Option<Box<T>>`。
+
+Rust裡面還有一個保留關鍵字box（注意是小寫）。它可以用於把變數“裝箱”到堆上。目前這個語法依然是unstable狀態，需要打開featuregate才能使用，
 
 
 
