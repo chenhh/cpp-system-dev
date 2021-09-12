@@ -184,7 +184,7 @@ destructor for 1
 2. `std::ops::Drop::drop()`方法是一個trait中定義的方法，當變數的生命週期結束的時候，編譯器會自動調用，手動調用是不允許的。
 3. `std::mem::drop<T>（_x:T）`的參數類型是`T`，採用的是move語義；`std::ops::Drop::drop（&mut self）`的參數類型是&mut Self，採用的是可變借用。在解構函式呼叫過程中，我們還有機會讀取或者修改此物件的屬性。
 
-### drop與copy
+## drop與copy trait
 
 要想實現Copy trait，類型必須滿足一定條件。**這個條件就是：如果一個類型可以使用memcpy的方式執行複製操作，且沒有記憶體安全問題，那麼它才能被允許實現Copy trait（基本類型或是基本類型的組合）**。
 
@@ -203,6 +203,108 @@ impl Drop for T {
 impl Copy for T {}
 fn main() {}
 ```
+
+## 解構標記
+
+那麼就說明，變數的生命週期並不是簡單地與某個程式碼塊一致，生命週期何時結束，很可能是由執行時的條件決定的。
+
+```rust
+use std::mem::drop;
+use std::ops::Drop;
+struct D(&'static str);
+impl Drop for D {
+    fn drop(&mut self) {
+        println!("destructor {}", self.0);
+    }
+}
+// 獲取 DROP 環境變數的值,並轉換為整數
+fn condition() -> Option<u32> {
+    std::env::var("DROP")
+        .map(|s| s.parse::<u32>().unwrap_or(0))
+        .ok()
+}
+fn main() {
+    let var = (D("first"), D("second"), D("third"));
+    match condition() {
+        Some(1) => drop(var.0),
+        Some(2) => drop(var.1),
+        Some(3) => drop(var.2),
+        _ => {}
+    }
+    println!("main end");
+}
+/* 如果我們沒有設置DROP環境變數
+main end
+destructor first
+destructor second
+destructor third
+
+設置export DROP=2
+destructor second
+main end
+destructor first
+destructor third
+*/
+```
+
+前面說過，解構函數的調用是在編譯階段就確定好了的，調用解構函數是編譯器自動插入的程式碼做的。
+
+而且示例又表明，解構函數的具體調用時機還是跟執行時的情況相關的。那麼編譯器是怎麼做到的呢？**編譯器是這樣完成這個功能的：首先判斷一個變數是否可能會在多個不同的路徑上發生解構，如果是這樣，那麼它會在當前函式呼叫棧中自動插入一個bool類型的標記，用於標記該物件的解構函數是否已經被調用**。
+
+```rust
+// 以下為偽程式碼,僅僅是示意
+fn main() {
+    let var = (D("first"), D("second"), D("third"));
+    // 當函數中有擁有所有權的物件時,需要有解構自動標記
+    let drop_flag_0 = false; // ---
+    let drop_flag_1 = false; // ---
+    let drop_flag_2 = false; // ---
+    // 退出語句塊時,對當前block內擁有所有權的物件調用解構函數,並設置標記
+    match condition() {
+        Some(1) => {
+            drop(var.0);
+            if (!drop_flag_0) {
+                // ---
+                drop_flag_0 = true; // ---
+            } // ---
+        }
+        Some(2) => {
+            drop(var.1);
+            if (!drop_flag_1) {
+                // ---
+                drop_flag_1 = true; // ---
+            } // ---
+        }
+        Some(3) => {
+            drop(var.2);
+            if (!drop_flag_2) {
+                // ---
+                drop_flag_2 = true; // ---
+            } // ---
+        }
+        _ => {}
+    }
+    println!("main end");
+    // 退出語句塊時,對當前block內擁有所有權的物件調用解構函數,並設置標記
+    if (!drop_flag_0) {
+        // ---
+        drop(var.0); // ---
+        drop_flag_0 = true; // ---
+    } // ---
+    if (!drop_flag_1) {
+        // ---
+        drop(var.1); // ---
+        drop_flag_1 = true; // ---
+    } // ---
+    if (!drop_flag_2) {
+        // ---
+        drop(var.2); // ---
+        drop_flag_2 = true; // ---
+    } // ---
+}
+```
+
+編譯器生成的程式碼類似於上面的示例，可能會有細微差別。原理是在解構函數被調用的時候，就把標記設置一個狀態，在各個可能調用解構函數的地方都先判斷一下狀態再調用解構函數。這樣，編譯階段確定生命週期和執行階段根據情況調用就統一起來了。
 
 ## Question：如果在變數生命週期結束後，出現異常，變數的解構函數是否會執行?
 
