@@ -223,8 +223,6 @@ fn main() {
 
 
 
-
-
 ### 不可同時有多個可變借用
 
 ```rust
@@ -234,6 +232,43 @@ fn main() {
     // 違反可變不共享原則
     let p1 = &mut i;
     let p2 = &mut i;
+}
+```
+
+## 借用所預防的問題
+
+### 疊代器失效（Iterator invalidation）
+
+當你試圖改變一個正在疊代的集合（collection）時會發生。 Rust 的借用檢查器會預防這件事發生。
+
+```rust
+fn main() {
+    let mut v = vec![1, 2, 3];
+
+    // 當我們疊代這個向量時，我們只會被給予其中元素的 references。
+    for i in &v {
+        println!("{}", i);
+        // v 是一個不可變的借用，所以我們在疊代時不能更改它
+        // v.push(34);
+    }
+}
+```
+
+### 在釋放之後使用（use after free）
+
+References 不能存活得比所參考的資源還久。 Rust 會檢查你的 references 的有效範圍來確保符合這個條件。
+
+
+
+```rust
+fn main() {
+    let y: &i32;
+    {
+        let x = 5;
+        y = &x; // x只在scope內存活
+    }
+    // x已經被釋放，y無法正確參照到x, 編譯錯誤
+    println!("{}", y);
 }
 ```
 
