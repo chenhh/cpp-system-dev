@@ -52,6 +52,43 @@ fn main() {
   * \[可變不共享\] 如果存在`&mut`型借用指標，那麼只能存在一個；
   * 如果同時有其他的`&`或者`&mut`型借用指針存在，那麼會出現編譯錯誤。
 
+```rust
+// 參數採用的“引用傳遞”,因此參數本身並未丟失對記憶體的管理權
+fn borrow_semantics(v: &Vec<i32>) {
+    // 列印參數佔用空間的大小,在64位元系統上,結果為8,
+    // 表明該指針與普通裸指針的內部表示方法相同
+    println!("size of param: {}", std::mem::size_of::<&Vec<i32>>());
+    for item in v {
+        print!("{} ", item);
+    }
+    println!("");
+}
+// 這裡的參數採用的“值傳遞”,
+// 而Vec沒有實現Copy trait,意味著它將執行move語義
+fn move_semantics(v: Vec<i32>) {
+    // 列印參數佔用空間的大小,結果為24,
+    // 表明參數中堆疊上分配的記憶體空間複製到了函數的參數中
+    println!("size of param: {}", std::mem::size_of::<Vec<i32>>());
+    for item in v {
+        print!("{} ", item);
+    }
+    println!("");
+}
+fn main() {
+    let array = vec![1, 2, 3];
+    // 如果使用引用傳遞,不僅在函式宣告的地方需要使用&標記
+    // 函式呼叫的地方同樣需要使用&標記,否則會出現語法錯誤
+    // 這樣設計主要是為了顯眼,不用去閱讀該函數的簽名就知道這個函式呼叫的時候發生了什麼
+    // 而小數點方式的成員函式呼叫,對於self參數,會“自動轉換”,不必顯式借用,這裡有個區別
+    borrow_semantics(&array);
+    // 在使用引用傳遞給上面的函數後,array本身依然有效,我們還能在下面的函數中使用
+    move_semantics(array);
+    // 在使用move語義傳遞後,array在這個函式呼叫後,它的生命週期已經完結
+}
+```
+
+
+
 ## 參考資料
 
 * [\[知乎\] 理解 Rust 引用和借用](https://zhuanlan.zhihu.com/p/59998584)
