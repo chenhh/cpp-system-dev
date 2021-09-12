@@ -66,6 +66,26 @@ fn main() {
 | a: &mut T | T\* const a | 不能修改a | 可變引\(借\)用的不可變綁定 |
 | mut a:&mut T | T\* a | 都能修改 | 可變引\(借\)用的可變綁定 |
 
+```rust
+let x = value;
+// x {binds immutably} to {immutable value}
+
+let mut x = value;
+// x {binds mutably} to {possibly mutable value}
+
+let x = &value;
+// x {binds immutably} to {a reference to} {immutable value}
+
+let x = &mut value;
+// x {binds immutably} to {a reference to} {mutable value}
+
+let mut x = &value;
+// x {binds mutably} to {a reference to} {immutable value}
+
+let mut x = &mut value;
+// x {binds mutably} to {a reference to} {mutable value}
+```
+
 ### 不可變借用的可變綁定
 
 ```rust
