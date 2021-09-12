@@ -57,14 +57,44 @@ fn main() {
 * 如果mut修飾的是變數名，那麼它代表這個變數可以被重新綁定；\(但指向的物件不能被修改\)
 * 如果mut修飾的是“借用指標&”，那麼它代表的是被指向的物件可以被修改。\(但變數不能被修改\)
 
-### 與C++的對照表
+## 可變借用與綁定的組合
 
 | Rust | C++ | 含義 | 解釋 |
 | :--- | :--- | :--- | :--- |
-| a: &T | const T\* const a | 都不能修改 | 不可變引用的不可變綁定 |
-| mut a: &T | const T\* a | 不能修改a指向的內容 | 不可變引用的可變綁定 |
-| a: &mut T | T\* const a | 不能修改a | 可變引用的不可變綁定 |
-| mut a:&mut T | T\* a | 都能修改 | 可變引用的可變綁定 |
+| a: &T | const T\* const a | 都不能修改 | 不可變引\(借\)用的不可變綁定 |
+| mut a: &T | const T\* a | 不能修改a指向的內容 | 不可變引\(借\)用的可變綁定 |
+| a: &mut T | T\* const a | 不能修改a | 可變引\(借\)用的不可變綁定 |
+| mut a:&mut T | T\* a | 都能修改 | 可變引\(借\)用的可變綁定 |
+
+### 不可變借用的可變綁定
+
+```rust
+struct FullName {
+    first_name: String,
+    last_name: String,
+}
+
+fn main() {
+    let obj1 = FullName {
+        first_name: String::from("Jobs"),
+        last_name: String::from("Steve"),
+    };
+    // mut a:& T
+    let mut a = &obj1;
+    
+    // a重新綁定到一個新的FullName的引用
+    let obj2 = &FullName {
+        first_name: String::from("Gates"),
+        last_name: String::from("Bill"),
+    };
+    a = &obj2;
+    //不允許對a指向的內容作出修改
+    //a.first_name = String::from("Error");
+    println!("{}:{}", a.last_name, a.first_name);
+}
+```
+
+
 
 ## Rust沒有null指標
 
