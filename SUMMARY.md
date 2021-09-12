@@ -182,4 +182,5 @@
 * [記憶體管理](rust-language/memory-management/README.md)
   * [所有權與移動\(ownership and move\)](rust-language/memory-management/ownership-and-move.md)
   * [解構函數\(destructor\)](rust-language/memory-management/destructor.md)
+  * [借用和生命週期](rust-language/memory-management/borrow-lifetime.md)
 
