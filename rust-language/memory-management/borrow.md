@@ -94,7 +94,34 @@ fn main() {
 }
 ```
 
+### 可變借用的不可變綁定
 
+```rust
+struct FullName {
+    first_name: String,
+    last_name: String,
+}
+
+fn main() {
+    let mut obj1 = FullName {
+        first_name: String::from("Jobs"),
+        last_name: String::from("Steve"),
+    };
+    // a: &mut T
+    let a = &mut obj1;
+    
+    let mut obj2 = FullName {
+         first_name: String::from("Gates"),
+         last_name: String::from("Bill"),
+    };
+    //a不允許重新綁定到一個新的FullName的引用
+    // a = &mut obj2;
+    
+    //允許對a指向的內容作出修改
+    a.first_name = String::from("Gates");
+    println!("{}:{}", a.last_name, a.first_name);
+}
+```
 
 ## Rust沒有null指標
 
