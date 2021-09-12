@@ -361,4 +361,5 @@ fn main() {
 ## 參考資料
 
 * [\[知乎\] 理解 Rust 引用和借用](https://zhuanlan.zhihu.com/p/59998584)
+* [\[stackoverflow\] What's the difference between placing "mut" before a variable name and after the ":"?](https://stackoverflow.com/questions/28587698/whats-the-difference-between-placing-mut-before-a-variable-name-and-after-the)
 
