@@ -87,6 +87,17 @@ fn main() {
 }
 ```
 
+```rust
+fn main() {
+    let mut x = 1_i32;
+    let p = &mut x;
+    // 任何借用指標的存在，都會導致原來的變數被“凍結”（Frozen）。
+    // 因此x不可再被存取
+    x = 2; // compile error
+    println!("value of pointed : {}", p);
+}
+```
+
 
 
 ## 參考資料
