@@ -182,6 +182,43 @@ fn main() {
 }
 ```
 
+```rust
+fn main() {
+    let mut x = 5;
+    let y = &mut x; // mutable borrow, 全域
+ 
+    *y += 1;
+    // 如果只有x傳給println是合法的操作
+    println!("x={}", x);
+    // 若同時將borrow與mut borrow傳給println，
+    // 會產生編譯錯誤
+    println!("x={}, y={}", x, y);
+}
+```
+
+* 上例這是因為我們違反了規則：我們有一個指向 x 的 &mut T，所以我們不被允許建立任何其他 &T。 必須要在兩者間做出選擇。 
+* 解法：所以我們希望可變借用能在我們呼叫 println! 並建立不可變借用 之前 能結束掉。可變借用會在我們建立不可變借用前離開有效範圍。 有效範圍是個看清借用持續多久的關鍵。
+
+```rust
+fn main() {
+    let mut x = 5;
+    {
+        // 將mutable borrow的範圍限縮在括號內
+        let y = &mut x; // -+ &mut borrow starts here
+        *y += 1; //  |
+    } // -+ ... and ends here
+      // mutable borrow生命周期已結束
+
+    println!("x={}", x); //6
+}
+```
+
+
+
+
+
+
+
 ### 不可同時有多個可變借用
 
 ```rust
