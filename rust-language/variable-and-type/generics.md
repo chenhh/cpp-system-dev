@@ -158,5 +158,21 @@ where T: PartialOrd
 
 這兩種寫法達到的目的是一樣的。但是，在某些情況下（比如存在下文要講解的關聯類型的時候），where子句比參數聲明中的冒號約束具有更強的表達能力，但它在泛型參數列表中是無法表達的。
 
+```rust
+trait Iterator {
+    type Item; // Item 是一個關聯類型
+               // 此處的where子句沒辦法在聲明泛型參數的時候寫出來
+    fn max(self) -> Option<Self::Item>
+    where
+        Self: Sized,
+        Self::Item: Ord,
+        // 它要求Self類型滿足Sized約束，
+        // 同時關聯類型Self：：Item要滿足Ord約束，
+        // 這是用冒號語法寫不出來的。
+    {
+    }
+}
+```
+
 
 
