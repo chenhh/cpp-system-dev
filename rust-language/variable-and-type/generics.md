@@ -189,3 +189,22 @@ pub trait Iterator {
 
 這樣在trait中聲明的類型叫作“關聯類型”（associated type）。關聯類型也同樣是這個trait的“泛型參數”。只有指定了所有的泛型參數和關聯類型，這個trait才能真正地具體化。
 
+```rust
+use std::fmt::Debug;
+use std::iter::Iterator;
+// 。跟普通泛型參數比起來，關聯類型參數必須使用名字賦值的方式。
+fn use_iter<ITEM, ITER>(mut iter: ITER)
+where
+    ITER: Iterator<Item = ITEM>,
+    ITEM: Debug,
+{
+    while let Some(i) = iter.next() {
+        println!("{:?}", i);
+    }
+}
+fn main() {
+    let v: Vec<i32> = vec![1, 2, 3, 4, 5];
+    use_iter(v.iter());
+}
+```
+
