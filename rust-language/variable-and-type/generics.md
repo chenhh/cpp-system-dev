@@ -225,3 +225,21 @@ fn distance<N, E, G: Graph<N, E>>(graph: &G, start: &N, end: &N) -> uint {
 }
 ```
 
+我們可以看到，泛型參數比較多，也比較麻煩。對於指定的Graph類型，它的頂點和邊的類型應該是固定的。在函數簽名中再寫一遍其實沒什麼道理。如果我們把普通的泛型參數改為“關聯類型”設計，那麼資料結構就成了：
+
+```rust
+trait Graph<N, E> {
+    type N;
+    type E;
+    fn has_edge(&self, node1: &N, node2: &N) -> bool;
+    // ...
+}
+```
+
+對應的，計算距離的函數簽名可以簡化成：
+
+```rust
+fn distance<G>(graph: &G, start: &G::N, end: &G::N) -> uint
+where G: Graph { //...}
+```
+
