@@ -13,11 +13,18 @@
 那麼，程式編寫過程中必然會在不同的函式塊裡呼叫同一塊記憶體，所以引用的使用將會變得非常頻繁，我們犯的錯誤大多也在此。
 
 ```rust
+#![feature(core_intrinsics)]
+fn print_type_of<T>(_: &T) {
+    println!("{}", unsafe { std::intrinsics::type_name::<T>() });
+}
+
 fn main() {
     let v1 = 1;
     let p = &v1; //取引用操作
     let v2 = *p; //解引用操作
     println!("{} {}", v1, v2); // 1, 1
+    print_type_of(&p);         // &i32
+    print_type_of(&v2);        // i32
 }
 ```
 
