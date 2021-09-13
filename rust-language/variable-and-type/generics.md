@@ -45,3 +45,39 @@ struct Num<T> {
 }
 ```
 
+## 函數中的泛型
+
+```rust
+fn compare_option<T>(first: Option<T>, second: Option<T>) -> bool {
+    match (first, second) {
+        (Some(..), Some(..)) => true,
+        (None, None) => true,
+        _ => false,
+    }
+}
+```
+
+函數compare\_option有一個泛型參數T，兩個形參類型均為Option&lt;T&gt;。這意味著這兩個參數必須是完全一致的類型。如果我們在參數中傳入兩個不同的Option，會導致編譯錯誤。
+
+```rust
+fn main() {
+    // 類型不匹配編譯錯誤
+    println!("{}", compare_option(Some(1i32), Some(1.0f32)));
+}
+```
+
+編譯器在看到這個函式呼叫的時候，會進行類型檢查：
+
+* first的形參類型是Option&lt;T&gt;、實參類型是Option&lt;i32&gt;，
+* second的形參類型是Option&lt;T&gt;、實參類型是Option&lt;f32&gt;。
+
+這時編譯器的類型推導功能會進行一個類似解方程組的操作：由Option&lt;T&gt;==Option&lt;i32&gt;可得T==i32，而由Option&lt;T&gt;==Option&lt;f32&gt;又可得T==f32。這兩個結論產生了矛盾，因此該方程組無解，出現編譯錯誤。
+
+如果我們希望參數可以接受兩個不同的類型，那麼需要使用兩個泛型參數：
+
+```rust
+fn compare_option<T1, T2>(
+    first: Option<T1>, 
+    second: Option<T2>) -> bool { ... }
+```
+
