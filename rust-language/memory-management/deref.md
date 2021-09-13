@@ -36,3 +36,37 @@ fn main() {
 
 我們也可以通過自行實現Deref這個Trait來自定義解引用的最終目標是什麼，而恰恰這個也是Rust語言最難的地方，你得瞭解每個型別是否實現了Deref，而Rust型別實在是太多了，連&T借用也算一個新的型別，&T是不能繼承T的所有特性的。
 
+## 自訂解引用
+
+解引用操作可以被自訂。方法是，實現標準庫中的`std::ops::Deref`或者`std::ops::DerefMut`這兩個trait。DerefMut的唯一區別是返回的是&mut型引用都是類似的，因此不過多介紹了。
+
+```rust
+pub trait Deref {
+    type Target: ?Sized;
+    fn deref(&self) -> &Self::Target;
+}
+pub trait DerefMut: Deref {
+    fn deref_mut(&mut self) -> &mut Self::Target;
+}
+```
+
+這個trait有一個關聯類型Target，代表解引用之後的目標類型。比如，標準庫中實現了String向str的解引用轉換：
+
+```rust
+impl ops::Deref for String {
+    type Target = str;
+    #[inline]
+    fn deref(&self) -> &str {
+        unsafe { str::from_utf8_unchecked(&self.vec) }
+    }
+}
+```
+
+
+
+
+
+
+
+
+
