@@ -175,6 +175,7 @@
   * [複合資料類型](rust-language/variable-and-type/compounded-data-type.md)
   * [陣列](rust-language/variable-and-type/array.md)
   * [字串](rust-language/variable-and-type/string.md)
+  * [泛型\(generics\)](rust-language/variable-and-type/generics.md)
 * [語句與運算式](rust-language/statement-and-expression/README.md)
   * [模式解構\(pattern destructure\)](rust-language/statement-and-expression/pattern-destructure.md)
 * [函數](rust-language/function/README.md)
