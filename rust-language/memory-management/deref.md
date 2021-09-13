@@ -79,9 +79,9 @@ impl ops::Deref for String {
 ```rust
 fn main() {
     let s = "hello";
-    println!("length: {}", s.len());
+    println!("length: {}", s.len());    // str::len(&s)
     // 以下均為自動解引用
-    println!("length: {}", (&s).len());
+    println!("length: {}", (&s).len()); // 等價於 str::len(&&s)
     println!("length: {}", (&&&&&&&&&&&&&s).len());
 }
 ```
@@ -100,11 +100,62 @@ println!("length: {}", str::len(&s));
 
 但是，如果我們使用&&&&&&&&&&str類型來調用成員方法，也是可以的。**原因就是，Rust編譯器幫我們做了隱式的deref調用，當它找不到這個成員方法的時候，會自動嘗試使用deref方法後再找該方法，一直迴圈下去**。
 
+編譯器在&&&str類型裡面找不到len方法；嘗試將它deref，變成&&str類型後再尋找len方法，還是沒找到；繼續deref，變成&str，現在找到len方法了，於是就調用這個方法。
 
+**自動deref的規則是，如果類型T可以解引用為U，即T：Deref&lt;U&gt;，則&T可以轉為&U**。
 
+### 自動解引用的例子：Rc
 
+```rust
+use std::rc::Rc;
+fn main() {
+    // 我們創建了一個指向String類型的Rc指標，並調用了bytes（）方法
+    // 但是Rc類別並沒有bytes()方法
+    let s = Rc::new(String::from("hello"));
+    println!("{:?}", s.bytes());
+}
 
+// 自動解引用展開如下
+use std::ops::Deref;
+use std::rc::Rc;
+fn main() {
+    let s = Rc::new(String::from("hello"));
+    println!("length: {}", s.len());
+    println!("length: {}", s.deref().len());
+    println!("length: {}", s.deref().deref().len());
+    println!("length: {}", (*s).len());
+    println!("length: {}", (&*s).len());
+    println!("length: {}", (&**s).len());
+}
+```
 
+這裡的機制是這樣的：
+
+* Rc類型本身並沒有bytes\(\)方法，所以編譯器會嘗試自動deref，試試s.deref\(\).bytes\(\)。
+* String類型其實也沒有bytes\(\)方法，但是String可以繼續deref，於是再試試s.deref\(\).deref\(\).bytes\(\)。
+* 這次在str類型中找到了bytes\(\)方法，於是編譯通過。
+
+我們實際上通過Rc類型的變數調用了str類型的方法，讓這個智慧指標透明。這就是自動Deref的意義。
+
+這就是為什麼String需要實現Deref trait，是為了讓&String類型的變數可以在必要的時候自動轉換為&str類型。所以String類型的變數可以直接調用str類型的方法。
+
+```rust
+/* 雖然s的類型是String，
+   但它在調用bytes()方法的時候，
+   編譯器會自動查找並轉換為s.deref().bytes()調用。
+   所以String類型的變數就可以直接調用str類型的方法了。
+*/
+let s = String::from("hello");
+let len = s.bytes();
+```
+
+同理：Vec&lt;T&gt;類型也實現了Deref trait，目標類型是\[T\]，&Vec&lt;T&gt;類型的變數就可以在必要的時候自動轉換為&\[T\]陣列切片類型；Rc&lt;T&gt;類型也實現了Deref trait，目標類型是T，Rc&lt;T&gt;類型的變數就可以直接調用T類型的方法。
+
+### &\*連寫法分開寫意義不同
+
+因為編譯器很聰明，它看到&\*這兩個操作連在一起的時候，會直接把&\*s運算式理解為s.deref\(\)，這時候p只是s的一個借用而已。而如果把這兩個操作分開寫，會先執行\*s把內部的資料move出來，再對這個臨時變數取引用，這時候s已經被移走了，生命週期已經結束。
+
+從這裡我們也可以看到，預設的“取引用”、“解引用”操作是互補抵消的關係，互為逆運算。但是，在Rust中，只允許自訂“解引用”，不允許自訂“取引用”。如果類型有自訂“解引用”，那麼對它執行“解引用”和“取引用”就不再是互補抵消的結果了。先&後\*以及先\*後&的結果是不同的。
 
 
 
