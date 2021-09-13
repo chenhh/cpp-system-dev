@@ -275,3 +275,25 @@ impl ConvertTo for i32 {
 }
 ```
 
+目前為止，這兩種設計似乎沒什麼區別。但是，假如我們想繼續增加一種從i32類型到f64類型的轉換，使用泛型參數來實現的話，可以編譯通過，但關聯類型會出現編譯錯誤。
+
+```rust
+// 泛型可成功編譯
+impl ConvertTo<f64> for i32 {
+    fn convert(&self) -> f64 { *self as f64 }
+}
+// compile error, conflicting implementations of trait `ConvertTo` for type `i32`
+impl ConvertTo for i32 {
+    type DEST = f64;
+    fn convert(&self) -> f64 { *self as f64 }
+}
+```
+
+由此可見，**如果我們採用了“關聯類型”的設計方案，就不能針對這個類型實現多個impl**。
+
+在編譯器的眼裡，如果trait有類型參數，那麼給定不同的類型參數，它們就已經是不同的trait，可以同時針對同一個類型實現impl。如果trait沒有類型參數，只有關聯類型，給關聯類型指定不同的類型參數是不能用它們針對同一個類型實現impl的。
+
+## 何時使用關聯類型
+
+
+
