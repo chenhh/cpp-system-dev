@@ -208,3 +208,20 @@ fn main() {
 }
 ```
 
+假如我們想設計一個泛型的“圖”類型，它包含“頂點”和“邊”兩個泛型參數，如果我們把它們作為普通的泛型參數設計，那麼看起來就是：
+
+```rust
+trait Graph<N, E> {
+    fn has_edge(&self, node1: &N, node2: &N) -> bool;
+    // ...
+}
+```
+
+現在如果有一個泛型函數，要計算一個圖中兩個頂點的距離，它的簽名會是：
+
+```rust
+fn distance<N, E, G: Graph<N, E>>(graph: &G, start: &N, end: &N) -> uint {
+    //...
+}
+```
+
