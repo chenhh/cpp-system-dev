@@ -81,3 +81,9 @@ fn compare_option<T1, T2>(
     second: Option<T2>) -> bool { ... }
 ```
 
+一般情況下，調用泛型函數可以不指定泛型參數類型，編譯器可以通過類型推導自動判斷。某些時候，如果確實需要手動指定泛型參數類型，則需要使用function\_name：：&lt;type params&gt;（function params）的語法：
+
+```rust
+compare_option::<i32, f32>(Some(1), Some(1.0));
+```
+
