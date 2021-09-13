@@ -189,4 +189,5 @@
   * [解引用\(deref\)](rust-language/memory-management/deref.md)
   * [生命週期\(lifetime\)](rust-language/memory-management/lifetime.md)
   * [NLL\(non-lexical-lifetime\)](rust-language/memory-management/non-lexical-lifetime.md)
+  * [unsafe區塊](rust-language/memory-management/unsafe.md)
 
