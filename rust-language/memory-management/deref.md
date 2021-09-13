@@ -23,6 +23,7 @@ fn main() {
     let p = &v1; //取引用操作
     let v2 = *p; //解引用操作
     println!("{} {}", v1, v2); // 1, 1
+    print_type_of(&v1);        // i32
     print_type_of(&p);         // &i32
     print_type_of(&v2);        // i32
 }
