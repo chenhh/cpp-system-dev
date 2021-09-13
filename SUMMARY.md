@@ -188,3 +188,7 @@
   * [生命週期\(lifetime\)](rust-language/memory-management/lifetime.md)
   * [NLL\(non-lexical-lifetime\)](rust-language/memory-management/non-lexical-lifetime.md)
 
+---
+
+* [記憶體洩漏](memory-leak.md)
+
