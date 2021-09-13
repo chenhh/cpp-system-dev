@@ -225,6 +225,8 @@ fn distance<N, E, G: Graph<N, E>>(graph: &G, start: &N, end: &N) -> uint {
 }
 ```
 
+### 關聯類型優點：可簡化函數參數
+
 我們可以看到，泛型參數比較多，也比較麻煩。對於指定的Graph類型，它的頂點和邊的類型應該是固定的。在函數簽名中再寫一遍其實沒什麼道理。如果我們把普通的泛型參數改為“關聯類型”設計，那麼資料結構就成了：
 
 ```rust
@@ -241,5 +243,35 @@ trait Graph<N, E> {
 ```rust
 fn distance<G>(graph: &G, start: &G::N, end: &G::N) -> uint
 where G: Graph { //...}
+```
+
+### trait的impl匹配規則
+
+假如我們要設計一個trait，名字叫作ConvertTo，用於類型轉換。那麼，我們就有兩種選擇。一種是使用泛型類型參數，另一種使用關聯類型：
+
+```rust
+// 使用泛型
+trait ConvertTo<T> {
+    fn convert(&self) -> T;
+}
+// 使用關聯類型
+trait ConvertTo {
+    type DEST;
+    fn convert(&self) -> Self::DEST;
+}
+```
+
+如果我們想寫一個從i32類型到f32類型的轉換，在這兩種設計下，程式碼分別是：
+
+```rust
+// 使用泛型
+impl ConvertTo<f32> for i32 {
+    fn convert(&self) -> f32 { *self as f32 }
+}
+// 使用關聯類型
+impl ConvertTo for i32 {
+    type DEST = f32;
+    fn convert(&self) -> f32 { *self as f32 }
+}
 ```
 
