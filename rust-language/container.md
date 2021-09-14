@@ -77,3 +77,7 @@ fn main() {
 }
 ```
 
+如果迭代器就是這麼簡單，那麼它的用處基本就不大了。Rust的迭代器有一個重要特點，那它就是可組合的（composability）。
+
+Iterator trait裡面還有一大堆的方法，比如nth、map、filter、skip\_while、take等等，這些方法都有預設實現，它們可以統稱為adapters（適配器）。它們有個共性，返回的是一個具體類型，而這個類型本身也實現了Iterator trait。這意味著，我們調用這些方法可以從一個迭代器創造出一個新的迭代器。
+
