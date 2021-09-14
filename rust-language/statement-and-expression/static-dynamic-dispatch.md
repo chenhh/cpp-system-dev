@@ -56,3 +56,19 @@ fn main() {
 
 trait object這個名字以後也會被改為dynamic trait type。impl Trait forTrait這樣的語法同樣會被改為impl Trait for dyn Trait。這樣能更好地跟impl Trait語法對應起來。
 
+當指標指向trait的時候，這個指標就不是一個普通的指標了，變成一個“胖指標”。前文所講解的DST類型：
+
+* 陣列類型\[T\]是一個DST類型，因為它的大小在編譯階段是不確定的。
+* 相對應的，&\[T\]類型就是一個“胖指標”，它不僅包含了指標指向陣列的其中一個元素，同時包含一個長度資訊。它的內部表示實質上是Slice類型。
+
+同理，Bird只是一個trait的名字，符合這個trait的具體類型可能有多種，這些類型並不具備同樣的大小，因此使用dyn Bird來表示滿足Bird約束的DST類型。指向DST的指標理所當然也應該是一個“胖指標”，它的名字就叫trait object。
+
+比如`Box<dyn Bird>`，它的內部表示可以理解成下面這樣：
+
+```rust
+pub struct TraitObject {
+    pub data: *mut (),
+    pub vtable: *mut (),
+}
+```
+
