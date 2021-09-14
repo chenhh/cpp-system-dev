@@ -169,3 +169,38 @@ fn main() {
 }
 ```
 
+既然如此，跟普通的trait一樣，如果我們需要向函數中傳遞閉包，有下面兩種方式。
+
+* 通過泛型的方式。這種方式會為不同的閉包參數類型生成不同版本的函數，實現**靜態分派**。
+* 通過trait object的方式。這種方式會將閉包裝箱進入堆記憶體中，向函數傳遞一個胖指標，實現**運行期動態分派**。
+
+如果我們希望一個閉包作為函數的返回值，那麼就不能使用泛型的方式了。因為如果泛型類型不在參數中出現，而僅在返回類型中出現的話，會要求在調用的時候顯式指定類型，編譯器才能完成類型推導。可是調用方根本無法指定具體類型，因為閉包類型是匿名類型，用戶無法顯式指定。
+
+```rust
+// 這裡是泛型參數。對於每個不同類型的參數,編譯器將會生成不同版本的函數
+fn static_dispatch<F>(closure: &F)
+where
+    F: Fn(i32) -> i32,
+{
+    println!("static dispatch {}", closure(42));
+}
+// 這裡是 `trait object``Box<Fn(i32)->i32>`也算`trait object`。
+fn dynamic_dispatch(closure: &Fn(i32) -> i32) {
+    println!("dynamic dispatch {}", closure(42));
+}
+fn main() {
+    let closure1 = |x| x * 2;
+    let closure2 = |x| x * 3;
+    fn function_ptr(x: i32) -> i32 {
+        x * 4
+    };
+    static_dispatch(&closure1);
+    static_dispatch(&closure2);
+    static_dispatch(&function_ptr);
+    // 普通`fn`函數也實現了`Fn trait`,它可以與此參數類型匹配。`fn`不可以捕獲外部變數
+    dynamic_dispatch(&closure1);
+    dynamic_dispatch(&closure2);
+    dynamic_dispatch(&function_ptr);
+}
+```
+
