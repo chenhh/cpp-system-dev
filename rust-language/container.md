@@ -58,3 +58,22 @@ fn main() {
 }
 ```
 
+## 迭代器的組合
+
+Rust標準庫有一個命名規範，從容器創造出迭代器一般有三種方法
+
+* `iter()`創造一個Item是`&T`類型的迭代器；
+* `iter_mut()`創造一個Item是`&mut T`類型的迭代器；
+* `into_iter()`創造一個Item是`T`類型的迭代器。
+
+```rust
+fn main() {
+    let v = vec![1, 2, 3, 4, 5];
+    // Item為&T的iterator
+    let mut iter = v.iter();
+    while let Some(i) = iter.next() {
+        println!("{}", i);
+    }
+}
+```
+
