@@ -195,4 +195,5 @@
   * [NLL\(non-lexical-lifetime\)](rust-language/memory-management/non-lexical-lifetime.md)
   * [unsafe區塊](rust-language/memory-management/unsafe.md)
 * [容器](rust-language/container.md)
+* [線程安全](rust-language/thread-safe.md)
 
