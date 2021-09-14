@@ -91,3 +91,21 @@ Rust主要是通過分析外部變數在閉包中的使用方式，通過一系�
 
 簡單點總結規則是，在保證能編譯通過的情況下，編譯器會自動選擇一種對外部影響最小的類型存儲。**對於被捕獲的類型為T的外部變數，在匿名結構體中的存儲方式選擇為：盡可能先選擇&T類型，其次選擇&mut T類型，最後選擇T類型**。
 
+```rust
+struct T(i32);
+fn by_value(_: T) {}
+fn by_mut(_: &mut T) {}
+fn by_ref(_: &T) {}
+fn main() {
+    let x: T = T(1);
+    let y: T = T(2);
+    let mut z: T = T(3);
+    let closure = || {
+        by_value(x);
+        by_ref(&y);
+        by_mut(&mut z);
+    };
+    closure();
+}
+```
+
