@@ -81,3 +81,41 @@ fn main() {
 
 Iterator trait裡面還有一大堆的方法，比如nth、map、filter、skip\_while、take等等，這些方法都有預設實現，它們可以統稱為adapters（適配器）。它們有個共性，返回的是一個具體類型，而這個類型本身也實現了Iterator trait。這意味著，我們調用這些方法可以從一個迭代器創造出一個新的迭代器。
 
+```rust
+// 迭代器寫法，容易平行化
+fn main() {
+    let v = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut iter = v
+        .iter()
+        .take(5)
+        .filter(|&x| x % 2 == 0)
+        .map(|&x| x * x)
+        .enumerate();
+    while let Some((i, v)) = iter.next() {
+        println!("{} {}", i, v);
+    }
+}
+
+// 傳統等價寫法
+fn main() {
+    let v = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut iter = v.iter();
+    let mut count = 0;
+    let mut index = 0;
+    while let Some(i) = iter.next() {
+        if count < 5 {
+            count += 1;
+            if (*i) % 2 == 0 {
+                let s = (*i) * (*i);
+                println!("{} {}", index, s);
+                index += 1;
+            }
+        } else {
+            break;
+        }
+    }
+}
+```
+
+。兩個版本相比較，迭代器的可讀性是不言而喻的。這種抽象相比于直接在傳統的迴圈內部寫各種邏輯是有優勢的，特別是如果我們想把迭代器改成並存執行是非常容易的事情。而傳統的寫法涉及細節太多，不太容易改成並存執行。
+
