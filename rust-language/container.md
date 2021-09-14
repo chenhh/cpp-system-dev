@@ -27,3 +27,34 @@ trait Iterator {
 
 它最主要的一個方法就是`next()`，返回一個`Option<Item>`。一般情況返回`Some(Item)`；如果迭代運算完成，就返回`None`。
 
+```rust
+use std::iter::Iterator;
+// 自訂的類別
+struct Seq {
+    current: i32,
+}
+impl Seq {
+    fn new() -> Self {
+        Seq { current: 0 }
+    }
+}
+// 實現迭代器
+impl Iterator for Seq {
+    type Item = i32;
+    fn next(&mut self) -> Option<i32> {
+        if self.current < 100 {
+            self.current += 1;
+            return Some(self.current);
+        } else {
+            return None;
+        }
+    }
+}
+fn main() {
+    let mut seq = Seq::new();
+    while let Some(i) = seq.next() {
+        println!("{}", i);
+    }
+}
+```
+
