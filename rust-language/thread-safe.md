@@ -27,20 +27,30 @@ Rust標準庫中與執行緒相關的內容在std::thread模組中。Rust中的�
 use std::thread;
 use std::time::Duration;
 fn main() {
+    // 使用Builder模式為child thread指定更多的訊息
     let t = thread::Builder::new()
         .name("child1".to_string())
-        .spawn(move || {
+        .spawn(
+            // 新建的thread
+            move || {
             println!("enter child thread.");
-            thread::park();
+            thread::park();    // 進入等待狀態
             println!("resume child thread");
         })
         .unwrap();
     println!("spawn a thread");
     thread::sleep(Duration::new(5, 0));
-    t.thread().unpark();
+    t.thread().unpark();    // 恢復等待的狀態
+    // parent等待child thread結束
     t.join();
     println!("child thread finished");
 }
+/*
+spawn a thread
+enter child thread.
+resume child thread
+child thread finished
+*/
 ```
 
 
