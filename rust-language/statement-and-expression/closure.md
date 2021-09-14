@@ -46,3 +46,35 @@ fn main() {
 }
 ```
 
+## 變數捕獲
+
+Rust目前的closure實現，又叫作unboxed closure，它的原理與C++11的lambda非常相似。當一個closure創建的時候，編譯器幫我們生成了一個匿名struct類型，通過自動分析closure的內部邏輯，來決定該結構體包括哪些資料，以及這些資料該如何初始化。
+
+```rust
+fn main() {
+    let x = 1_i32;
+    let add_x = |a| x + a;
+    let result = add_x(5);
+    println!("result is {}", result);
+}
+```
+
+以struct模擬如下：
+
+```rust
+struct Closure {
+    inner1: i32,
+}
+impl Closure {
+    fn call(&self, a: i32) -> i32 {
+        self.inner1 + a
+    }
+}
+fn main() {
+    let x = 1_i32;
+    let add_x = Closure { inner1: x };
+    let result = add_x.call(5);
+    println!("result is {}", result);
+}
+```
+
