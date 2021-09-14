@@ -295,5 +295,46 @@ impl ConvertTo for i32 {
 
 ## 何時使用關聯類型
 
+雖然關聯類型也是類型參數的一種，但它與泛型類型參數列表是不同的。我們可以把這兩種泛型類型參數分為兩個類別：
+
+* 輸入類型參數：在尖括弧中存在的泛型參數，是輸入類型參數；
+* 輸出類型參數：在trait內部存在的關聯類型，是輸出類型參數。
+
+輸入類型參數是用於決定匹配哪個impl版本的參數；輸出類型參數則是可以由輸入類型參數和Self類型決定的類型參數。
+
+```rust
+trait ConvertTo<T> {
+    fn convert(&self) -> T;
+}
+/* 我們可以用不同的參數類型實現重載，
+   但是不能用不同的返回類型來做重載，
+   因為編譯器是根據參數類型來判斷調用哪個版本的重載函數的，
+   而不是依靠返回值的類型。
+*/
+
+impl ConvertTo<f32> for i32 {
+    fn convert(&self) -> f32 {
+        *self as f32
+    }
+}
+impl ConvertTo<f64> for i32 {
+    fn convert(&self) -> f64 {
+        *self as f64
+    }
+}
+fn main() {
+    let i = 1_i32;
+    // compile error, 無法判定使用f32或f64的版本
+    // let f = i.convert(); 
+    // 要明確指定f的類型
+    let f: f32 = i.convert();
+    println!("{:?}", f);
+}
+```
+
+## 泛型特化
+
+Rust2018目前還不穩定，暫不介紹。
+
 
 
