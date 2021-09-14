@@ -139,3 +139,20 @@ fn main() {
 }
 ```
 
+## 閉包與泛型
+
+果我們想讓閉包作為一個參數傳遞到函數中，可以這樣寫：
+
+```rust
+fn call_with_closure<F>(some_closure: F) -> i32
+where
+    F: Fn(i32) -> i32,
+{
+    some_closure(1)
+}
+fn main() {
+    let answer = call_with_closure(|x| x + 2);
+    println!("{}", answer); // 3
+}
+```
+
