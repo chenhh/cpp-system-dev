@@ -21,3 +21,27 @@ Rust不僅在沒有自動垃圾回收（Garbage Collection）的條件下實現�
 
 
 
+Rust標準庫中與執行緒相關的內容在std::thread模組中。Rust中的執行緒是對作業系統執行緒的直接封裝。
+
+```rust
+use std::thread;
+use std::time::Duration;
+fn main() {
+    let t = thread::Builder::new()
+        .name("child1".to_string())
+        .spawn(move || {
+            println!("enter child thread.");
+            thread::park();
+            println!("resume child thread");
+        })
+        .unwrap();
+    println!("spawn a thread");
+    thread::sleep(Duration::new(5, 0));
+    t.thread().unpark();
+    t.join();
+    println!("child thread finished");
+}
+```
+
+
+
