@@ -72,3 +72,76 @@ pub struct TraitObject {
 }
 ```
 
+它裡面包含了兩個成員，都是指向單元類型的裸指標。在這裡聲明的指標指向的類型並不重要，我們只需知道它裡面包含了兩個裸指標即可。由上可見，和Slice一樣，Trait Object除了包含一個指標之外，還帶有另外一個“中繼資料”，它就是指向“虛函數表”的指標。這裡用的是裸指標，指向unit類型的指標\*mut（）實際上類似於C語言中的void\*。
+
+Rust的動態分派和C++的動態分派，記憶體佈局有所不同。在C++裡，如果一個類型裡面有虛函數，那麼每一個這種類型的變數內部都包含一個指向虛函數表的位址。而在Rust裡面，物件本身不包含指向虛函數表的指標，這個指標是存在於traitobject指標裡面的。如果一個類型實現了多個trait，那麼不同的traitobject指向的虛函數表也不一樣。
+
+## object safe
+
+trait object的構造是受到許多約束的，當這些約束條件不能滿足的時候，會產生編譯錯誤。
+
+在以下條件下trait object是無法構造出來的：
+
+1. 當trait有Self：Sized約束時
+2. 當函數中有Self類型作為參數或者返回類型時
+3. 當函數第一個參數不是self時
+4. 當函數有泛型參數時
+
+### 當trait有Self：Sized約束時
+
+一般情況下，我們把trait當作類型來看的時候，它是不滿足Sized條件的。**因為trait只是描述了公共的行為，並不描述具體的內部實現，實現這個trait的具體類型是可以各種各樣的，佔據的空間大小也不是統一的**。Self關鍵字代表的類型是實現該trait的具體類型，在impl的時候，針對不同的類型，有不同的具體化實現。
+
+```rust
+trait Foo
+where
+    Self: Sized,
+{
+    fn foo(&self);
+}
+impl Foo for i32 {
+    fn foo(&self) {
+        println!("{}", self);
+    }
+}
+fn main() {
+    let x = 1_i32;
+    x.foo();
+    // 直接調用函數foo依然是可行的。
+    // 可是，當我們試圖創建trait object的時候編譯器阻止了我們
+    //let p = &x as &dyn Foo;
+    //p.foo();
+}
+```
+
+所以，如果我們不希望一個trait通過trait object的方式使用，可以為它加上Self：Sized約束。
+
+同理，如果我們想阻止一個函數在虛函數表中出現，可以專門為該函數加上Self：Sized約束。
+
+```rust
+trait Foo {
+    fn foo1(&self);
+    fn foo2(&self)
+    where
+        Self: Sized;
+}
+impl Foo for i32 {
+    fn foo1(&self) {
+        println!("foo1 {}", self);
+    }
+    fn foo2(&self) {
+        println!("foo2 {}", self);
+    }
+}
+fn main() {
+    let x = 1_i32;
+    x.foo2();
+    let p = &x as &dyn Foo;
+    p.foo1();
+    // p.foo2(); //有Sized限制，不可實現
+}
+```
+
+
+
+
+
