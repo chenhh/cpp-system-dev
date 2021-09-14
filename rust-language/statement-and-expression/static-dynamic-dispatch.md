@@ -48,3 +48,11 @@ fn main() {
 
 上例中，test\_dynamic函數的參數既可以是Box&lt;Duck&gt;類型，也可以是Box&lt;Swan&gt;類型，一樣實現了“多態”。但在參數類型這裡已經將“具體類型”資訊抹掉了，我們只知道它可以調用Bird trait的方法。而具體調用的是哪個版本的方法，實際上是由這個指標的值來決定的。這就是“動態分派”。
 
+## trait object
+
+指向trait的指標就是trait object。假如Bird是一個trait的名稱，那麼dyn Bird就是一個DST動態大小類型。
+
+&dyn Bird、&mut dyn Bird、Box&lt;dyn Bird&gt;、\*const dyn Bird、\*mut dyn Bird以及Rc&lt;dyn Bird&gt;等等都是Trait Object。
+
+trait object這個名字以後也會被改為dynamic trait type。impl Trait forTrait這樣的語法同樣會被改為impl Trait for dyn Trait。這樣能更好地跟impl Trait語法對應起來。
+
