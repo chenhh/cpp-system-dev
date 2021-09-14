@@ -151,5 +151,50 @@ fn main() {
 }
 ```
 
+```rust
+trait IntoIterator {
+    type Item;
+    type IntoIter: Iterator<Item = Self::Item>;
+    fn into_iter(self) -> Self::IntoIter;
+}
+```
+
+只要某個類型實現了IntoIterator，那麼調用into\_iter\(\)方法就可以得到對應的迭代器。這個into\_iter\(\)方法的receiver是self，而不是&self，執行的是move語義。這麼做，可以同時支援Item類型為T、&T或者&mut T，用戶有選擇的權力。
+
+```rust
+impl<K, V> IntoIterator for BTreeMap<K, V> {
+    type Item = (K, V);
+    type IntoIter = IntoIter<K, V>;
+}
+impl<'a, K: 'a, V: 'a> IntoIterator for &'a BTreeMap<K, V> {
+    type Item = (&'a K, &'a V);
+    type IntoIter = Iter<'a, K, V>;
+}
+impl<'a, K: 'a, V: 'a> IntoIterator for &'a mut BTreeMap<K, V> {
+    type Item = (&'a K, &'a mut V);
+    type IntoIter = IterMut<'a, K, V>;
+}
+```
+
+對於一個容器類型，標準庫裡面對它impl了三次IntoIterator。當Self類型為BTreeMap的時候，Item類型為（K，V），這意味著，每次next\(\)方法都是把內部的元素move出來了；當Self類型為&BTreeMap的時候，Item類型為（&K，&V），每次next\(\)方法返回的是借用；當Self類型為&mut BTreeMap的時候，Item類型為（&K，&mut V），每次next\(\)方法返回的key是唯讀的，value是可讀寫的。
+
+Rust的for&lt;item&gt;in&lt;container&gt;{&lt;body&gt;}語法結構就是一個語法糖。這個語法的原理其實就是調用**`<container>.into_iter()`**方法來獲得迭代器，然後不斷迴圈調用迭代器的`next()`方法，將返回值解包，賦值給&lt;item&gt;，然後調用&lt;body&gt;語句塊。
+
+在使用for迴圈的時候，我們可以自主選擇三種使用方式：
+
+```rust
+// container在迴圈之後生命週期就結束了,
+// 迴圈過程中的每個item是從container中move出來的
+for item in container {}
+// 迭代器中只包含container的&型引用,
+// 迴圈過程中的每個item都是container中元素的借用
+for item in &container {}
+// 迭代器中包含container的&mut型引用,
+// 迴圈過程中的每個item都是指向container中元素的可變借用
+for item in &mut container{}
+```
+
+Rust的IntoIterator trait實際上就是for語法的擴展介面。如果我們需要讓各種自訂容器也能在for迴圈中使用，那就可以借鑒標準庫中的寫法，自行實現這個trait即可。
+
 
 
