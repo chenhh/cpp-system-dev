@@ -141,7 +141,34 @@ fn main() {
 }
 ```
 
+### 當函數中有Self類型作為參數或者返回類型時
 
+Self類型是個很特殊的類型，它代表的是impl這個trait的當前類型。編譯器不知道，因為它在編譯階段無法確定self指向的具體物件，它的類型是什麼只能在執行階段確定，無法在編譯階段確定。
 
+Rust規定，如果函數中除了self這個參數之外，還在其他參數或者返回值中用到了Self類型，那麼這個函數就不是object safe的。這樣的函數是不能使用trait object來調用的。這樣的方法是不能在虛函數表中存在的。
 
+這樣的規定在某些情況下會給我們造成一定的困擾。假如我們有下面這樣一個trait，它裡面的一部分方法是滿足object safe的，而另外一部分是不滿足的。如例子中因為new（）這個方法是不滿足object safe條件的。但是我們其實只想在trait object中調用double方法，並不指望通過traitobject調用new（）方法，但可惜編譯器還是直接禁止了這個trait object的創建。
+
+我們可以通過加上Self: Sized的限制，把new（）方法從trait object的虛函數表中移除。
+
+```rust
+
+trait Double {
+    fn new() -> Self where Self: Sized;
+    fn double(&mut self);
+}
+impl Double for i32 {
+    fn new() -> i32 {
+        0
+    }
+    fn double(&mut self) {
+        *self *= 2;
+    }
+}
+fn main() {
+    let mut i = 1;
+    let p: &mut dyn Double = &mut i as &mut dyn Double;
+    p.double();
+}
+```
 
