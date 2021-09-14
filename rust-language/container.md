@@ -137,5 +137,19 @@ fn main() {
 
 Rust裡面更簡潔、更自然地使用迭代器的方式是使用for迴圈。本質上來說，for迴圈就是專門為迭代器設計的一個語法糖。for迴圈可以對針對陣列切片、字串、Range、Vec、LinkedList、HashMap、BTreeMap等所有具有迭代器的類型執行迴圈，而且還允許我們針對自訂類型實現迴圈。
 
+```rust
+use std::collections::HashMap;
+fn main() {
+    let v = vec![1, 2, 3, 4, 5, 6, 7, 8, 9];
+    for i in v {
+        println!("{}", i);
+    }
+    let map: HashMap<i32, char> = [(1, 'a'), (2, 'b'), (3, 'c')].iter().cloned().collect();
+    for (k, v) in &map {
+        println!("{} : {}", k, v);
+    }
+}
+```
+
 
 
