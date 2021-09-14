@@ -179,6 +179,7 @@
 * [語句與運算式](rust-language/statement-and-expression/README.md)
   * [模式解構\(pattern destructure\)](rust-language/statement-and-expression/pattern-destructure.md)
   * [閉包\(closure\)](rust-language/statement-and-expression/closure.md)
+  * [靜態與動態分派](rust-language/statement-and-expression/static-dynamic-dispatch.md)
 * [函數](rust-language/function/README.md)
   * [巨集](rust-language/function/macro.md)
   * [trait](rust-language/function/trait.md)
