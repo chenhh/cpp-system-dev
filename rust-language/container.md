@@ -126,7 +126,16 @@ fn main() {
     let v = vec![1, 2, 3, 4, 5];
     // 什麼事都沒做，因為map只是iterator
     // 沒有真正操作內容資料
-    v.iter().map(|x| println!("{}", x));
+    let data = v.iter().map( |x| println!("{}", x));
+    // 要真正走訪iterator才會執行
+    for _ in data{
+    }
 }
 ```
+
+## for循環
+
+Rust裡面更簡潔、更自然地使用迭代器的方式是使用for迴圈。本質上來說，for迴圈就是專門為迭代器設計的一個語法糖。for迴圈可以對針對陣列切片、字串、Range、Vec、LinkedList、HashMap、BTreeMap等所有具有迭代器的類型執行迴圈，而且還允許我們針對自訂類型實現迴圈。
+
+
 
