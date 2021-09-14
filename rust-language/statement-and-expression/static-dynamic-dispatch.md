@@ -178,3 +178,13 @@ fn main() {
 
 與上面講解的情況類似，如果一個trait中存在靜態方法，而又希望通過trait object來調用其他的方法，那麼我們需要在這個靜態方法後面加上Self：Sized約束，將它從虛函數表中剔除。
 
+### 當函數有泛型參數時
+
+```rust
+trait SomeTrait {
+    fn generic_fn<A>(&self, value: A);
+}
+```
+
+trait object通過它調用成員的方法是通過vtable虛函數表來進行查找並調用。現在需要被查找的函數成了泛型函數，而泛型函數在Rust中是編譯階段自動展開的，generic\_fn函數實際上有許多不同的版本。這裡有一個根本性的衝突問題。Rust選擇的解決方案是，禁止使用trait object來調用泛型函數，泛型函數是從虛函數表中剔除了的。這個行為跟C++是一樣的。C++中同樣規定了類的虛成員函數不可以是template方法。
+
