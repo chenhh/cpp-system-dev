@@ -72,3 +72,195 @@ Rust的這個設計，優點不在於它“允許你做什麼”，而在於它�
 
 把這些綜合起來，我們可以推理出Arc&lt;RefCell&lt;\_&gt;&gt;是！Sync。最終，編譯器把其他的路都堵死了，唯一可以編譯通過的就是使用那些滿足Sync條件的類型，比如Arc&lt;Mutex&lt;\_&gt;&gt;。在使用的時候，我們也不可能忘記調用lock方法，因為Mutex把真實資料包裹起來了，只有調用lock方法才有機會訪問內部資料。我們也不需要記得調用unlock方法，因為lock方法返回的是一個MutexGuard類型，這個類型在解構的時候會自動調用unlock。所以，編譯器在逼著使用者用正確的方式寫程式碼。
 
+## RwLock
+
+RwLock就是“讀寫鎖”。它跟Mutex很像，主要區別是對外暴露的API不一樣。對Mutex內部的資料讀寫，RwLock都是調用同樣的lock方法；而對RwLock內部的資料讀寫，它分別提供了一個成員方法read/write來做這個事情。其他方面基本和Mutex一致。
+
+```rust
+use std::sync::Arc;
+use std::sync::RwLock;
+use std::thread;
+const COUNT: u32 = 1000000;
+fn main() {
+    let global = Arc::new(RwLock::new(0));
+    let clone1 = global.clone();
+    let thread1 = thread::spawn(move || {
+        for _ in 0..COUNT {
+            let mut value = clone1.write().unwrap();
+            *value += 1;
+        }
+    });
+    let clone2 = global.clone();
+    let thread2 = thread::spawn(move || {
+        for _ in 0..COUNT {
+            let mut value = clone2.write().unwrap();
+            *value -= 1;
+        }
+    });
+    thread1.join().ok();
+    thread2.join().ok();
+    println!("final value: {:?}", global);
+}
+```
+
+## Atomic
+
+Rust標準庫還為我們提供了一系列的“原子操作”資料類型，它們在std::sync::atomic模組裡面。它們都是符合Sync的，可以在多執行緒之間共用。比如，我們有AtomicIsize類型，顧名思義，它對應的是isize類型的“執行緒安全”版本。我們知道，普通的整數讀取再寫入，這種操作是非原子的。而原子整數的特點是，可以把“讀取”“計算”“再寫入”這樣的操作編譯為特殊的CPU指令，保證這個過程是原子操作。
+
+```rust
+use std::sync::atomic::{AtomicIsize, Ordering};
+use std::thread;
+use std::sync::Arc;
+const COUNT: u32 = 1000000;
+fn main() {
+    // Atomic 系列類型同樣提供了執行緒安全版本的內部可變性
+    let global = Arc::new(AtomicIsize::new(0));
+    let clone1 = global.clone();
+    let thread1 = thread::spawn(move || {
+        for _ in 0..COUNT {
+            clone1.fetch_add(1, Ordering::SeqCst);
+        }
+    });
+    let clone2 = global.clone();
+    let thread2 = thread::spawn(move || {
+        for _ in 0..COUNT {
+            clone2.fetch_sub(1, Ordering::SeqCst);
+        }
+    });
+    thread1.join().ok();
+    thread2.join().ok();
+    println!("final value: {:?}", global);
+}
+```
+
+## Deadlock
+
+假設有5個哲學家，共用一張放有5把椅子的桌子，每人分得一把椅子，但是，桌子上共有5支筷子，在每人兩邊各放一支，哲學家們在肚子饑餓時才試圖分兩次從兩邊拿起筷子就餐。條件:·拿到兩支筷子時哲學家才開始吃飯；·如果筷子已在他人手上，則該哲學家必須等他人吃完之後才能拿到筷子；·任一哲學家在自己未拿到兩隻筷子前卻不放下自己手中的筷子。
+
+```rust
+use std::sync::{Arc, Mutex};
+use std::thread;
+use std::time::Duration;
+struct Philosopher {
+    name: String,
+    left: usize,
+    right: usize,
+}
+impl Philosopher {
+    fn new(name: &str, left: usize, right: usize) -> Philosopher {
+        Philosopher {
+            name: name.to_string(),
+            left: left,
+            right: right,
+        }
+    }
+    fn eat(&self, table: &Table) {
+        let _left = table.forks[self.left].lock().unwrap();
+        println!("{} take left fork.", self.name);
+        thread::sleep(Duration::from_secs(2));
+        let _right = table.forks[self.right].lock().unwrap();
+        println!("{} take right fork.", self.name);
+        thread::sleep(Duration::from_secs(1));
+        println!("{} is done eating.", self.name);
+    }
+}
+struct Table {
+    forks: Vec<Mutex<()>>,
+}
+fn main() {
+    let table = Arc::new(Table {
+        forks: vec![
+            Mutex::new(()),
+            Mutex::new(()),
+            Mutex::new(()),
+            Mutex::new(()),
+            Mutex::new(()),
+        ],
+    });
+    let philosophers = vec![
+        Philosopher::new("Judith Butler", 0, 1),
+        Philosopher::new("Gilles Deleuze", 1, 2),
+        Philosopher::new("Karl Marx", 2, 3),
+        Philosopher::new("Emma Goldman", 3, 4),
+        Philosopher::new("Michel Foucault", 4, 0),
+    ];
+    let handles: Vec<_> = philosophers
+        .into_iter()
+        .map(|p| {
+            let table = table.clone();
+            thread::spawn(move || {
+                p.eat(&table);
+            })
+        })
+        .collect();
+    for h in handles {
+        h.join().unwrap();
+    }
+}
+```
+
+我們可以發現，5個哲學家都拿到了他左邊的那支筷子，而都在等待他右邊的那支筷子。在沒等到右邊筷子的時候，每個人都不會釋放自己已經拿到的那支筷子。於是，大家都進入了無限的等待之中，程式無法繼續執行了。這就是“鎖死”。在Rust中，“鎖死”問題是沒有辦法在編譯階段由靜態檢查來解決的。就像前面提到的“迴圈引用製造記憶體洩漏”一樣，編譯器無法通過靜態檢查來完全避免這個問題，需要程式設計師自己注意。
+
+## Barrier
+
+Barrier是這樣的一個類型，它使用一個整數做初始化，可以使得多個執行緒在某個點上一起等待，然後再繼續執行。
+
+```rust
+use std::sync::{Arc, Barrier};
+use std::thread;
+fn main() {
+    let barrier = Arc::new(Barrier::new(10));
+    let mut handlers = vec![];
+    for _ in 0..10 {
+        let c = barrier.clone();
+        // The same messages will be printed together.
+        // You will NOT see any interleaving.
+        let t = thread::spawn(move || {
+            println!("before wait");
+            c.wait();
+            println!("after wait");
+        });
+        handlers.push(t);
+    }
+    for h in handlers {
+        h.join().ok();
+    }
+}
+```
+
+這個程式創建了一個多個執行緒之間共用的Barrier，它的初始值是10。我們創建了10個子執行緒，每個子執行緒都有一個Arc指標指向了這個Barrier，並在子執行緒中調用了Barrier：：wait方法。這些子執行緒執行到wait方法的時候，就開始進入等候狀態，一直到wait方法被調用了10次，10個子執行緒都進入等候狀態，此時Barrier就通知這些執行緒可以繼續了。然後它們再開始執行下面的邏輯。所以最終的執行結果是：先列印出10條before wait，再列印出10條after wait，絕不會錯亂。
+
+## Condvar
+
+Condvar是條件變數，它可以用於等待某個事件的發生。在等待的時候，這個執行緒處於阻塞狀態，並不消耗CPU資源。在常見的作業系統上，Condvar的內部實現是調用的作業系統提供的條件變數。它調用wait方法的時候需要一個MutexGuard類型的參數，因此Condvar總是與Mutex配合使用的。而且我們一定要注意，一個Condvar應該總是對應一個Mutex，不可混用，否則會導致執行階段的panic。
+
+Condvar的一個常見使用模式是和一個Mutex&lt;bool&gt;類型結合使用。我們可以用Mutex中的bool變數存儲一個舊的狀態，在條件發生改變的時候修改它的狀態。通過這個狀態值，我們可以決定是否需要執行等待事件的操作。
+
+```rust
+use std::sync::{Arc, Condvar, Mutex};
+use std::thread;
+use std::time::Duration;
+fn main() {
+    let pair = Arc::new((Mutex::new(false), Condvar::new()));
+    let pair2 = pair.clone();
+    thread::spawn(move || {
+        thread::sleep(Duration::from_secs(1));
+        let &(ref lock, ref cvar) = &*pair2;
+        let mut started = lock.lock().unwrap();
+        *started = true;
+        cvar.notify_one();
+        println!("child thread {}", *started);
+    });
+    // wait for the thread to start up
+    let &(ref lock, ref cvar) = &*pair;
+    let mut started = lock.lock().unwrap();
+    println!("before wait {}", *started);
+    while !*started {
+        started = cvar.wait(started).unwrap();
+    }
+    println!("after wait {}", *started);
+}
+```
+
+
+
