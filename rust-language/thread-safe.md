@@ -144,3 +144,5 @@ Sync的定義是，如果類型T實現了Sync trait，那說明在不同的執�
 
 那麼什麼樣的類型是！Sync呢？**所有具有“內部可變性”而又沒有多執行緒同步考慮的類型都不是Sync的。**比如，Cell&lt;T&gt;和RefCell&lt;T&gt;就不能是Sync的。按照定義，如果我們多個執行緒中都持有指向同一個變數的&Cell&lt;T&gt;型指標，那麼在多個執行緒中，都可以執行Cell::set方法來修改它裡面的資料。而我們知道，這個方法在修改內部資料的時候，是沒有考慮多執行緒同步問題的。所以，我們必須把它標記為！Sync。
 
+還有一些特殊的類型，它們既具備內部可變性，又滿足Sync約束，比如前面提到的Mutex&lt;T&gt;類型。為什麼說Mutex&lt;T&gt;具備內部可變性？大家查一下文檔就會知道，這個類型可以通過不可變引用調用lock\(\)方法，返回一個智慧指標MutexGuard&lt;T&gt;類型，而這個智慧指標有權修改內部資料。這個做法就跟RefCell&lt;T&gt;的try\_borrow\_mut\(\)方法非常類似。區別只是:Mutex::lock\(\)方法的實現，使用了作業系統提供的多執行緒同步機制，實現了執行緒同步，保證了非同步安全；而RefCell的內部實現就是簡單的普通數字加減操作。因此，Mutex&lt;T&gt;既具備內部可變性，又滿足Sync約束。除了Mutex&lt;T&gt;，標準庫中還有RwLock&lt;T&gt;、AtomicBool、AtomicIsize、AtomicUsize、AtomicPtr等類型，都提供了內部可變性，而且滿足Sync約束。
+
