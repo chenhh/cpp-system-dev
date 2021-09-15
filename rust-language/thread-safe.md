@@ -132,3 +132,5 @@ where F: FnOnce() -> T, F: Send + 'static, T: Send + 'static
 
 但是相對的是，Arc&lt;T&gt;類型是符合Send的（當然需要T：Send）。為什麼呢？因為Arc類型內部的引用計數用的是“原子計數”，對它進行增減操作，不會出現多執行緒資料競爭。所以，多個執行緒擁有指向同一個變數的Arc指標是可以接受的。
 
+## 
+
