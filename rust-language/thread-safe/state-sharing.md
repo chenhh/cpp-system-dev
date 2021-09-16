@@ -311,7 +311,9 @@ fn main() {
 在Rust中，執行緒獨立存儲有兩種使用方式。
 
 * 可以使用\#\[thread\_local\]attribute來實現。這個功能目前在穩定版中還不支持，只能在nightly版本中開啟\#！\[feature（thread\_local）\]功能才能使用。
-* 可以使用thread\_local！宏來實現。這個功能已經在穩定版中獲得支持。
+* 可以使用thread\_local！巨集來實現。這個功能已經在穩定版中獲得支持。
+
+用thread\_local！聲明的變數，使用的時候要用with\(\)方法加閉包來完成。
 
 ```rust
 use std::cell::RefCell;
@@ -337,5 +339,14 @@ fn main() {
         println!("main thread value3 {:?}", *f.borrow());
     });
 }
+/*
+main thread value1 1
+main thread value2 2
+child thread value1 1
+child thread value2 3
+main thread value3 2
+*/
 ```
+
+在主執行緒中將FOO的值修改為2，但是進入子執行緒後，它看到的初始值依然是1。在子執行緒將FOO的值修改為3之後回到主執行緒，主執行緒看到的值還是2。這說明，在子執行緒中和主執行緒中看到的FOO其實是兩個完全獨立的變數，互不影響。
 
