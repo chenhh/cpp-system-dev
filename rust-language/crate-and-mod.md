@@ -46,6 +46,47 @@ Rust裡面的crate都是自帶版本號的。基本意思如下：
 
 絕大部分優質開源庫，作者都會發佈到官方倉庫中，所以我們大部分的依賴都是來自於這個地方。在crates.io中，每個庫都有一個獨一無二的名字，我們要依賴某個庫的時候，只需指定它的名字及版本號即可。
 
+```rust
+[dependencies]
+lazy_static = "1.0"
+```
+
+指定版本號的時候，可以使用模糊匹配的方式。
+
+* ^符號，如^1.2.3代表1.2.3&lt;=version&lt;2.0.0；
+* ~符號，如~1.2.3代表1.2.3&lt;=version&lt;1.3.0；
+* \*符號，如1.\*代表1.0.0&lt;=version&lt;2.0.0；
+* 比較符號，比如&gt;=1.2.3、&gt;1.2.3、&lt;2.0.0、=1.2.3含義基本上一目了然。
+* 還可以把多個限制條件合起來用逗號分開，比如version="&gt;1.2，  &lt;1.9"。
+
+直接寫一個數位的話，等同於^符號的意思。所以lazy\_static="1.0"等同於lazy\_static="^1.0"，含義是1.0.0&lt;=version&lt;2.0.0。cargo會到網上找到當前符合這個約束條件的最新的版本下載下來。
+
+#### 來自git倉庫的依賴
+
+除了最簡單的git="…"指定repository之外，我們還可以指定對應的分支。或者指定當前的commit號。
+
+```bash
+# 指定分支
+rand = { git = https://github.com/rust-lang-nursery/rand, branch = "next" }
+
+# 指定commit號
+rand = { git = https://github.com/rust-lang-nursery/rand, branch = "master", rev =
+"31f2663" }
+
+# 指定對應的tag名字
+rand = { git = https://github.com/rust-lang-nursery/rand, tag = "0.3.15" }
+```
+
+#### 來自本地檔路徑的依賴
+
+指定本地檔路徑，既可以使用絕對路徑也可以使用相對路徑。
+
+
+
+
+
+
+
 #### 
 
 
