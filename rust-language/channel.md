@@ -58,5 +58,32 @@ fn main() {
 
 ## 同步管道
 
+非同步管道內部有一個不限長度的緩衝區，可以一直往裡面填充資料，直至記憶體資源耗盡。非同步管道的發送端調用send方法不會發生阻塞，只要把消息加入到緩衝區，它就馬上返回。
+
+同步管道的特點是：其內部有一個固定大小的緩衝區，用來緩存消息。如果緩衝區被填滿了，繼續調用send方法的時候會發生阻塞，等待接收端把緩衝區內的消息拿走才能繼續發送。緩衝區的長度可以在建立管道的時候設置，而且0是有效數值。如果緩衝區的長度設置為0，那就意味著每次的發送操作都會進入等候狀態，直到這個消息被接收端取走才能返回。
+
+```rust
+use std::sync::mpsc::sync_channel;
+use std::thread;
+fn main() {
+    let (tx, rx) = sync_channel(1);
+    tx.send(1).unwrap();
+    println!("send first");
+    thread::spawn(move || {
+        tx.send(2).unwrap();
+        println!("send second");
+    });
+    println!("receive first {}", rx.recv().unwrap());
+    println!("receive second {}", rx.recv().unwrap());
+}
+/*
+send first
+receive first 1
+receive second 2
+*/
+```
+
+程式執行結果永遠是：發送一個並接收一個之後，才會出現發送第二個接收第二個。我們講的這兩種管道都是單向通信，一個發送一個接收，不能反過來。Rust沒有在標準庫中實現管道雙向通信。雙向管道也不是不可能的，在第三方庫中已經有了實現。
+
 
 
