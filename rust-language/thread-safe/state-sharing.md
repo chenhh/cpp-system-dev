@@ -308,3 +308,34 @@ fn main() {
 
 執行緒局部（Thread Local）的意思是，**聲明的這個變數看起來是一個變數，但它實際上在每一個執行緒中分別有自己獨立的存儲位址，是不同的變數，互不干擾**。在不同執行緒中，只能看到與當前執行緒相關聯的那個副本，因此對它的讀寫無須考慮執行緒安全問題。
 
+在Rust中，執行緒獨立存儲有兩種使用方式。
+
+* 可以使用\#\[thread\_local\]attribute來實現。這個功能目前在穩定版中還不支持，只能在nightly版本中開啟\#！\[feature（thread\_local）\]功能才能使用。
+* 可以使用thread\_local！宏來實現。這個功能已經在穩定版中獲得支持。
+
+```rust
+use std::cell::RefCell;
+use std::thread;
+fn main() {
+    thread_local! {
+    static FOO: RefCell<u32> = RefCell::new(1)
+    };
+    FOO.with(|f| {
+        println!("main thread value1 {:?}", *f.borrow());
+        *f.borrow_mut() = 2;
+        println!("main thread value2 {:?}", *f.borrow());
+    });
+    let t = thread::spawn(move || {
+        FOO.with(|f| {
+            println!("child thread value1 {:?}", *f.borrow());
+            *f.borrow_mut() = 3;
+            println!("child thread value2 {:?}", *f.borrow());
+        });
+    });
+    t.join().ok();
+    FOO.with(|f| {
+        println!("main thread value3 {:?}", *f.borrow());
+    });
+}
+```
+
