@@ -21,6 +21,35 @@ Cargo是Rust的包管理工具，是隨著編譯器一起發佈的。在使用ru
 
 cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是調用的rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用cargo build--verbose選項查看詳細的編譯命令。
 
+### 項目依賴
+
+在Cargo.toml檔中，我們可以指定一個crate依賴哪些項目。這些依賴既可以是來自官方的crates.io，也可以是某個git倉庫位址，還可以是本地檔路徑。
+
+```bash
+[dependencies]
+lazy_static = "1.0.0"
+rand = { git = https://github.com/rust-lang-nursery/rand, branch = "master" }
+my_own_project = { path = "/my/local/path", version = "0.1.0" }
+```
+
+### crate版本號
+
+Rust裡面的crate都是自帶版本號的。基本意思如下：
+
+* 1.0.0以前的版本是不穩定版本，如果出現了不相容的改動，升級次版本號，比如從0.2.15升級到0.3.0；
+* 在1.0.0版本之後，如果出現了不相容的改動，需要升級主版本號，比如從1.2.3升級到2.0.0；
+* 在1.0.0版本之後，如果是相容性的增加API，雖然不會導致下游用戶編譯失敗，但是增加公開的API情況，應該升級次版本號。
+
+### 在\[dependencies\]裡面的幾種依賴項的格式
+
+#### 来自crates.io的依賴
+
+絕大部分優質開源庫，作者都會發佈到官方倉庫中，所以我們大部分的依賴都是來自於這個地方。在crates.io中，每個庫都有一個獨一無二的名字，我們要依賴某個庫的時候，只需指定它的名字及版本號即可。
+
+#### 
+
+
+
 ## prelude模組
 
 除此之外，標準庫中的某些type、trait、function、macro等實在是太常用了。每次都寫use語句確實非常無聊，因此標準庫提供了一個std：：prelude模組，在這個模組中匯出了一些最常見的類型、trait等東西，編譯器會為用戶寫的每個crate自動插入一句話：
