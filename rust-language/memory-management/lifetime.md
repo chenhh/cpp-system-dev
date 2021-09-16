@@ -207,3 +207,7 @@ fn get_str<'a>(s: &'a String) -> &'a str {
 }
 ```
 
+## 參考資料
+
+* [\[知乎\] 如何理解Rust中的生命週期標注？](https://www.zhihu.com/question/435470652)
+
