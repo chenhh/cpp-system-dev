@@ -33,3 +33,30 @@ Sender和Receiver的泛型參數必須滿足T：Send約束。這個條件是顯�
 
 發送者調用send方法，接收者調用recv方法，返回類型都是Result類型，用於錯誤處理，因為它們都有可能調用失敗。當發送者已經被銷毀的時候，接收者調用recv則會返回錯誤；同樣，當接收者已經銷毀的時候，發送者調用send也會返回錯誤。
 
+在管道的接收端，如果調用recv方法的時候還沒有資料，它會進入等候狀態阻塞當前執行緒，直到接收到資料才繼續往下執行。管道還可以是多發送端單接收端。做法很簡單，只需將發送端Sender複製多份即可。複製方式是調用Sender類型的clone\(\)方法。這個庫不支持多接收端的設計，因此Receiver類型沒有clone\(\)方法。在上例的基礎上我們稍做改動，創建多個執行緒，每個執行緒發送一個資料到接收端。
+
+```rust
+use std::sync::mpsc::channel;
+use std::thread;
+fn main() {
+    let (tx, rx) = channel();
+    for i in 0..10 {
+        // 複製一個新的 tx,將這個複製的變數 move 進入子執行緒
+        let tx = tx.clone();
+        thread::spawn(move || {
+            tx.send(i).unwrap();
+        });
+    }
+    drop(tx);
+    while let Ok(r) = rx.recv() {
+        println!("received {}", r);
+    }
+}
+```
+
+但在這個示例中，這些數字呈亂序排列，因為它們來自不同的執行緒，哪個先執行哪個後執行並不是確定的，取決於作業系統的調度。
+
+## 同步管道
+
+
+
