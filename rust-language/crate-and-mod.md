@@ -13,6 +13,14 @@ Rust用了兩個概念來管理專案：一個是crate，一個是mod。
 
 Rust有一個極簡標準庫，叫作std，除了極少數嵌入式系統下無法使用標準庫之外，絕大部分情況下，我們都需要用到標準庫裡面的東西。為了效率，Rust編譯器對標準庫有特殊處理。**預設情況下，使用者不需要手動添加對標準庫的依賴，編譯器會自動引入對標準庫的依賴**。
 
+## cargo
+
+[https://doc.rust-lang.org/cargo/](https://doc.rust-lang.org/cargo/)
+
+Cargo是Rust的包管理工具，是隨著編譯器一起發佈的。在使用rustup安裝了官方發佈的Rust開發套裝之後，Cargo工具就已經安裝好了，無須單獨安裝。
+
+cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是調用的rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用cargo build--verbose選項查看詳細的編譯命令。
+
 ## prelude模組
 
 除此之外，標準庫中的某些type、trait、function、macro等實在是太常用了。每次都寫use語句確實非常無聊，因此標準庫提供了一個std：：prelude模組，在這個模組中匯出了一些最常見的類型、trait等東西，編譯器會為用戶寫的每個crate自動插入一句話：
