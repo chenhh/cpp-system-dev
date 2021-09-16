@@ -119,9 +119,31 @@ fn main() {
 
 借用指標類型都有一個生命週期泛型參數，它們的完整寫法應該是`&'a T&'a mut T`，只不過在做區域變數的時候，生命週期參數是可以省略的。
 
-生命週期之間有重要的包含關係。如果生命週期`'a`比`'b`更長或相等，則記為`'a:'b`，意思是`'a`至少不會比`'b`短，英語讀做“lifetime aoutlives lifetime b”。對於借用指標類型來說，如果`&'a`是合法的，那麼`'b`作為`'a`的一部分，`&'b`也一定是合法的。
+生命週期之間有重要的包含關係。如果生命週期`'a`比`'b`更長或相等，則記為`'a:'b`，意思是`'a`至少不會比`'b`短，英語讀做“lifetime a outlives lifetime b”。對於借用指標類型來說，如果`&'a`是合法的，那麼`'b`作為`'a`的一部分，`&'b`也一定是合法的。
 
 另外，`'static`是一個特殊的生命週期，它代表的是這個程式從開始到結束的整個階段，所以它比其他任何生命週期都長。這意味著，任意一個生命週期`'a`都滿足`'static：'a`。
+
+```rust
+// 函數標記x,y的生命週期一樣長
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+fn main() {
+    let a = "hello";
+    let result;
+    {
+        let b = String::from("world");
+        // error[E0597]: `b` does not live long enough
+        // 使用函數時, a的生命週期比b長，與函數的宣告不符
+        result = longest(a, b.as_str());
+    }
+    println!("The longest string is {}", result);
+}
+```
 
 ## 類型的生命週期標記
 
