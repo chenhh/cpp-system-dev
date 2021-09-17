@@ -169,8 +169,8 @@
 
 * [Rust簡介](rust-language/introduction.md)
 * [panic](rust-language/panic.md)
-* [crate與mod](rust-language/crate-and-mod.md)
-* [第三方套件](rust-language/third-party-crate.md)
+* [crate與mod](rust-language/crate-and-mod/README.md)
+  * [第三方套件](rust-language/crate-and-mod/third-party-crate.md)
 * [變數與類型](rust-language/variable-and-type/README.md)
   * [基本資料類型](rust-language/variable-and-type/basic-data-type.md)
   * [複合資料類型](rust-language/variable-and-type/compounded-data-type.md)
