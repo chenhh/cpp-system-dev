@@ -170,6 +170,7 @@
 * [Rust簡介](rust-language/introduction.md)
 * [測試](rust-language/testing.md)
 * [panic](rust-language/panic.md)
+* [錯誤處理](rust-language/error-processing.md)
 * [crate與mod](rust-language/crate-and-mod/README.md)
   * [第三方套件](rust-language/crate-and-mod/third-party-crate.md)
 * [變數與類型](rust-language/variable-and-type/README.md)
