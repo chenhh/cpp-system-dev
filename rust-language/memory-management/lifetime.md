@@ -222,4 +222,5 @@ fn get_str<'a>(s: &'a String) -> &'a str {
 
 * [\[知乎\] 如何理解Rust中的生命週期標注？](https://www.zhihu.com/question/435470652)
 * [\[知乎\] 深入理解Rust中的生命週期](https://zhuanlan.zhihu.com/p/342405519)
+* [\[知乎\] Rust中的生命週期](https://zhuanlan.zhihu.com/p/191457302)
 
