@@ -9,3 +9,9 @@
 * [Rayon: data parallelism in Rust](https://smallcultfollowing.com/babysteps/blog/2015/12/18/rayon-data-parallelism-in-rust/)
 * [\[知乎\] 深入淺出Rust非同步程式設計之Tokio](https://zhuanlan.zhihu.com/p/107820568)
 
+## GUI
+
+* [\[知乎\] Rust GUI 庫](https://zhuanlan.zhihu.com/p/278012049)
+
+
+
