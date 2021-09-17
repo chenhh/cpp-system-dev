@@ -8,7 +8,7 @@
 
 ```rust
 enum Option<T> {
-    Some(T),
+    Some(T),    // tuple struct
     None,
 }
 
