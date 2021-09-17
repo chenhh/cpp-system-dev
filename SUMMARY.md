@@ -168,6 +168,7 @@
 ## rust語言 <a id="rust-language"></a>
 
 * [Rust簡介](rust-language/introduction.md)
+* [測試](rust-language/testing.md)
 * [panic](rust-language/panic.md)
 * [crate與mod](rust-language/crate-and-mod/README.md)
   * [第三方套件](rust-language/crate-and-mod/third-party-crate.md)
