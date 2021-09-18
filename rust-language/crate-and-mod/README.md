@@ -192,6 +192,31 @@ cargo的workspace概念，是為了解決多crate的互相協調問題而存在�
 
 為了讓不同的crate之間能共用一些資訊，cargo提供了一個workspace的概念。一個workspace可以包含多個專案；所有的項目共用一個Cargo.lock檔，共用同一個輸出目錄；一個workspace內的所有項目的公共依賴項都是同樣的版本，輸出的目的檔案都在同一個資料夾內。workspace同樣是用Cargo.toml來管理的。我們可以把所有的項目都放到一個資料夾下面。在這個資料夾下寫一個Cargo.toml來管理這裡的所有專案。
 
+Cargo.toml檔中要寫一個\[workspace\]的配置：
+
+```rust
+[workspace]
+members = [
+"project1", "lib1"
+]
+```
+
+```rust
+├── Cargo.lock
+├── Cargo.toml
+├── project1
+│ ├── Cargo.toml
+│ └── src
+│ └── main.rs
+├── lib1
+│ ├── Cargo.toml
+│ └── src
+│ └── lib.rs
+└── target
+```
+
+我們可以在workspace的根目錄執行cargo build等命令。請注意，雖然每個crate都有自己的Cargo.toml檔，可以各自配置自己的依賴項，但是每個crate下面不再會各自生成一個Cargo.lock檔，而是統一在workspace下生成一個Cargo.lock文件。如果多個crate都依賴一個外部庫，那麼它們必然都是依賴的同一個版本。
+
 ## prelude模組
 
 除此之外，標準庫中的某些type、trait、function、macro等實在是太常用了。每次都寫use語句確實非常無聊，因此標準庫提供了一個std：：prelude模組，在這個模組中匯出了一些最常見的類型、trait等東西，編譯器會為用戶寫的每個crate自動插入一句話：
