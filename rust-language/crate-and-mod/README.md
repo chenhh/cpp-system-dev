@@ -58,7 +58,10 @@ cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc
 
 * `cargo new hello_world --bin`，建立名稱為hello\_world可執行檔專案。
 * `cargo new hello_world --lib`，建立名稱為hello\_world函式庫專案。
-  * 程式碼在`{PROJ_DIR}/src`資料夾中，編譯產生的檔案在`{PROJ_DIR}/target/debug or release` 資料夾中。
+* 程式碼在`{PROJ_DIR}/src`資料夾中
+  * `carge build`編譯產生的檔案在`{PROJ_DIR}/target/debug`資料夾中。
+  * `cargo build release` 編譯產生的檔案在 `{PROJ_DIR}/target/release` 資料夾中。
+* `cargo run` 可以執行debug版的程式，`cargo run --release`可以執行release版的程式。
 
 ### 項目依賴
 
