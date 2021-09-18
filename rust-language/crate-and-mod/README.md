@@ -56,6 +56,9 @@ Cargo是Rust的包管理工具，是隨著編譯器一起發佈的。在使用ru
 
 cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是調用的rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用cargo build--verbose選項查看詳細的編譯命令。
 
+* `cargo new hello_world --bin`，建立名稱為hello\_world可執行檔專案。
+* `cargo new hello_world --lib`，建立名稱為hello\_world函式庫專案。
+
 ### 項目依賴
 
 在Cargo.toml檔中，我們可以指定一個crate依賴哪些項目。這些依賴既可以是來自官方的crates.io，也可以是某個git倉庫位址，還可以是本地檔路徑。
