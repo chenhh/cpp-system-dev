@@ -119,6 +119,10 @@ rand = { git = https://github.com/rust-lang-nursery/rand, tag = "0.3.15" }
 
 指定本地檔路徑，既可以使用絕對路徑也可以使用相對路徑。
 
+### cargo.toml
+
+Cargo.toml是我們的專案管理設定檔，這裡記錄了該專案相關的元資訊。
+
 ### cargo.lock
 
 當我們使用cargo build編譯完專案後，專案檔案夾內會產生一個新檔，名字叫Cargo.lock。它實際上是一個純文字檔，同樣也是toml格式。**它裡面記錄了當前專案所有依賴項目的具體版本。**
