@@ -63,6 +63,12 @@ cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc
   * `cargo build release` 編譯產生的檔案在 `{PROJ_DIR}/target/release` 資料夾中。
 * `cargo run` 可以執行debug版的程式，`cargo run --release`可以執行release版的程式。
 * cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是調用的rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用`cargo build--verbose`選項查看詳細的編譯命令。
+* `cargo check` ，可以只檢查編譯錯誤，而不做程式碼優化以及生成可執行程式，非常適合在開發過程中快速檢查語法、類型錯誤。
+* `cargo clean`，清理以前的編譯結果。
+* `cargo doc`，生成文件。
+* `cargo test`，生成單元測試。
+* `cargo bench`，執行性能測試。
+* `cargo update`，升級所有依賴項的版本，重新生成Cargo.lock文件。
 
 ### 項目依賴
 
