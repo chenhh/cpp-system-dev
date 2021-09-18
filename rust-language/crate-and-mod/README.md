@@ -62,6 +62,7 @@ cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc
   * `carge build`編譯產生的檔案在`{PROJ_DIR}/target/debug`資料夾中。
   * `cargo build release` 編譯產生的檔案在 `{PROJ_DIR}/target/release` 資料夾中。
 * `cargo run` 可以執行debug版的程式，`cargo run --release`可以執行release版的程式。
+* cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是調用的rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用`cargo build--verbose`選項查看詳細的編譯命令。
 
 ### 項目依賴
 
@@ -73,6 +74,39 @@ lazy_static = "1.0.0"
 rand = { git = https://github.com/rust-lang-nursery/rand, branch = "master" }
 my_own_project = { path = "/my/local/path", version = "0.1.0" }
 ```
+
+### 使用函數庫
+
+### 自建函式庫
+
+* `cargo new good_bye --lib`
+* `{PROJ_DIR}/src/lib.rs`是函式庫的入口檔案，
+
+```rust
+// lib.rs
+pub fn say() {
+    println!("good bye");
+}
+```
+
+* 希望hello\_world專案能引用good\_bye專案。打開hello\_world項目的Cargo.toml文件，在依賴項下面添加對good\_bye的引用
+
+```bash
+[dependencies]
+good_bye = { path = "../good_bye" }
+```
+
+現在在應用程式中調用這個庫。打開main.rs原始檔案，修改程式碼後，使用`cargo run`編譯並執行。
+
+```rust
+extern crate good_bye;
+fn main() {
+    println!("Hello, world!");
+    good_bye::say();
+}
+```
+
+
 
 ### crate版本號
 
