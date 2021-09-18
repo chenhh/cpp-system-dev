@@ -69,6 +69,10 @@ cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc
 * `cargo test`，生成單元測試。
 * `cargo bench`，執行性能測試。
 * `cargo update`，升級所有依賴項的版本，重新生成Cargo.lock文件。
+* `cargo install`，安裝rust可執行程式。它可以讓用戶自己擴展cargo的子命令，為它增加新功能。
+  * 例：`cargo install cargo-tree`增加子命令後，可使用`cargo tree`印出依賴樹模型。
+  * 在crates.io網站上，用subcommand關鍵字可以搜出許多有用的子命令，用戶可以按需安裝。
+* `cargo uninstall`，刪除rust可執行程式。
 
 ### 項目依賴
 
@@ -81,7 +85,7 @@ rand = { git = https://github.com/rust-lang-nursery/rand, branch = "master" }
 my_own_project = { path = "/my/local/path", version = "0.1.0" }
 ```
 
-### 使用函數庫
+## 使用函數庫
 
 ### 自建函式庫
 
@@ -176,7 +180,17 @@ Cargo.toml是我們的專案管理設定檔，這裡記錄了該專案相關的
 * 一般來說：如果我們的項目是庫，那麼最好不要把Cargo.lock檔納入到版本管理系統中，避免依賴庫的版本號被鎖死；
 * 如果我們的項目是可執行程式，那麼最好要把Cargo.lock檔納入到版本管理系統中，這樣可以保證，在不同機器上編譯使用的是同樣的版本，生成的是同樣的可執行程式。
 
+## 預設配置
 
+cargo也支持設定檔。設定檔可以定制cargo的許多行為，就像我們給git設置設定檔一樣。類似的，cargo的設定檔可以存在多份，它們之間有優先順序關係。
+
+你可以為某個資料夾單獨提供一份設定檔，放置到當前資料夾的.cargo/config位置，也可以提供一個全域的預設配置，放在$HOME/.cargo/config位置。
+
+## workspace
+
+cargo的workspace概念，是為了解決多crate的互相協調問題而存在的。假設現在我們有一個比較大的項目。我們把它拆分成了多個crate來組織，就會面臨一個問題：不同的crate會有各自不同的Cargo.toml，編譯的時候它們會各自產生不同的Cargo.lock檔，我們無法保證所有的crate對同樣的依賴項使用的是同樣的版本號。
+
+為了讓不同的crate之間能共用一些資訊，cargo提供了一個workspace的概念。一個workspace可以包含多個專案；所有的項目共用一個Cargo.lock檔，共用同一個輸出目錄；一個workspace內的所有項目的公共依賴項都是同樣的版本，輸出的目的檔案都在同一個資料夾內。workspace同樣是用Cargo.toml來管理的。我們可以把所有的項目都放到一個資料夾下面。在這個資料夾下寫一個Cargo.toml來管理這裡的所有專案。
 
 ## prelude模組
 
