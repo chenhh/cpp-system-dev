@@ -172,6 +172,7 @@
 * [panic](rust-language/panic.md)
 * [錯誤處理](rust-language/error-processing.md)
 * [crate與cargo](rust-language/crate-and-cargo/README.md)
+  * [mod](rust-language/crate-and-cargo/mod.md)
   * [第三方套件](rust-language/crate-and-cargo/third-party-crate.md)
 * [變數與類型](rust-language/variable-and-type/README.md)
   * [基本資料類型](rust-language/variable-and-type/basic-data-type.md)
