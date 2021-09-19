@@ -166,19 +166,23 @@ enum Result<T, E> {
 }
 ```
 
-Rust用於錯誤處理的最基本的類型就是我們常見的Option&lt;T&gt;類型。
+Rust用於錯誤處理的最基本的類型就是我們常見的Option&lt;T&gt;類型。**用 Option&lt;T&gt; 表示錯誤時一般不關心錯誤原因，出錯時直接返回空值 None** 。一般就直接用 Option&lt;T&gt; 例如從 HashMap 裡面取值或者對 Vector 進行 pop 操作，前者出錯了只可能是對應的 key 不存在，後者出錯只可能是 Vector 已經是空的了。
 
-```cpp
-impl str {
-pub fn find<'a, P: Pattern<'a>>(&'a self, pat: P) -> Option<usize> {}
-}
+而 Result&lt;T, E&gt; 則將錯誤的不同原因包括進來了，Option&lt;T&gt; 相當於 Result&lt;T, \(\)&gt;。而如果錯誤可能是多種原因造成的則用 Result&lt;T, E&gt; 來表示，例如 IO 錯誤，原因可能是 NotFound, PermissionDenied, AlreadyExists, InvalidData…。
+
+在看各種文檔或讀別人的程式碼時發現 Result&lt;T&gt; 的錯誤類型時可能會有點小疑惑。因為Result&lt;T&gt; 是用到了類型別名。
+
+例如 io::Result 定義如下，因為 io 模組裡的錯誤都是 io::Error，用到 Result&lt;T, Error&gt; 的地方如果都換成 Result&lt;T&gt; 會少敲很多次鍵盤，同時又不會產生歧義\(因為 Result 裡面的 E 已經被固定成 io::Error 了\)
+
+```rust
+type Result<T> = Result<T, Error>;
 ```
 
-這個方法當然是可能失敗的，它有可能找不到。為了表達“成功返回了一個值”以及“沒有返回值”這兩種情況，Option&lt;usize&gt;就是一個非常合理的選擇。
 
 
 
 
+## 參考資料
 
-
+* [\[知乎\] Rust 錯誤處理](https://zhuanlan.zhihu.com/p/25506762)
 
