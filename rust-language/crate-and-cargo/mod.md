@@ -25,7 +25,7 @@ mod name { fn items() {} … }
 
 比如，我們有一個crate內部包含了兩個模組，一個是caller一個是worker。我們可以有幾種方案來實現。
 
-方案一：直接把所有程式碼都寫到lib.rs裡面：
+### 方案一：直接把所有程式碼都寫到lib.rs裡面
 
 ```rust
 // <lib.rs>
@@ -39,7 +39,9 @@ mod worker {
 }
 ```
 
-方案二：把這兩個模組分到兩個不同的檔中，分別叫作caller.rs和worker.rs。那麼我們的項目就有了三個檔，它們的內容分別是：
+### 方案二：把模組分到兩個不同的檔中
+
+分別叫作caller.rs和worker.rs。那麼我們的項目就有了三個檔，它們的內容分別是：
 
 ```rust
 // <lib.rs>
@@ -55,11 +57,60 @@ fn work3() {}
 
 因為lib.rs是這個crate的入口，我們需要在這裡聲明它的所有子模組，否則caller.rs和worker.rs都不會被當成這個項目的源碼編譯。
 
+### 方案三：如果worker.rs這個檔包含的內容太多，我們還可以繼續分成幾個檔
+
+```rust
+// <lib.rs>
+mod caller;
+mod worker;
+// <caller.rs>
+fn call() {}
+// <worker/mod.rs>
+mod worker1;
+mod worker2;
+mod worker3;
+// <worker/worker1.rs>
+fn work1() {}
+// <worker/worker2.rs>
+fn work2() {}
+// <worker/worker3.rs>
+fn work3() {}
+```
+
+這樣就把一個模組繼續分成了幾個小模組。而且worker模組的拆分其實是不影響caller模組的，只要我們在worker模組中把它子模組內部的東西重新匯出（re-export）就可以了。這個是可見性控制的內容。
+
+## 可見性
+
+我們可以給模組內部的元素指定可見性。預設都是私有，除了兩種例外情況：
+
+* 一是用pub修飾的trait內部的關聯元素（associated item），預設是公開的；
+* 二是pub enum內部的成員預設是公開的。
+
+·如果一個元素是私有的，那麼只有本模組內的元素以及它的子模組可以訪問；·如果一個元素是公開的，那麼上一層的模組就有權訪問它。
 
 
 
-
-
+```rust
+mod top_mod1 {
+    pub fn method1() {}
+    pub mod inner_mod1 {
+        pub fn method2() {}
+        fn method3() {}
+    }
+    mod inner_mod2 {
+        fn method4() {}
+        mod inner_mod3 {
+            fn call_fn_inside() {
+                super::method4();
+            }
+        }
+    }
+}
+fn call_fn_outside() {
+    top_mod1::method1();
+    top_mod1::inner_mod1::method2();
+}
+```
 
 
 
