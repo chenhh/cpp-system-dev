@@ -104,7 +104,7 @@ assert!(result.is_err());
 
 沒錯，它的行為幾乎就是try/catch了：panic！巨集被捕獲了，程式並也沒有掛，返回了Err。儘管如此，Rust的目的並不是讓它成為try/catch機制的實現，而是當Rust和其他程式語言互動時，避免其他語言程式碼塊throw出異常。所以呢，錯誤處理的正道還是用Result。
 
-從catch\_unwind的名字上，需要留意下unwind這個限定詞，它意味著只有預設進行棧反解的panic可以被捕獲到，如果是設為直接終止程式的panic，就逮不住了。
+從catch\_unwind的名字上，需要留意下unwind這個限定詞，它意味著只有預設進行堆疊反解的panic可以被捕獲到，如果是設為直接終止程式的panic，就逮不住了。
 
 
 
