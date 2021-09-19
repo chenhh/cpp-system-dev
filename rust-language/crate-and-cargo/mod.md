@@ -53,6 +53,8 @@ fn work2() {}
 fn work3() {}
 ```
 
+因為lib.rs是這個crate的入口，我們需要在這裡聲明它的所有子模組，否則caller.rs和worker.rs都不會被當成這個項目的源碼編譯。
+
 
 
 
