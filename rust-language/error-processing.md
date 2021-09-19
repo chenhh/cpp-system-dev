@@ -28,7 +28,15 @@ Rust語言在這方面則做的非常精緻。
 
 Rust 並沒有提供基於 exception 的錯誤處理機制，雖然 panic! 巨集在讓行程掛掉時也拋出堆疊，同時也可以用 `std::panic::catch_unwind` 捕捉 panic，但是極其不推薦用來處理常規錯誤。
 
+Rust 提供以下基礎設施做錯誤處理：
 
+* Option, Result
+* unwrap, expect
+* combinators
+* try! macro
+* Error trait
+* From trait
+* Carrier trait
 
 ## 主流模式：try-catch-finally
 
@@ -136,7 +144,27 @@ assert!(result.is_err());
 
 從catch\_unwind的名字上，需要留意下unwind這個限定詞，它意味著只有預設進行堆疊反解的panic可以被捕獲到，如果是設為直接終止程式的panic，就逮不住了。
 
+catch\_unwind 一般是用來在多執行緒程式裡面在將掛掉的執行緒 catch 住，防止一個執行緒掛掉導致整個進程崩掉，或者是通過外部函數介面\(FFI\)與 C 互動時將堆疊資訊兜住防止 C 程式看到堆疊不知道如何處理，直接把堆疊資訊丟給 C 程式的話屬於 C 裡的未定義行為\(Undefined Behavior\)。
+
+另外 catch\_unwind 並不保證能 catch 所有 panic，而只對通過 unwind 實現的 panic 有用。因為 unwind 需要額外記錄堆疊資訊，對程式效能和二進製程式大小有影響，所以在一些嵌入式平臺上面的 panic 並沒有通過 unwind 實現，而是直接 abort 的，所以 catch\_unwind 並不保證能捕捉到所有panic。
+
 ## 基本錯誤處理
+
+Rust 錯誤處理本質上還是基於返回值的，很多基於返回值做錯誤處理的語言是將錯誤直接硬編碼到正確值上，或者返回兩個值，前者例如 C 在很多時候都是直接把正常情況永遠不會出現的值作為錯誤值，後者例如 Go 同時返回兩個值來進行錯誤處理。
+
+而 Rust 則將兩個可能的值用 enum 類型表示，enum 在函數式語言裡面叫做代數數據類型\(algebraic data type\)，而且是和類型\(sum type\)，表示兩個可能的值一次只能取一個。
+
+```cpp
+enum Option<T> {
+    None,
+    Some(T),
+}
+
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
 
 Rust用於錯誤處理的最基本的類型就是我們常見的Option&lt;T&gt;類型。
 
