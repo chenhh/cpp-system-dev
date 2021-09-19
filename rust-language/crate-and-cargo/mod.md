@@ -112,5 +112,64 @@ fn call_fn_outside() {
 }
 ```
 
+top\_mod1外部的函數call\_fn\_outside\(\)，有權訪問method1\(\)，因為它是用pub修飾的。同樣也可以訪問method2\(\)，因為inner\_mod1是pub的，而且method2也是pub的。而inner\_mod2不是pub的，所以外部的函數是沒法訪問method4的。但是call\_fn\_inside是有權訪問method4的，因為它在method4所處模組的子模組中。
+
+### 重新導出
+
+模組內的元素可以使用pub use重新匯出（re-export）。這也是Rust模組系統的一個重要特點。
+
+```rust
+mod top_mod1 {
+    pub use self::inner_mod1::method1;
+    mod inner_mod1 {
+        pub use self::inner_mod2::method1;
+        mod inner_mod2 {
+            pub fn method1() {}
+        }
+    }
+}
+fn call_fn_outside() {
+    top_mod1::method1();
+}
+```
+
+在call\_fn\_outside函數中，我們調用了top\_mod1中的函數method1。可是我們注意到，method1其實不是在top\_mod1內部實現的，它只是把它內部inner\_mod1裡面的函數重新匯出了而已。
+
+**pub use就是起這樣的作用，可以把元素當成模組的直接成員公開出去**。我們繼續往下看還可以發現，這個函數在inner\_mod1裡面也只是重新匯出的，它的真正實現是在inner\_mod2裡面。
+
+這個機制可以讓我們輕鬆做到介面和實現的分離。我們可以先設計好一個模組的對外API，這個固定下來之後，它的具體實現是可以隨便改，不影響外部用戶的。我們可以把具體實現寫到任何一個子模組中，然後在當前模組重新匯出即可。對外部用戶來說，這沒什麼區別。
+
+不過這個機制有個麻煩之處就是，如果具體實現嵌套在很深層次的子模組中的話，要把它匯出到最外面來，必須一層層地轉發，任何一層沒有重新匯出，都是無法達到目標的。
+
+Rust裡面用pub標記了的元素最終可能在哪一層可見，並不能很簡單地得出結論。因為它有可能被外面重新匯出。為了更清晰地限制可見性，Rust設計組又給pub關鍵字增加了下面的用法，可以明確地限定元素的可見性。
+
+* method1用了pub（self）限制，那麼它最多只能被這個模組以及子模組使用，在模組外部調用或者重新匯出都會出錯。
+* method2用了pub（super）限制，那麼它的可見性最多就只能到inner\_mod1這一層，在這層外面不能被調用或者重新匯出。
+* 而method3用了pub（crate）限制，那麼它的可見性最多就只能到當前crate這一層，再繼續往外重新匯出，就會出錯。
+
+```rust
+mod top_mod {
+    pub mod inner_mod1 {
+        pub mod inner_mod2 {
+            pub(self) fn method1() {}
+            pub(super) fn method2() {}
+            pub(crate) fn method3() {}
+        }
+        // Error:
+        // pub use self::inner_mod2::method1;
+        fn caller1() {
+            // Error:
+            // self::inner_mod2::method1();
+        }
+    }
+    fn caller2() {
+        // Error:
+        // self::inner_mod1::inner_mod2::method2();
+    }
+}
+// Error:
+// pub use ::top_mod::inner_mod1::inner_mod2::method3;
+```
+
 
 
