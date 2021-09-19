@@ -39,6 +39,20 @@ mod worker {
 }
 ```
 
+方案二：把這兩個模組分到兩個不同的檔中，分別叫作caller.rs和worker.rs。那麼我們的項目就有了三個檔，它們的內容分別是：
+
+```rust
+// <lib.rs>
+mod caller;
+mod worker;
+// <caller.rs>
+fn call() {}
+// <worker.rs>
+fn work1() {}
+fn work2() {}
+fn work3() {}
+```
+
 
 
 
