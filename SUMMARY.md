@@ -169,8 +169,8 @@
 
 * [Rust簡介](rust-language/introduction.md)
 * [測試](rust-language/testing.md)
-* [panic](rust-language/panic.md)
-* [錯誤處理](rust-language/error-processing.md)
+* [錯誤處理](rust-language/error-processing/README.md)
+  * [panic](rust-language/error-processing/panic.md)
 * [crate與cargo](rust-language/crate-and-cargo/README.md)
   * [mod](rust-language/crate-and-cargo/mod.md)
   * [第三方套件](rust-language/crate-and-cargo/third-party-crate.md)
