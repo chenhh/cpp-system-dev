@@ -228,3 +228,32 @@ mod top_mod1 {
 use std::io::{self, Read, Write}; 
 ```
 
+### use語句的大括弧可以嵌套使用
+
+```rust
+use a::b::{c, d, e::{f, g::{h, i}} };
+```
+
+### use語句可以使用星號，引入所有的元素
+
+```rust
+// 這句話引入了 std::io::prelude下面所有的名字
+use std::io::prelude::*; 
+```
+
+### use語句不僅可以用在模組中，還可以用在函數、trait、impl等地方
+
+```rust
+fn call() {
+    use std::collections::HashSet;
+    let s = HashSet::<i32>::new();
+}
+```
+
+### use語句允許使用as重命名，避免名字衝突
+
+```rust
+use std::result::Result as StdResult;
+use std::io::Result as IoResult;
+```
+
