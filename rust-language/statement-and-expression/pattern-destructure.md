@@ -119,6 +119,46 @@ pub enum Error {
 
 上游庫作者可以用一個叫作“non\_exhaustive”的attribute來標記一個enum或者struct，這樣在另外一個項目中使用這個類型的時候，無論如何都沒辦法在match運算式中通過列舉所有的成員實現完整匹配，必須使用底線才能完成編譯。這樣，以後上游庫裡面為這個類型添加新成員的時候，就不會導致下游專案中的編譯錯誤了因為它已經存在一個預設分支匹配其他情況。
 
+### match用法小結
+
+```rust
+#[derive(Debug)]
+enum OpenJS {
+    Nodejs,
+    React
+}
+enum Language {
+    Go,
+    Rust,
+    JavaScript(OpenJS),
+}
+
+fn get_url_by_language (language: Language) -> String {
+    match language {
+        // 僅需要返回一個值，可以不使用大括號。
+        Language::Go => String::from("https://golang.org/"),
+        // 需要在分支中執行多行代碼，可以使用大括號。
+        Language::Rust => {
+            println!("We are learning Rust.");
+            String::from("https://www.rust-lang.org/")
+        },
+        // 想對匹配的模式綁定一個值，可以修改枚舉的一個成員來存放數據，
+        // 這種模式稱為綁定值的模式。
+        Language::JavaScript(value) => {
+            println!("Openjs value {:?}!", value);
+            String::from("https://openjsf.org/")
+        },
+    }
+}
+
+fn main() {
+    print!("{}\n", get_url_by_language(Language::JavaScript(OpenJS::Nodejs)));
+    print!("{}\n", get_url_by_language(Language::JavaScript(OpenJS::React)));
+    print!("{}\n", get_url_by_language(Language::Go));
+    print!("{}\n", get_url_by_language(Language::Rust));
+}
+```
+
 ### match可做為表達式
 
 ```rust
@@ -141,6 +181,28 @@ fn main() {
     let x = Direction::East;
     let s = direction_to_int(x);
     println!("{}", s);  // 10
+}
+```
+
+### 匹配 Option 與 Some\(value\)
+
+Option 是 Rust 系統定義的一個枚舉類型，它有兩個變量：None 表示失敗、Some\(value\) 是元組結構體，封裝了一個范型類型的值 value。
+
+```rust
+fn something(num: Option<i32>) -> Option<i32> {
+    match num {
+        // None => None 是必須寫的，否則會報 pattern None not covered 錯誤，
+        // 編譯階段就不會通過的。
+        None => None,
+        Some(value) => Some(value + 1),
+    }
+}
+fn main() {
+    let five = Some(5);
+    let six = something(five);
+    let none = something(None);
+
+    println!("{:?} {:?}", six, none);
 }
 ```
 
