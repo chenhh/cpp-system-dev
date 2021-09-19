@@ -26,7 +26,7 @@ Rust語言在這方面則做的非常精緻。
 
 在Safe Rust中基本可以保證異常安全，但是unsafe rust中則需要開發者來保證。即便如此，unsafe rust中也有種種限制不會隨便暴露記憶體。
 
-Rust 並沒有提供基於 exception 的錯誤處理機制，雖然 panic! 巨集在讓進程掛掉時也拋出堆疊，同時也可以用 `std::panic::catch_unwind` 捕捉 panic，但是極其不推薦用來處理常規錯誤。
+Rust 並沒有提供基於 exception 的錯誤處理機制，雖然 panic! 巨集在讓行程掛掉時也拋出堆疊，同時也可以用 `std::panic::catch_unwind` 捕捉 panic，但是極其不推薦用來處理常規錯誤。
 
 
 
