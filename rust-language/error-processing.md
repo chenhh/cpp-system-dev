@@ -106,6 +106,20 @@ assert!(result.is_err());
 
 從catch\_unwind的名字上，需要留意下unwind這個限定詞，它意味著只有預設進行堆疊反解的panic可以被捕獲到，如果是設為直接終止程式的panic，就逮不住了。
 
+## 基本錯誤處理
+
+Rust用於錯誤處理的最基本的類型就是我們常見的Option&lt;T&gt;類型。
+
+```cpp
+impl str {
+pub fn find<'a, P: Pattern<'a>>(&'a self, pat: P) -> Option<usize> {}
+}
+```
+
+這個方法當然是可能失敗的，它有可能找不到。為了表達“成功返回了一個值”以及“沒有返回值”這兩種情況，Option&lt;usize&gt;就是一個非常合理的選擇。
+
+
+
 
 
 
