@@ -14,45 +14,38 @@
 
 ```rust
 fn main() {
-    // 通常情况下，`{}` 会被任意变量内容所替换。
-    // 变量内容会转化成字符串。
+    // 通常情況下，`{}` 會被任意變數內容所替換。
+    // 變數內容會轉化成字串。
     println!("{} days", 31);
-
-    // 不加后缀的话，31 就自动成为 i32 类型。
-    // 你可以添加后缀来改变 31 的类型（例如使用 31i64 声明 31 为 i64 类型）。
-
-    // 用变量替换字符串有多种写法。
-    // 比如可以使用位置参数。
+    // 不加尾碼的話，31 就自動成為 i32 類型。
+    // 你可以添加尾碼來改變 31 的類型（例如使用 31i64 聲明 31 為 i64 類型）。
+    // 用變數替換字串有多種寫法。
+    // 比如可以使用位置參數。
     println!("{0}, this is {1}. {1}, this is {0}", "Alice", "Bob");
-
-    // 可以使用命名参数。
-    println!("{subject} {verb} {object}",
-             object="the lazy dog",
-             subject="the quick brown fox",
-             verb="jumps over");
-
-    // 可以在 `:` 后面指定特殊的格式。
+    // 可以使用具名引數。
+    println!(
+        "{subject} {verb} {object}",
+        object = "the lazy dog",
+        subject = "the quick brown fox",
+        verb = "jumps over"
+    );
+    // 可以在 `:` 後面指定特殊的格式。
     println!("{} of {:b} people know binary, the other half don't", 1, 2);
-
-    // 你可以按指定宽度来右对齐文本。
-    // 下面语句输出 "     1"，5 个空格后面连着 1。
-    println!("{number:>width$}", number=1, width=6);
-
-    // 你可以在数字左边补 0。下面语句输出 "000001"。
-    println!("{number:>0width$}", number=1, width=6);
-
-    // println! 会检查使用到的参数数量是否正确。
+    // 你可以按指定寬度來右對齊文本。
+    // 下面語句輸出 " 1"，5 個空格後面連著 1。
+    println!("{number:>width$}", number = 1, width = 6);
+    // 你可以在數位左邊補 0。下面語句輸出 "000001"。
+    println!("{number:>0width$}", number = 1, width = 6);
+    // println! 會檢查使用到的參數數量是否正確。
     println!("My name is {0}, {1} {0}", "Bond");
-    // 改正 ^ 补上漏掉的参数："James"
-
-    // 创建一个包含单个 `i32` 的结构体（structure）。命名为 `Structure`。
+    // 改正 ^ 補上漏掉的參數："James"
+    // 創建一個包含單個 `i32` 的結構體（structure）。命名為 `Structure`。
     #[allow(dead_code)]
     struct Structure(i32);
-
-    // 但是像结构体这样的自定义类型需要更复杂的方式来处理。
-    // 下面语句无法运行。
+    // 但是像結構體這樣的自訂類型需要更複雜的方式來處理。
+    // 下麵語句無法執行。
     println!("This struct `{}` won't print...", Structure(3));
-    // 改正 ^ 注释掉此行。
+    // 改正 ^ 注釋掉此行。
 }
 ```
 

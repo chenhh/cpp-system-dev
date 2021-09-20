@@ -80,7 +80,7 @@ fn main() {
 
 **對陣列取借用borrow操作，可以生成一個“陣列切片”（Slice）**。
 
-陣列切片對陣列沒有“所有權”，我們可以把陣列切片看作專門用於指向陣列的指標，是對陣列的另外一個“視圖” \(view\)。比如，我們有一個陣列`[T:n]`，它的借用指標的類型就是`&[T;n]`。它可以通過編譯器內部魔法轉換為陣列切片類型`&[T]`。陣列切片實質上還是指標，它不過是在類型系統中丟棄了編譯階段定長陣列類型的長度資訊，而將此長度資訊存儲為運行期的值。
+陣列切片對陣列沒有“所有權”，我們可以把陣列切片看作專門用於指向陣列的指標，是對陣列的另外一個“視圖” \(view\)。比如，我們有一個陣列`[T:n]`，它的借用指標的類型就是`&[T;n]`。它可以通過編譯器內部魔法轉換為陣列切片類型`&[T]`。陣列切片實質上還是指標，它不過是在類型系統中丟棄了編譯階段定長陣列類型的長度資訊，而將此長度資訊存儲為執行期的值。
 
 ```rust
 fn main() {
@@ -97,6 +97,47 @@ fn main() {
         mut_array(s);
     }
     println!("{:?}", v);    // [1, 2, 5]
+}
+```
+
+切片（slice）型別和陣列類似，但其大小在編譯時是不確定的。相反，切片是一個雙字物件（two-word object），第一個字是一個指向資料的指標，第二個字是切片的長度。這 個 “字” 的寬度和 usize 相同，由處理器架構決定，比如在 x86-64 平台上就是 64 位。 slice 可以用來借用陣列的一部分。slice 的型別標記為 `&[T]`。
+
+```rust
+use std::mem;
+
+// 此函數借用一個 slice
+fn analyze_slice(slice: &[i32]) {
+    println!("first element of the slice: {}", slice[0]);
+    println!("the slice has {} elements", slice.len());
+}
+
+fn main() {
+    // 定長陣列（類型標記是多餘的）
+    let xs: [i32; 5] = [1, 2, 3, 4, 5];
+
+    // 所有元素可以初始化成相同的值
+    let ys: [i32; 500] = [0; 500];
+
+    // 下標從 0 開始
+    println!("first element of the array: {}", xs[0]);  // 1
+    println!("second element of the array: {}", xs[1]); // 2
+
+    // `len` 返回陣列的大小
+    println!("array size: {}", xs.len()); // 5
+
+    // 陣列是在堆疊中分配的
+    println!("array occupies {} bytes", mem::size_of_val(&xs)); // 20
+
+    // 陣列可以自動被借用成為 slice
+    println!("borrow the whole array as a slice");
+    analyze_slice(&xs);
+
+    // slice 可以指向陣列的一部分
+    println!("borrow a section of the array as a slice");
+    analyze_slice(&ys[1 .. 4]);
+
+    // 越界的下標會引發致命錯誤（panic）
+    //println!("{}", xs[5]);
 }
 ```
 
