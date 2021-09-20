@@ -189,6 +189,82 @@ Box類型是Rust中一種常用的指針類型。它代表“擁有所有權的�
 被裝箱的值可以使用 \* 運算符進行解引用；這會移除掉一層裝箱。
 
 ```rust
+use std::mem;
+
+#[derive(Debug, Clone, Copy)]
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+struct Rectangle {
+    p1: Point,
+    p2: Point,
+}
+
+fn origin() -> Point {
+    Point { x: 0.0, y: 0.0 }
+}
+
+fn boxed_origin() -> Box<Point> {
+    // 在堆上分配這個點（point），並返回一個指向它的指標
+    Box::new(Point { x: 0.0, y: 0.0 })
+}
+
+fn main() {
+    // （所有的型別標注都不是必需的）
+    // 堆疊分配的變數
+    let point: Point = origin();
+    let rectangle: Rectangle = Rectangle {
+        p1: origin(),
+        p2: Point { x: 3.0, y: 4.0 },
+    };
+
+    // 堆積分配的 rectangle（矩形）
+    let boxed_rectangle: Box<Rectangle> = Box::new(Rectangle {
+        p1: origin(),
+        p2: origin(),
+    });
+
+    // 函式的輸出可以裝箱
+    let boxed_point: Box<Point> = Box::new(origin());
+
+    // 兩層裝箱
+    let box_in_a_box: Box<Box<Point>> = Box::new(boxed_origin());
+
+    println!(
+        "Point occupies {} bytes in the stack",
+        mem::size_of_val(&point)    // 16
+    );
+    println!(
+        "Rectangle occupies {} bytes in the stack",
+        mem::size_of_val(&rectangle)    // 32
+    );
+
+    // box 的寬度就是指標寬度
+    println!(
+        "Boxed point occupies {} bytes in the stack",
+        mem::size_of_val(&boxed_point) // 8
+    );
+    println!(
+        "Boxed rectangle occupies {} bytes in the stack",
+        mem::size_of_val(&boxed_rectangle)  // 8
+    );
+    println!(
+        "Boxed box occupies {} bytes in the stack",
+        mem::size_of_val(&box_in_a_box) // 8
+    );
+
+    // 將包含在 `boxed_point` 中的資料複製到 `unboxed_point`
+    let unboxed_point: Point = *boxed_point;
+    println!(
+        "Unboxed point occupies {} bytes in the stack",
+        mem::size_of_val(&unboxed_point)    // 16
+    );
+}
+```
+
+```rust
 struct T {
     value: i32,
 }
