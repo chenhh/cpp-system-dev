@@ -4,6 +4,31 @@
 
 Rust的變數必須先聲明後才能使用，預設是唯讀不可寫入，與C/C++中變數預寫為可讀寫不同。
 
+Rust 通過靜態類型確保類型安全。變量綁定可以在聲明時說明類型，不過在多數情況下， 編譯器能夠從上下文推導出變量的類型，從而大大減少了類型說明的工作。
+
+使用 let 綁定操作可以將值（比如字面量）綁定（bind）到變量。
+
+```rust
+fn main() {
+    let an_integer = 1u32;
+    let a_boolean = true;
+    let unit = ();
+
+    // 将 `an_integer` 复制到 `copied_integer`
+    let copied_integer = an_integer;
+
+    println!("An integer: {:?}", copied_integer);
+    println!("A boolean: {:?}", a_boolean);
+    println!("Meet the unit value: {:?}", unit);
+
+    // 编译器会对未使用的变量绑定产生警告；可以给变量名加上下划线前缀来消除警告。
+    let _unused_variable = 3u32;
+
+    let noisy_unused_variable = 2u32;
+    // 改正 ^ 在变量名前加上下划线以消除警告
+}
+```
+
 ```rust
 fn main() {
    let x: i32 = 100;  // type i32可省略，由編譯器自動推斷type
