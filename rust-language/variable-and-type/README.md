@@ -196,6 +196,11 @@ fn main() {
 
 ## 常數\(const\)
 
+Rust 有兩種常量，可以在任意作用域聲明，包括全域性作用域。它們都需要顯式的類型聲明：
+
+* const：不可改變的值（通常使用這種）。
+* static：具有 'static 生命週期的，可以是可變的變量（須使用 static mut 關鍵字）。
+
 使用const聲明的是常數，而不是變數。因此一定不允許使用mut關鍵字修飾這個變數綁定，這是語法錯誤。
 
 常量的初始設定式也一定要是一個編譯期常數，不能是運行期的值。它與static變數的最大區別在於：**編譯器並不一定會給const常量分配記憶體空間**，在編譯過程中，它很可能會被內聯優化。以const聲明一個常量，也不具備類似let語句的模式匹配功能。
@@ -204,6 +209,30 @@ fn main() {
 fn main() {
     // 必須顯式指定型別，不可省略
     const GLOBAL: i32 = 0;
+}
+```
+
+```rust
+// 全域變數是在在所有其他作用域之外聲明的。
+static LANGUAGE: &'static str = "Rust";
+const  THRESHOLD: i32 = 10;
+
+fn is_big(n: i32) -> bool {
+    // 在一般函數中訪問常量
+    n > THRESHOLD
+}
+
+fn main() {
+    let n = 16;
+
+    // 在 main 函數（主函數）中訪問常量
+    println!("This is {}", LANGUAGE);
+    println!("The threshold is {}", THRESHOLD);
+    println!("{} is {}", n, if is_big(n) { "big" } else { "small" });
+
+    // 報錯！不能修改一個 `const` 常量。
+    // THRESHOLD = 5;
+    // 改正 ^ 注釋掉此行
 }
 ```
 
