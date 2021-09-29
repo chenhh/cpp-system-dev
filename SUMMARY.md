@@ -156,9 +156,10 @@
 
 ## 平行處理 <a id="parallel-processing"></a>
 
-* [平行處理簡介](parallel-processing/parallel-processing-introduction.md)
-* [平行計算簡介](parallel-processing/basic-parallel-computing.md)
+* [平行處理簡介](parallel-processing/parallel-processing-introduction/README.md)
+  * [平行計算簡介](parallel-processing/parallel-processing-introduction/basic-parallel-computing.md)
 * [concurrent, parallel](parallel-processing/concurrent-parallel.md)
+* [執行緒\(thread\)](parallel-processing/zhi-hang-xu-thread.md)
 
 ## 韌體 <a id="firmware"></a>
 
