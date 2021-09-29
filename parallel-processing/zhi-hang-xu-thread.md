@@ -67,6 +67,8 @@ if __name__ == "__main__":
     t3.start()
     # wait thread finish
     # thread完成時，不一定會按照次序，所以exiting會亂序
+    # 如果沒有join時，主執行緒會繼續執行下去，
+    # 而不會等到子執行緒結束
     t1.join()
     t2.join()
     t3.join()
@@ -78,6 +80,7 @@ if __name__ == "__main__":
 # 2nd_thread is exiting
 # 1st_thread is exiting
 # 3rd_thread is exiting
+# finished
 ```
 
 
