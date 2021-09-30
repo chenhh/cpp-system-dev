@@ -161,7 +161,7 @@ if __name__ == '__main__':
     print("Exiting Main Thread")
 ```
 
-## setDaemon
+### setDaemon
 
 若子執行緒希望在主執行緒執行完畢後，不管其他的執行緒是否已執行完畢，都強制跟主執行緒一起結束，則必須寫在start\(\) 之前，預設為 False。
 
@@ -205,7 +205,18 @@ if __name__ == '__main__':
 
 ## Queue
 
+[https://docs.python.org/zh-tw/3.8/library/queue.html](https://docs.python.org/zh-tw/3.8/library/queue.html)
+
 如果只是threading之間要通訊，可以使用queue。Thread 無法回傳值，所以要使用 `Queue.put()` 將要傳回的值存入 Queue，再用 `Queue.get()` 取出。
+
+Queue是同步的類別，實現了多生產者、多消費者隊列。這特別適用於訊息必須安全地在多線程間交換的線程編程。模塊中的 Queue 類實現了所有所需的鎖定語義。
+
+Queue模組有幾個類別：
+
+* queue.Queue：FIFO佇列。
+* queue.LifoQueue：LIFO 隊列構造函數
+* queue.PriorityQueue：優先級隊列構造函數。
+* queue.SimpleQueue：無界的 FIFO 隊列構造函數。簡單的隊列，缺少任務跟蹤等高級功能。
 
 而Python的threading模組提供了很多同步方法，包括互斥量\(mutex\)、訊號量\(semaphore\)、原子變數\(atomic\)、條件變數\(conditional variable\)、事件\(event\)和鎖\(lock\)。如果可以使用這些方法的話，應該優先考慮使用這些，而不是使用queue（佇列）模組。
 
