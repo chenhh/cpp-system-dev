@@ -19,6 +19,8 @@ Python中，\_thread是低階的執行緒模組，threading是高階的執行緒
 
 ## 建立thread
 
+### 外部函數以thread執行
+
 ```python
 # -*- coding: UTF-8 -*-
 import threading
