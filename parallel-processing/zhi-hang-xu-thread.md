@@ -31,8 +31,6 @@ Python中，\_thread是低階的執行緒模組，threading是高階的執行緒
 
 呼叫 `start()` 之後子執行緒變為活躍狀態，並且持續直到 `run()` 結束，或者中間出現異常。所有的執行緒都執行完成之後，程式結束。
 
-
-
 ### 以thread執行外部函數
 
 * thread建立時，如果沒有指定`name`時，以thread-{num}命名。
@@ -88,12 +86,15 @@ if __name__ == "__main__":
                           target=third_function)
     t4 = threading.Thread(name='arg_thread',
                           target=param_function,
-                          args=("hello world",))
+                          args=["hello world",])
     threads = (t1, t2, t3, t4)
     # start thread
     # 建立thread時, 因為t1, t2, t3是依序建立,
     # 所以在印出starting時不會亂序
     [t.start() for t in threads]
+
+    #  查看目前有多少個執行緒
+    print(f"current acting threads: {threading.active_count()}")
 
     # wait thread finish
     # thread完成時，不一定會按照次序，所以exiting會亂序
@@ -109,6 +110,7 @@ if __name__ == "__main__":
 # 1st_thread is exiting
 # 3rd_thread is exiting
 # finished
+
 ```
 
 ### 覆寫thread class的run成員函數
@@ -157,6 +159,48 @@ if __name__ == '__main__':
     # wait child threads complete
     [t.join() for t in threads]
     print("Exiting Main Thread")
+```
+
+## setDaemon
+
+若子執行緒希望在主執行緒執行完畢後，不管其他的執行緒是否已執行完畢，都強制跟主執行緒一起結束，則必須寫在start\(\) 之前，預設為 False。
+
+```python
+# -*- coding: UTF-8 -*-
+import threading
+import time
+
+
+def thread_first_job(x):
+    name = threading.currentThread().getName()
+    time.sleep(5)
+    print(f"thread name:{name}, 1st job: {x}")
+    print(f"thread name:{name}, 1st job finished")
+
+
+def thread_second_job(x):
+    name = threading.currentThread().getName()
+    print(f"thread name:{name}, 2nd job: {x}")
+    print(f"thread name:{name}, 2nd job finished")
+
+
+if __name__ == '__main__':
+    t1 = threading.Thread(target=thread_first_job, args=("Hi",))
+    t2 = threading.Thread(target=thread_second_job, args=("Hello",))
+    # t2的daemon設為true, 則不論t1是否結束, t2會和main thread一起結束,
+    # 必須寫在t2.start之前
+    t2.setDaemon(True)
+    t1.start()
+    t2.start()
+    print("main thread finished")
+
+    """
+    thread name:Thread-2, 2nd job: Hello
+    thread name:Thread-2, 2nd job finished
+    main thread finished
+    thread name:Thread-1, 1st job: Hi
+    thread name:Thread-1, 1st job finished
+    """
 ```
 
 ## 參考資料
