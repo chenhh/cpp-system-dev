@@ -21,6 +21,9 @@ Python中，\_thread是低階的執行緒模組，threading是高階的執行緒
 
 ### 外部函數以thread執行
 
+* thread建立時，如果沒有指定`name`時，以thread-{num}命名。
+* 需要被執行的函數以target在thread建立時傳入，thread會自動以成員函數run\(\)執行target函數。
+
 ```python
 # -*- coding: UTF-8 -*-
 import threading
