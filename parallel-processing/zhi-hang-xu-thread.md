@@ -17,7 +17,17 @@ Python中，\_thread是低階的執行緒模組，threading是高階的執行緒
 
 在 CPython 中，由於存在全域性解釋器鎖\(GIL\)，同一時刻只有一個執滿者可以執行 Python 代碼。 如果想讓應用更好地利用多核心計算機的計算資源，推薦你使用 multiprocessing 或 concurrent.futures.ProcessPoolExecutor。 但是，如果你想要同時運行多個 I/O 密集型任務，則多執行緒仍然是一個合適的模型。
 
-## 建立thread
+## 建立執行緒
+
+### 如何實現一個執行緒
+
+使用threading模組實現一個新的執行緒，需要下面3步：
+
+* 定義一個 Thread 類的子類；
+* 重寫 `__init__(self [,args])` 方法，可以新增額外的引數；
+* 最後，需要重寫 `run(self, [,args])` 方法來實現執行緒要做的事情。
+
+當建立了新的 Thread 子類的時候，可以實例化這個類，呼叫 `start()` 方法來啟動它。執行緒啟動之後將會執行 `run()` 方法。
 
 ### 以thread執行外部函數
 
