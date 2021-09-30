@@ -547,5 +547,5 @@ if __name__ == '__main__':
 ## 參考資料
 
 * [\[python\] thread module](https://docs.python.org/zh-tw/3.8/library/threading.html)
-* [Python並行編程 中文版](https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html)
+* [Python並行編程\(python parallel programming cookbook\) 中文版](https://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html)
 
