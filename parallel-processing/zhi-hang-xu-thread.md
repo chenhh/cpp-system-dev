@@ -23,6 +23,7 @@ Python中，\_thread是低階的執行緒模組，threading是高階的執行緒
 
 * thread建立時，如果沒有指定`name`時，以thread-{num}命名。
 * 需要被執行的函數以target在thread建立時傳入，thread會自動以成員函數run\(\)執行target函數。
+* 若目標函數需要參數時，可在建立thread時，以arg關鍵字，將參數以list或tuple傳入。
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -54,6 +55,14 @@ def third_function():
     return
 
 
+def param_function(arg):
+    t_name = threading.currentThread().getName()
+    print(f"{t_name} is starting, arg={arg}")
+    time.sleep(2)
+    print(f"{t_name} is exiting")
+    return
+
+
 if __name__ == "__main__":
     # 建立Thread object
     # target 是用於 run() 方法調用的可調用對象。
@@ -63,7 +72,10 @@ if __name__ == "__main__":
                           target=second_function)
     t3 = threading.Thread(name='3rd_thread',
                           target=third_function)
-    threads = (t1, t2, t3)
+    t4 = threading.Thread(name='arg_thread',
+                          target=param_function,
+                          args=("hello world",))
+    threads = (t1, t2, t3, t4)
     # start thread
     # 建立thread時, 因為t1, t2, t3是依序建立,
     # 所以在印出starting時不會亂序
@@ -83,9 +95,6 @@ if __name__ == "__main__":
 # 1st_thread is exiting
 # 3rd_thread is exiting
 # finished
-# 如果沒有join時，child threads starting後
-# main thread會先印出finished, child threads
-# 才會印出exiting
 ```
 
 ### 覆寫thread class的run成員函數
