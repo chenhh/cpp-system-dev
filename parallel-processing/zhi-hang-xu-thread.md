@@ -78,11 +78,14 @@ if __name__ == "__main__":
 # 1st_thread is exiting
 # 3rd_thread is exiting
 # finished
+# 如果沒有join時，child threads starting後
+# main thread會先印出finished, child threads
+# 才會印出exiting
 ```
 
 
 
+## 參考資料
 
-
-
+* [\[python\] thread module](https://docs.python.org/zh-tw/3.8/library/threading.html)
 
