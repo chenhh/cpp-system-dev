@@ -299,6 +299,84 @@ if __name__ == '__main__':
     
 ```
 
+## rlock
+
+如果想讓只有拿到鎖的執行緒才能釋放該鎖，那麼應該使用 RLock\(\) 類別。和 Lock\(\) 類別一樣， RLock\(\) 類別有兩個方法： acquire\(\) 和 release\(\) 。當你需要在類別外面保證執行緒安全，又要在類內使用同樣方法的時候 RLock\(\) 就很實用了。
+
+RLock其實叫做“Reentrant Lock”，就是可以重複進入的鎖，也叫做“遞迴鎖”。這種鎖對比Lock有是三個特點：
+
+* 誰拿到誰釋放。如果執行緒A拿到鎖，執行緒B無法釋放這個鎖，只有A可以釋放；
+* 同一執行緒可以多次拿到該鎖，即可以acquire多次；
+* acquire多少次就必須release多少次，只有最後一次release才能改變RLock的狀態為unlocked
+
+
+
+```python
+# -*- coding: UTF-8 -*-
+import threading
+import time
+
+
+class Box(object):
+    lock = threading.RLock()
+
+    def __init__(self):
+        self.total_items = 0
+
+    def execute(self, n):
+        Box.lock.acquire()
+        self.total_items += n
+        Box.lock.release()
+
+    def add(self):
+        Box.lock.acquire()
+        self.execute(1)
+        Box.lock.release()
+
+    def remove(self):
+        Box.lock.acquire()
+        self.execute(-1)
+        Box.lock.release()
+
+
+## These two functions run n in separate
+## threads and call the Box's methods
+def adder(box, items):
+    while items > 0:
+        print("adding 1 item in the box")
+        box.add()
+        time.sleep(1)
+        items -= 1
+
+
+def remover(box, items):
+    while items > 0:
+        print("removing 1 item in the box")
+        box.remove()
+        time.sleep(1)
+        items -= 1
+
+
+## the main program build some
+## threads and make sure it works
+if __name__ == "__main__":
+    items = 5
+    n_thread = 2
+    print(f"putting {items} items in the box ")
+    box = Box()
+    threads = []
+    for idx in range(n_thread):
+        if idx % 2 == 0:
+            threads.append(threading.Thread(target=adder, args=(box, items)))
+        else:
+            threads.append(threading.Thread(target=remover, args=(box, items)))
+
+    [t.start() for t in threads]
+    [t.join() for t in threads]
+    print(f"{box.total_items} items still remain in the box ")
+
+```
+
 ## 訊號量\(Semaphore\)
 
 * semaphore可類比於抽號碼牌等資源的概念。雖然binary semaphore等價於lock，但是semaphore應用於執行緒間的同步，而不適用於用lock資源。
