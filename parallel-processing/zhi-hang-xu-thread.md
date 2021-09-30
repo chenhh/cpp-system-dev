@@ -305,6 +305,43 @@ Semaphore 跟 Lock 類似，但 Semaphore 多了計數器的功能，可以允�
 
 Semaphore類似抽號碼牌的機制，多個執行緒要使用同一個資源時，先抽號碼牌，叫到號碼的執行緒才可使用資源。
 
+```python
+# -*- coding: UTF-8 -*-
+
+import threading
+
+
+def thread_first_job(t_a, sem):
+    for _ in range(10):
+        # 取得旗標
+        sem.acquire()
+        t_a += 1
+        print(f"This is the first thread {t_a}")
+        # 釋放旗標
+        sem.release()
+
+
+def thread_second_job(t_a, sem):
+    for _ in range(10):
+        # 取得旗標
+        sem.acquire()
+        t_a -= 1
+        print(f"This is the second thread {t_a}")
+        # 釋放旗標
+        sem.release()
+
+
+if __name__ == '__main__':
+    a = 0
+    # 設定旗標計數器為2
+    semaphore = threading.Semaphore(2)
+    t_1 = threading.Thread(target=thread_first_job, args=(a, semaphore))
+    t_2 = threading.Thread(target=thread_second_job, args=(a, semaphore))
+    threads = (t_1, t_2)
+    [t.start() for t in threads]
+    [t.join() for t in threads]
+```
+
 ## 參考資料
 
 * [\[python\] thread module](https://docs.python.org/zh-tw/3.8/library/threading.html)
