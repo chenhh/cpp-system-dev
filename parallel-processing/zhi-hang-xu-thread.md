@@ -203,6 +203,12 @@ if __name__ == '__main__':
     """
 ```
 
+## Queue
+
+如果只是threading之間要通訊，可以使用queue。Thread 無法回傳值，所以要使用 `Queue.put()` 將要傳回的值存入 Queue，再用 `Queue.get()` 取出。
+
+而Python的threading模組提供了很多同步方法，包括互斥量\(mutex\)、訊號量\(semaphore\)、原子變數\(atomic\)、條件變數\(conditional variable\)、事件\(event\)和鎖\(lock\)。如果可以使用這些方法的話，應該優先考慮使用這些，而不是使用queue（佇列）模組。
+
 ## 參考資料
 
 * [\[python\] thread module](https://docs.python.org/zh-tw/3.8/library/threading.html)
