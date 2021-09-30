@@ -90,6 +90,8 @@ if __name__ == "__main__":
 
 ### 覆寫thread class的run成員函數
 
+* 如果不使用target在thread建構時傳入函數，也可以在覆寫thread class的run成員函數做更精細的控制。
+
 ```python
 # -*- coding: UTF-8 -*-
 import _thread
