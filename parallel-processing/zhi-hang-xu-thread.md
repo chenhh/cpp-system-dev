@@ -299,14 +299,25 @@ if __name__ == '__main__':
     
 ```
 
-## Semaphore
+## 訊號量\(Semaphore\)
 
-Semaphore 跟 Lock 類似，但 Semaphore 多了計數器的功能，可以允許多個執行緒同時執行。
+* semaphore可類比於抽號碼牌等資源的概念。雖然binary semaphore等價於lock，但是semaphore應用於執行緒間的同步，而不適用於用lock資源。
+* 訊號量是由作業系統管理的一種抽象資料型別，用於在多執行緒中同步對共享資源的使用。
 
-Semaphore類似抽號碼牌的機制，多個執行緒要使用同一個資源時，先抽號碼牌，叫到號碼的執行緒才可使用資源。
+  本質上說，訊號量是一個內部資料，用於標明當前的共享資源可以有多少並發讀取\(類似抽號碼牌\)。
+
+* threading模組中，訊號量的操作有兩個函式，即 acquire\(\) 和 release\(\) ，解釋如下：
+
+  * 每當執行緒想要讀取關聯了訊號量的共享資源時，必須呼叫 acquire\(\) ，此操作減少訊號量的內部變數, 如果此變數的值非負，那麼分配該資源的許可權。如果是負值，那麼執行緒被掛起，直到有其他的執行緒釋放資源。
+  * 當執行緒不再需要該共享資源，必須通過 release\(\) 釋放。這樣，訊號量的內部變數增加，在訊號量等待佇列中排在最前面的執行緒會拿到共享資源的許可權。
+
+![&#x7531;semaphore&#x7BA1;&#x7406;&#x5171;&#x4EAB;&#x8CC7;&#x6E90;](../.gitbook/assets/semaphores-min.png)
+
+
 
 ```python
 # -*- coding: UTF-8 -*-
+# binary semaphore
 
 import threading
 
