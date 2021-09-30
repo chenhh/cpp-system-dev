@@ -299,6 +299,12 @@ if __name__ == '__main__':
     
 ```
 
+## Semaphore
+
+Semaphore 跟 Lock 類似，但 Semaphore 多了計數器的功能，可以允許多個執行緒同時執行。
+
+Semaphore類似抽號碼牌的機制，多個執行緒要使用同一個資源時，先抽號碼牌，叫到號碼的執行緒才可使用資源。
+
 ## 參考資料
 
 * [\[python\] thread module](https://docs.python.org/zh-tw/3.8/library/threading.html)
