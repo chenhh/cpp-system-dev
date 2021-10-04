@@ -60,8 +60,6 @@ class threading.Thread(
 
 呼叫 `start()` 之後子執行緒變為活躍狀態，並且持續直到 `run()` 結束，或者中間出現異常。所有的執行緒都執行完成之後，程式結束。
 
-
-
 ### 以thread執行外部函數
 
 * thread建立時，如果沒有指定`name`時，以thread-{num}命名。
@@ -75,6 +73,7 @@ import time
 
 
 def first_function():
+    # currentThread()可得到目前的thread object
     t_name = threading.currentThread().getName()
     print(f"{t_name} is starting")
     time.sleep(2)
@@ -147,6 +146,12 @@ if __name__ == "__main__":
 ### 覆寫thread class的run成員函數
 
 * 如果不使用target在thread建構時傳入函數，也可以在覆寫thread class的run成員函數做更精細的控制。
+
+使用threading模組實現一個新的執行緒，需要下面3步：
+
+* 定義一個 Thread 類的子類
+* 重寫 `__init__(self [,args])` 方法，可以新增額外的參數
+* 最後，需要重寫 `run(self, [,args])` 方法來實現執行緒要做的事情
 
 ```python
 # -*- coding: UTF-8 -*-
@@ -295,6 +300,16 @@ if __name__ == '__main__':
 ## Lock
 
 當同時有幾個 Thread 要用到同一個資料時，為了不發生 Race Condition 的現象，需要使用 `lock.acquire()` 以及 `lock.release()` 來將其鎖定住，不讓其他Thread 執行。
+
+* 鎖有兩種狀態： `locked`（被某一執行緒拿到）和`unlocked`（可用狀態）。
+* 我們有兩個方法來操作鎖： `acquire()` 和 `release()`。
+
+lock遵循以下規則：
+
+* 如果狀態是unlocked， 可以調用 acquire\(\) 將狀態改為locked。
+* 如果狀態是locked， acquire\(\) 會被block直到另一執行緒調用 release\(\) 釋放鎖。
+* 如果狀態是unlocked， 調用 release\(\) 將導致 RuntimError 異常。
+* 如果狀態是locked， 可以調用 release\(\) 將狀態改為unlocked。
 
 ```python
 # -*- coding: UTF-8 -*-
