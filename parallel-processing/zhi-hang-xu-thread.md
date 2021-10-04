@@ -20,7 +20,14 @@ description: 線程
 
 ![python thread&#x72C0;&#x614B;&#x8F49;&#x79FB;&#x5716;](../.gitbook/assets/python_thread_state-min.png)
 
-Python中，\_thread是低階的執行緒模組，threading是高階的執行緒模組。
+Python中，\_thread是低階的執行緒模組，threading是高階的執行緒模組。threading模組的主要組件如下：
+
+* 執行緒物件
+* Lock物件
+* RLock物件
+* 信號物件
+* 條件變數物件
+* 事件物件
 
 在 CPython 中，由於存在全域性解釋器鎖\(GIL\)，同一時刻只有一個執滿者可以執行 Python 代碼。 如果想讓應用更好地利用多核心計算機的計算資源，推薦你使用 multiprocessing 或 concurrent.futures.ProcessPoolExecutor。 但是，如果你想要同時運行多個 I/O 密集型任務，則多執行緒仍然是一個合適的模型。
 
