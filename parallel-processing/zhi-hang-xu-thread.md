@@ -345,7 +345,11 @@ if __name__ == '__main__':
     
 ```
 
-## rlock
+## RLock
+
+[https://docs.python.org/zh-tw/3/library/threading.html\#rlock-objects](https://docs.python.org/zh-tw/3/library/threading.html#rlock-objects)
+
+在鎖定狀態下，某些執行緒擁有鎖 ； 在非鎖定狀態下， 沒有執行緒擁有它。
 
 如果想讓只有拿到鎖的執行緒才能釋放該鎖，那麼應該使用 RLock\(\) 類別。和 Lock\(\) 類別一樣， RLock\(\) 類別有兩個方法： acquire\(\) 和 release\(\) 。當你需要在類別外面保證執行緒安全，又要在類內使用同樣方法的時候 RLock\(\) 就很實用了。
 
@@ -364,6 +368,7 @@ import time
 
 
 class Box(object):
+    # class variable
     lock = threading.RLock()
 
     def __init__(self):
@@ -479,6 +484,8 @@ if __name__ == '__main__':
 
 ## condition
 
+條件指的是應用程式狀態的改變。這是另一種同步機制，其中某些執行緒在等待某一條件發生，其他的執行緒會在該條件發生的時候進行通知。一旦條件發生，執行緒會拿到共享資源的唯一權限。
+
 提供比 Lock, RLock更高級的功能：
 
 * 等待 wait\(\)；
@@ -539,6 +546,75 @@ if __name__ == '__main__':
 # This is the first thread  1
 # This is the first thread  2
 # This is the first thread  3
+```
+
+### 生產者-消費者
+
+```python
+# -*- coding: UTF-8 -*-
+from threading import (Thread, Condition)
+import time
+
+
+class Consumer(Thread):
+    """ 消費者 """
+    def __init__(self, _items, _condition):
+        super().__init__()
+        self.items = _items
+        self.condition = _condition
+
+    def consume(self):
+        # 要求lock
+        self.condition.acquire()
+        if len(self.items) == 0:
+            self.condition.wait()
+            print("消費者: 沒有產品了")
+        self.items.pop()
+        print(f"消費者: 使用1個產品，還有{len(self.items)}個產品")
+        # 喚醒等待的執行緒
+        self.condition.notify()
+        # 釋放lock
+        self.condition.release()
+
+    def run(self):
+        for _ in range(0, 20):
+            time.sleep(1)
+            self.consume()
+
+
+class Producer(Thread):
+    """ 生產者 """
+    def __init__(self, _items, _condition):
+        super().__init__()
+        self.items = _items
+        self.condition = _condition
+
+    def produce(self):
+        self.condition.acquire()
+        if len(self.items) == 10:
+            self.condition.wait()
+            print(f"生產者:現在產品滿了，有{len(self.items)}個產品，停止生產")
+        self.items.append(1)
+        print(f"生產者:生產1個，現在共有{len(self.items)}個產品")
+        self.condition.notify()
+        self.condition.release()
+
+    def run(self):
+        for i in range(0, 20):
+            time.sleep(0.5)
+            self.produce()
+
+
+if __name__ == "__main__":
+    items = []
+    condition = Condition()
+
+    producers = (Producer(items, condition), Producer(items, condition), Producer(items, condition))
+    consumers = (Consumer(items, condition), Consumer(items, condition), Consumer(items, condition))
+    [p.start() for p in producers]
+    [c.start() for c in consumers]
+    [p.join() for p in producers]
+    [c.join() for c in consumers]
 ```
 
 ## Event
