@@ -33,6 +33,19 @@ Python中，\_thread是低階的執行緒模組，threading是高階的執行緒
 
 ## 建立執行緒
 
+```python
+class threading.Thread(
+    group=None, target=None, name=None, args=(), kwargs={})
+```
+
+* group: 一般設置為 None ，這是為以後的一些特性預留的
+* target: 當執行緒啟動的時候要執行的函數
+* name: 執行緒的名字，默認會分配一個唯一名字 Thread-N
+* args: 傳遞給 target 的參數，要使用tuple類型
+* kwargs: 同上，使用字典類型dict
+
+創建執行緒的方法非常實用，通過target參數指定執行的函數、arg和kwarg將參數傳入函數，告訴執行緒應該做什麼。
+
 ### 如何實現一個執行緒
 
 使用threading模組實現一個新的執行緒，需要下面3步：
