@@ -111,23 +111,42 @@ while (True) {
 
 ![&#x4E8B;&#x4EF6;&#x767C;&#x751F;&#x5F8C;&#xFF0C;&#x547C;&#x53EB;&#x5C0D;&#x61C9;&#x7684;&#x56DE;&#x8ABF;&#x51FD;&#x6578;](../.gitbook/assets/event_loop_event2-min.png)
 
+上圖中，執行完Callback\_B之後才會繼續監聽，但假設在執行Callback\_B這個任務的中途，出現了需要調動IO的指令，不就應該要先放下Callback\_B這個任務，去監聽其他事件並執行其他任務嗎？為什麼要等到Callback\_B執行完呢？
+
+異步程式設計應該要在遇到IO讀取的時候切換其他任務去執行，但上圖確實是Event\_loop的實作機制。
+
+所以如果你的Callback\_B的內容像以下這樣，你的程式是沒有辦法中途去切換其他任務的。
+
+```python
+# 無法中途切換任務
+def Callback_B():
+    do_some_work1()
+    # 讀取IO的指令，等到讀取完成才能執行下一個指令
+    read_from_io_and_wait() 
+    do_some_work2()
+    return
+
+# 若要能夠切換其他任務，應該要設計成以下型式
+def Callback_B():
+    do_some_work1()
+    # 讀取io的指令，不用等到讀取完成就直接執行下一個指令
+    read_from_io_and_not_wait() 
+    register_to_EventLoop("finish read from io",Callback_D)
+    return
+ 
+def Callback_D(): 
+    # 等到Callback_B讀取io的指令完成並被EventLoop監聽到就執行
+    do_some_work2()
+    return
+```
+
+事實上如果Callback\_B若要有遇到調動IO指令就暫停執行的功能，那他應該要設計成遇到調動IO指令，就多註冊一個"Event\_D:Callback\_D"進去Event loop list。
+
+這個Event\_D指的是"調動IO完成"，Callback\_D的任務範圍是完成調動IO"後"所要執行的指令，而Callback\_B的任務範圍應該只有完成調動IO"前"所要執行的指令。
 
 
 
-
-### 
-
-
-
-
-
-
-
-### 
-
-
-
-
+![&#x56DE;&#x8ABF;&#x51FD;&#x6578;&#x4E2D;&#x6709;&#x8B80;&#x53D6;IO&#x6642;&#xFF0C;&#x53EF;&#x518D;&#x65B0;&#x589E;&#x4E00;&#x5C64;&#x56DE;&#x8ABF;&#x51FD;&#x6578;](../.gitbook/assets/event_loop_event3-min.png)
 
 ## 參考資料
 
