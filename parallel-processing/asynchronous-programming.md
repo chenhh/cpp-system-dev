@@ -84,6 +84,41 @@ while (True) {
 	loop = asyncio.get_event_loop() 
 ```
 
+### Coroutine \(協程\)
+
+在事件循環下的一個任務單位，\(背後原理是 generator的生成器\)，在on await的時候，就會釋放出系統資源回給事件循環，協程被安排時，會被包裝成Tasks。
+
+* 協程可以看做是”能在中途中斷、中途返回值給其他協程、中途恢復、中途傳入參數的函數”\(使用yield完成\)，和一般的函數只能在起始傳入參數，不能中斷，而且最後返回值給父函數之後就結束的概念不一樣。
+* 定義協程很簡單，只要在定義函數時再前面加入”async”這個關鍵字就可以了。
+
+### future
+
+事件循環在執行協程時，會回傳結果，這些結果的集合就是Futures，\(結果也有可能是Exception\)。
+
+### callback function \(回調、回呼函數\)
+
+非直接執行的函數，而是等特定事件執行完成後才被執行的函數。
+
+現在事件循環裡面有一個list，若程式有一些任務需要以非同步的方式去執行，那就需要以"Event:Callback"的型式註冊進我們事件循環的list裡面，之後事件循環以for迴圈的方式去察看list裡面的事件是否發生，若發生了就執行相對應的callback函數，並登出這個事件的監聽。
+
+例如天對事件循環註冊了三個任務：
+
+* "Event\_A:Callback\_A"
+* "Event\_B:Callback\_B"
+* "Event\_C:Callback\_C"
+
+![&#x67E5;&#x770B;&#x4E8B;&#x4EF6;&#x662F;&#x5426;&#x767C;&#x751F;](../.gitbook/assets/event_loop_event1-min.png)
+
+![&#x4E8B;&#x4EF6;&#x767C;&#x751F;&#x5F8C;&#xFF0C;&#x547C;&#x53EB;&#x5C0D;&#x61C9;&#x7684;&#x56DE;&#x8ABF;&#x51FD;&#x6578;](../.gitbook/assets/event_loop_event2-min.png)
+
+
+
+
+
+### 
+
+
+
 
 
 
