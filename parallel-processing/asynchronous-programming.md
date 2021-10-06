@@ -61,7 +61,7 @@ async def main():
 
 ## asyncio的組成元件
 
-### event loop
+### event loop \(事件循環\)
 
 Event Loop\(事件循環\)負責排程調配各項協程\(coroutine\)，類似於作業系統做context switch的管理員。
 
