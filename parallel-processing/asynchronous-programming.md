@@ -10,6 +10,26 @@
 
 ![&#x7570;&#x6B65;&#x6A21;&#x578B;&#xFF0C;&#x55AE;&#x57F7;&#x884C;&#x7DD2;](../.gitbook/assets/asynchronous-programming-model-min.png)
 
+## python的asyncio
+
+Python是3.4以後，在標準上逐步加入了asyncio、async與await等支援。asyncio本身主要有兩個對象：直接使用（end-user）的開發者與框架設計者。龐大的API文件中，大部份都是給框架設計者看的，直接使用的開發者其實不用瞭解那麼多。
+
+```python
+# 最簡單的async模型
+import asyncio
+
+async def main():
+    await asyncio.sleep(1.0)
+    print('done')
+    asyncio.run(main())
+```
+
+
+
+## 參考資料
+
+* [\[林信良\] asyncio由簡入繁](https://www.ithome.com.tw/voice/138875)
+
 
 
 
