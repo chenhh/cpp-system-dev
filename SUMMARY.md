@@ -160,6 +160,7 @@
   * [平行計算簡介](parallel-processing/parallel-processing-introduction/basic-parallel-computing.md)
 * [concurrent, parallel](parallel-processing/concurrent-parallel.md)
 * [執行緒\(thread\)](parallel-processing/zhi-hang-xu-thread.md)
+* [非同步\(異步\)程式設計](parallel-processing/asynchronous-programming.md)
 
 ## 韌體 <a id="firmware"></a>
 
