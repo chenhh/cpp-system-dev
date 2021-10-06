@@ -148,6 +148,28 @@ def Callback_D():
 
 ![&#x56DE;&#x8ABF;&#x51FD;&#x6578;&#x4E2D;&#x6709;&#x8B80;&#x53D6;IO&#x6642;&#xFF0C;&#x53EF;&#x518D;&#x65B0;&#x589E;&#x4E00;&#x5C64;&#x56DE;&#x8ABF;&#x51FD;&#x6578;](../.gitbook/assets/event_loop_event3-min.png)
 
+### async/await關鍵字
+
+簡單來說：
+
+* **async：用來宣告函數能夠有非同步的功能**。
+  * async def 函式內無法與 yield 或 yield from 共同使用，會引發SyntaxError 錯誤。
+  * 使用方法：將 async 加在 function 定義前面
+
+
+* **await：用來標記協程\(async function\)切換暫停和繼續的點**。
+  * await 後面必須接一個 Coroutine 對象或是 awaitable 型別的物件。
+  * 
+    await 的目的是將控制權回傳給事件循環並等待返回，而背後實現暫停掛起函數操作的是 yield。
+
+  * 使用方法：加在要等待的 function 前面。
+
+
+
+
+
+
+
 ## 參考資料
 
 * [\[林信良\] asyncio由簡入繁](https://www.ithome.com.tw/voice/138875)
