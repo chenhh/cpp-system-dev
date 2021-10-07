@@ -205,8 +205,14 @@ def Callback_D():
 簡單來說：
 
 * **async：用來宣告函數能夠有非同步的功能**。
+
   * async def 函式內無法與 yield 或 yield from 共同使用，會引發SyntaxError 錯誤。
-  * 使用方法：將 async 加在 function 定義前面
+  * 使用方法：將 async 加在 function 定義前面。
+  * 協程函數：定義形式為 async def 的函數;
+  * 協程物件：調用協程函數所返回的物件。
+
+
+
 
 
 * **await：用來標記協程\(async function\)切換暫停和繼續的點**。
@@ -216,7 +222,9 @@ def Callback_D():
 
   * 使用方法：加在要等待的 function 前面。
 
+如果一個物件可以在 await 語句中使用，那麼它就是 可等待物件。許多 asyncio API 都被設計為接受可等待對象。
 
+可等待物件有三種主要類型：**協程，任務\(task\) 和 Future**。
 
 
 
