@@ -50,13 +50,55 @@ asyncio是用在IO密集型和高層級結構化網路程式碼\(因為網路傳
 用最白話的說法是，今天用了asyncio的寫法，就不是主動等待去獲得答案，而是等函式主動告知你答案。
 
 ```python
-# 最簡單的async模型
+# -*- coding: UTF-8 -*-
 import asyncio
 
+
+async def hello():
+    print("hello")
+    await asyncio.sleep(2)
+    print("world")
+
+if __name__ == '__main__':
+    # python3.7以後直接用run即可自動建構event loop
+    # asyncio.run() 函數用來運行最高層級的入口點函數
+    asyncio.run(hello())
+    """
+    hello
+    world
+    """
+```
+
+```python
+# -*- coding: UTF-8 -*-
+import asyncio
+import time
+
+
+async def say_after(delay: int, what: str):
+    await asyncio.sleep(delay)
+    print(what)
+
+
 async def main():
-    await asyncio.sleep(1.0)
-    print('done')
+    print(f"started at {time.strftime('%X')}")
+
+    await say_after(1, 'hello')
+    await say_after(2, 'world')
+
+    print(f"finished at {time.strftime('%X')}")
+
+
+if __name__ == '__main__':
+    # 直接使用await一次只會處理一個coroutine
+    # 所以花了3秒才執行完成
     asyncio.run(main())
+    """
+    started at 17:45:50
+    hello
+    world
+    finished at 17:45:53
+    """
 ```
 
 ## asyncio的組成元件
@@ -79,9 +121,19 @@ while (True) {
         processEvent(e);
 }
 
-#在python中使用以下程式碼建立事件循環
-	import asyncio
-	loop = asyncio.get_event_loop() 
+
+# 3.6的寫法
+import asyncio
+futures = [...]
+loop = asyncio.get_event_loop()
+loop.run_until_complete(asyncio.wait(futures))
+loop.close()
+
+# python 3.7之後將 loop 封裝，
+# 只需要使用 asyncio.run() 一行程式就結束，
+# 不用在建立 event_loop 
+# 結束時也不需要 loop.close。
+asyncio.run()
 ```
 
 ### Coroutine \(協程\)
@@ -172,6 +224,7 @@ def Callback_D():
 
 ## 參考資料
 
+* [\[python\] 協程與任務](https://docs.python.org/zh-tw/3/library/asyncio-task.html)
 * [\[林信良\] asyncio由簡入繁](https://www.ithome.com.tw/voice/138875)
 
 
