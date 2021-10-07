@@ -208,34 +208,63 @@ def Callback_D():
 
   * async def 函式內無法與 yield 或 yield from 共同使用，會引發SyntaxError 錯誤。
   * 使用方法：將 async 加在 function 定義前面。
-  * 協程函數：定義形式為 async def 的函數;
-  * 協程物件：調用協程函數所返回的物件。
 
 
 
 
 
 * **await：用來標記協程\(async function\)切換暫停和繼續的點**。
+
   * await 後面必須接一個 Coroutine 對象或是 awaitable 型別的物件。
   * 
     await 的目的是將控制權回傳給事件循環並等待返回，而背後實現暫停掛起函數操作的是 yield。
 
   * 使用方法：加在要等待的 function 前面。
 
+## 可等待物件
+
 如果一個物件可以在 await 語句中使用，那麼它就是 可等待物件。許多 asyncio API 都被設計為接受可等待對象。
 
-可等待物件有三種主要類型：**協程，任務\(task\) 和 Future**。
+可等待物件有三種主要類型：**協程，task 和 Future**。
 
+* 協程函數：定義形式為 async def 的函數;
+* 協程物件：調用協程函數所返回的物件。
+* Task是被用來“平行的”調度協程。當一個協程通過 asyncio.create\_task\(\) 等函數被封裝為一個任務，該協程會被自動調度執行。
+* Future 是一種特殊的低層級可等待物件，表示一個異步操作的最終結果。當一個 Future 物件被等待，這意味著協程將保持等待直到該 Future物件在其他地方操作完畢。
 
+### Future與Task物件
 
+Task物件是從Future物件繼承過來的，所以Future物件所擁有的方法，Task對象也有，但是這兩個物件被發明出來的目的是很不一樣。
 
+### Future物件的意義
+
+**Future物件代表一個還未執行或還未完成的任務的結果，而這的確也指涉了一個未來的概念，這是一個在未來才會出現的結果**。
+
+若從一個未完成任務的角度來看，我們對這個Future物件最關心的就是，到底他完成後會得到什麼？會成功還是失敗？完成之後我們還會做什麼？
+
+```python
+import asyncio
+future = asyncio.Future()
+```
+
+所以他的物件方法都圍繞這幾個問題而設計：
+
+1. 觀察現在Future的狀態
+   * `done()` 察看這個任務是否已經完成\(成功或失敗\)。
+   * `cancelled()` 察看這個任務是否已經被取消。
+2. 指定任務的結果
+   * `cancel()` 取消任務的執行。
+   * `set_result()` 判定任務成功，並指定執行完的結果。
+   * `set_exception()` 判定任務失敗，並指定途中出現的exception。
+3. 取得任務結果
+   * `result()` 取得任務成功時的結果，若任務未成功則為None。
+   * `exception()` 取得任務失敗時的exception，若任務未失敗則為None。
+4. 指定任務完成後續要進行的行為
+   * `add_done_callback()` 指定若任務完成後要執行的回調函數。
+   * `remove_done_callback()` 取消若任務完成後要執行的回調函數。
 
 ## 參考資料
 
 * [\[python\] 協程與任務](https://docs.python.org/zh-tw/3/library/asyncio-task.html)
 * [\[林信良\] asyncio由簡入繁](https://www.ithome.com.tw/voice/138875)
-
-
-
-
 
