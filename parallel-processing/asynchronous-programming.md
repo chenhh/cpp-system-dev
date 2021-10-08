@@ -8,7 +8,9 @@
 
 任務（不同的顏色表示不同的任務）可能被其他任務插入，但是都處在同一個執行緒下。當某一個任務執行的時候，其他的任務都暫停了。與多執行緒編程模型很大的一點不同是， **多執行緒由作業系統決定在時間線上什麼時候掛起某個活動或恢復某個活動，而在異步平行模型中，程式設計師必須假設執行緒可能在任何時間被掛起和替換**。
 
-異步的機制和執行緒與矚程完全不同，基本上是可以在一個行程或執行者下，就達到多工處理的目的，不需要靠作業卜統調配行程和執行緒的調度。
+異步的機制和執行緒與行程完全不同，基本上是可以在一個行程或執行緒下，就達到多工處理的目的，不需要靠作系統調配行程和執行緒的調度。
+
+Async基本上是用在IO密集型的程式\(例如網路爬蟲，你大部分時間是在等response\)，在CPU密集型的程式，Async或者Thread都不能達到太好的效果。
 
 ![&#x7570;&#x6B65;&#x6A21;&#x578B;&#xFF0C;&#x55AE;&#x57F7;&#x884C;&#x7DD2;](../.gitbook/assets/asynchronous-programming-model-min.png)
 
@@ -103,9 +105,19 @@ if __name__ == '__main__':
 
 ## asyncio的組成元件
 
+協程與線程和行程不同的時，協程完成的功能通常較小，所以會有需求將不同的協程串起來，我們暫時稱它為協程鏈 \(coroutine chain\)。
+
+而其它部份協程與執行緒類似，要實現一個協程的函式庫，我們需要這幾樣東西：
+
+* 事件循環 \(event loop\)
+* 上下文\(context\)：以generator實作。
+* 上下文的切換\(context switch\)：以yield實作。
+
 ### event loop \(事件循環\)
 
 Event Loop\(事件循環\)負責排程調配各項協程\(coroutine\)，類似於作業系統做context switch的管理員。
+
+因為協程是一種能暫停的函數，那麼它暫停是為了什麼？一般是等待某個事件，比如說某個連接建立了；某個 socket 接收到數據了；某個計時器歸零了等。而這些事件應用程式只能通過輪詢的方式得知是否完成，但是操作系統（所有現代的操作系統）可以提供一些中斷的方式通知應用程式，如 select、epoll、kqueue 等等。
 
 * 一方面，它類似於 CPU ，順序執行協程的程式碼；另一方面，它相當於作業系統，完成協程的排程，即一個協程“暫停”時，決定接下來執行哪個協程。
 * 最基礎的切換也是通過 Python 生成器的 yield 加強版語法來完成的，但我們還要考慮協程鏈的情況。
@@ -138,10 +150,29 @@ asyncio.run()
 
 ### Coroutine \(協程\)
 
+所謂協程就是一個可以暫停將執行權讓給其他協程或 Awaitable 物件 的函數，等其執行完後再繼續執行，並可以多次的進行這樣的暫停與繼續。
+
 在事件循環下的一個任務單位，\(背後原理是 generator的生成器\)，在on await的時候，就會釋放出系統資源回給事件循環，協程被安排時，會被包裝成Tasks。
 
 * 協程可以看做是”能在中途中斷、中途返回值給其他協程、中途恢復、中途傳入參數的函數”\(使用yield完成\)，和一般的函數只能在起始傳入參數，不能中斷，而且最後返回值給父函數之後就結束的概念不一樣。
 * 定義協程很簡單，只要在定義函數時再前面加入”async”這個關鍵字就可以了。
+* 如果要判斷一個函數是不是 Coroutine可以使用 `asyncio.iscoroutinefunction(func)` 方法判別。
+* 如果要判斷一個函數返回的是不是 Coroutine 物件 可以使用 `asyncio.iscoroutine(obj)` 方法判別。
+
+### task \(任務\)
+
+建立任務方法有兩種
+
+* asyncio.create\_task\( \) ：Python 3.7+ 以上可使用
+* asyncio.ensure\_future\( \)：可讀性較差
+
+```python
+# In Python 3.7+
+task = asyncio.create_task(main())
+
+# This works in all Python versions but is less readable
+task = asyncio.ensure_future(main())
+```
 
 ### future
 
@@ -220,6 +251,7 @@ def Callback_D():
     await 的目的是將控制權回傳給事件循環並等待返回，而背後實現暫停掛起函數操作的是 yield。
 
   * 使用方法：加在要等待的 function 前面。
+  * 凡是用async def 定義的函數都要用await去調用，或是用asyncio.run\(\)調用，不可以直接調用。
 
 ## 可等待物件
 
@@ -263,8 +295,44 @@ future = asyncio.Future()
    * `add_done_callback()` 指定若任務完成後要執行的回調函數。
    * `remove_done_callback()` 取消若任務完成後要執行的回調函數。
 
+## 範例
+
+```python
+# -*- coding: UTF-8 -*-
+import asyncio
+
+
+async def compute(x, y):
+    print(f"Compute {x} + {y} ...")
+    await asyncio.sleep(1.0)
+    return x + y
+
+
+async def print_sum(x, y):
+    result = await compute(x, y)
+    print(f"{x} + {y} = {result}")
+
+
+if __name__ == '__main__':
+    asyncio.run(print_sum(1, 2))
+```
+
+![&#x7570;&#x6B65;&#x7A0B;&#x5F0F;&#x6D41;&#x7A0B;](../.gitbook/assets/async_sum-min.png)
+
+1. 首先執行print\_sum\(1,2\)，進去程式後，第一步要先等待compute\(1,2\)的結果。
+2. 進去compute\(1,2\)後，先印compute 1+2…, 然後就是等待1秒後，由compute回傳1+2給print\_sum。
+3. Print\_sum印出1+2=3。
+
+
+
+![&#x7D30;&#x90E8;&#x6D41;&#x7A0B;](../.gitbook/assets/asyncio-flow-min.png)
+
+
+
 ## 參考資料
 
 * [\[python\] 協程與任務](https://docs.python.org/zh-tw/3/library/asyncio-task.html)
 * [\[林信良\] asyncio由簡入繁](https://www.ithome.com.tw/voice/138875)
+* [理解 Python asyncio](https://lotabout.me/2017/understand-python-asyncio/)
+* [Python黑魔法 --- 異步IO（ asyncio） 協程](https://www.jianshu.com/p/b5e347b3a17c)
 
