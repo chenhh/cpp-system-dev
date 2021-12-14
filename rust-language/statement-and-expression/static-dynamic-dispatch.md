@@ -46,20 +46,20 @@ fn main() {
 }
 ```
 
-上例中，test\_dynamic函數的參數既可以是Box&lt;Duck&gt;類型，也可以是Box&lt;Swan&gt;類型，一樣實現了“多態”。但在參數類型這裡已經將“具體類型”資訊抹掉了，我們只知道它可以調用Bird trait的方法。而具體調用的是哪個版本的方法，實際上是由這個指標的值來決定的。這就是“動態分派”。
+上例中，test\_dynamic函數的參數既可以是Box\<Duck>類型，也可以是Box\<Swan>類型，一樣實現了“多態”。但在參數類型這裡已經將“具體類型”資訊抹掉了，我們只知道它可以調用Bird trait的方法。而具體調用的是哪個版本的方法，實際上是由這個指標的值來決定的。這就是“動態分派”。
 
 ## trait object
 
 指向trait的指標就是trait object。假如Bird是一個trait的名稱，那麼dyn Bird就是一個DST動態大小類型。
 
-&dyn Bird、&mut dyn Bird、Box&lt;dyn Bird&gt;、\*const dyn Bird、\*mut dyn Bird以及Rc&lt;dyn Bird&gt;等等都是Trait Object。
+\&dyn Bird、\&mut dyn Bird、Box\<dyn Bird>、\*const dyn Bird、\*mut dyn Bird以及Rc\<dyn Bird>等等都是Trait Object。
 
 trait object這個名字以後也會被改為dynamic trait type。impl Trait forTrait這樣的語法同樣會被改為impl Trait for dyn Trait。這樣能更好地跟impl Trait語法對應起來。
 
 當指標指向trait的時候，這個指標就不是一個普通的指標了，變成一個“胖指標”。前文所講解的DST類型：
 
-* 陣列類型\[T\]是一個DST類型，因為它的大小在編譯階段是不確定的。
-* 相對應的，&\[T\]類型就是一個“胖指標”，它不僅包含了指標指向陣列的其中一個元素，同時包含一個長度資訊。它的內部表示實質上是Slice類型。
+* 陣列類型\[T]是一個DST類型，因為它的大小在編譯階段是不確定的。
+* 相對應的，&\[T]類型就是一個“胖指標”，它不僅包含了指標指向陣列的其中一個元素，同時包含一個長度資訊。它的內部表示實質上是Slice類型。
 
 同理，Bird只是一個trait的名字，符合這個trait的具體類型可能有多種，這些類型並不具備同樣的大小，因此使用dyn Bird來表示滿足Bird約束的DST類型。指向DST的指標理所當然也應該是一個“胖指標”，它的名字就叫trait object。
 
@@ -141,7 +141,7 @@ fn main() {
 }
 ```
 
-### 當函數中有Self類型作為參數或者返回類型時
+### &#xD;當函數中有Self類型作為參數或者返回類型時
 
 Self類型是個很特殊的類型，它代表的是impl這個trait的當前類型。編譯器不知道，因為它在編譯階段無法確定self指向的具體物件，它的類型是什麼只能在執行階段確定，無法在編譯階段確定。
 
@@ -190,5 +190,4 @@ trait object通過它調用成員的方法是通過vtable虛函數表來進行�
 
 ## impl trait
 
-\[todo\]
-
+\[todo]

@@ -1,16 +1,17 @@
 # Windows PE格式
 
-## PE 檔案格式
+PE 檔案格式
+
 
 PE 是 Portable Executable 的縮寫，也就是 Windows 系統中的可執行（Executable）程式或動態連結函式庫（Dynamic link library）的文件格式，主要使用在 32 位和 64 位的 Windows 作業系統上。
 
-![PE&#x683C;&#x5F0F;&#x793A;&#x610F;&#x5716;](../../.gitbook/assets/pe_format-min.jpg)
+![PE格式示意圖](../../.gitbook/assets/pe\_format-min.jpg)
 
-![32-bit PE&#x7D50;&#x69CB; \(from wiki\)](../../.gitbook/assets/32_bit_pe-structure2-min.png)
+![32-bit PE結構 (from wiki)](../../.gitbook/assets/32\_bit\_pe-structure2-min.png)
 
-[Wiki有PE的SVG向量圖檔](https://en.wikipedia.org/wiki/Portable_Executable#/media/File:Portable_Executable_32_bit_Structure_in_SVG_fixed.svg)。
+[Wiki有PE的SVG向量圖檔](https://en.wikipedia.org/wiki/Portable\_Executable#/media/File:Portable\_Executable\_32\_bit\_Structure\_in\_SVG\_fixed.svg)。
 
-![&#x6A5F;&#x5668;&#x78BC;&#x5C0D;&#x61C9;PE&#x7D50;&#x69CB;](../../.gitbook/assets/binary_pe-min.png)
+![機器碼對應PE結構](../../.gitbook/assets/binary\_pe-min.png)
 
 ### DOS MZ Header
 
@@ -30,7 +31,7 @@ PE 是 Portable Executable 的縮寫，也就是 Windows 系統中的可執行�
 
 再往後數 12 Bytes 則是 Image base，最後 4 Bytes，也就是 0x01000000之前找到的入口點是相對虛擬位置（Relative virtual address, RVA）必須還得加上 ImageBase 才是真正的位置（Virtual address, VA）。
 
-### 什麼是 RVA \(relative virtual address\) ?
+### 什麼是 RVA (relative virtual address) ?
 
 RVA 就是虛擬空間中到參考點的距離，也就是虛擬空間中的偏移量。舉上面的例子來說：小算盤被放入虛擬地址（Virtual address, VA）的 01000000h 處，且入口點的 RVA 在 0x102D6Ch 處，那在虛擬空間之中真正入口起始位置是 0x01000000 + 0x102D6C = 0x01102D6C。
 
@@ -42,19 +43,17 @@ RVA 就是虛擬空間中到參考點的距離，也就是虛擬空間中的偏�
 
 PE file 裡的內容，被劃分成各個區段，每個區段的名子以 ” . ” 當作開頭，以下是常見的區段名和作用：
 
-| 區段名 | 功能 |
-| :--- | :--- |
-| .data | 已初始化的資料 |
-| .idata | 導入\(import\)的文件表名 |
-| .edata | 導出\(export\)的文件表名 |
-| .rdata | 唯讀的初始化資料 |
-| .reloc | 重定位表資訊 |
-| .rsrc | 資源 |
-| .text | exe或dll文件的可執行程式碼 |
+| 區段名    | 功能               |
+| ------ | ---------------- |
+| .data  | 已初始化的資料          |
+| .idata | 導入(import)的文件表名  |
+| .edata | 導出(export)的文件表名  |
+| .rdata | 唯讀的初始化資料         |
+| .reloc | 重定位表資訊           |
+| .rsrc  | 資源               |
+| .text  | exe或dll文件的可執行程式碼 |
 
 當 PE file 被執行時，PE 裝載器先檢查 DOS MZ Header 中的 PE Header 偏移量，若找到則跳到 PE Header 所在位置。接著檢查 PE header 是否有效，若有則跳到 Section Table 頭部，讀取訊息並利用文件映射（file mapping）的方法將這些區段映射到記憶體中。
-
-
 
 
 

@@ -17,29 +17,30 @@ BIOS的最主要的功能：初始化硬體平台和提供硬體的軟體抽象�
 
 當電腦開機時，CPU從主機板的BIOS晶片內取得程式，由BIOS內部的程式獲得硬體控制權並作用，從CPU內外部檢測設置，啟動DRAM，以及針對晶片組與外部設備作初始化設置後，最後驅動硬碟直到作業系統加載成功，BIOS的工作交棒給作業系統的bootloader後工作完成。
 
-BIOS平時儲存於ROM中\(EPROM或FLASH\)，除了特殊工具和方法之外，任何應用程式無法對BIOS進行修改或刪除。
+BIOS平時儲存於ROM中(EPROM或FLASH)，除了特殊工具和方法之外，任何應用程式無法對BIOS進行修改或刪除。
 
 對於新的CPU硬體，BIOS為了相容性，通常會使用CPUID的功能調整部份功能，其餘大部份程式碼不需修改即可使用。
 
 BIOS產業是科技和人力密集型企業。BIOS對熟練工程師需求相當大，因為BIOS對硬體的改變相當敏感，硬體小變需要小改，大變需要大改。
 
-## BIOS韌體
+BIOS韌體
+
 
 BOOT是載入執行的一個預啟動的操作環境程式，嚴格來算是軟體，通常用組合語言編寫。是一組固化到計算機內主機板上一個ROM晶片上的程式。它儲存著計算機最重要的基本輸入輸出的程式、系統設定資訊、開機後自檢程式和系統自啟動程式。其主要功能是為計算機提供最底層的、最直接的硬體設定和控制。
 
-![Award BIOS&#x8A2D;&#x5B9A;&#x756B;&#x9762;](../.gitbook/assets/bios_setting.png)
+![Award BIOS設定畫面](../.gitbook/assets/bios\_setting.png)
 
 一般稱BIOS是指主機板的BIOS，而其它的週邊也有自已的BIOS ROM，像是顯示卡、高階網路卡等，因為較複雜的外接週邊硬體設計差異很大，各自有其獨特初始動作，所以廠商會另外加上BIOS ROM。
 
-然而，不適當的執行或是終止 BIOS 更新可能導致電腦或是裝置的不堪使用。為了避免 BIOS 損壞，有些新的主機板有備份的 BIOS \("雙BIOS"主機板\)，主要是因為CIH病毒可破壞BIOS。
+然而，不適當的執行或是終止 BIOS 更新可能導致電腦或是裝置的不堪使用。為了避免 BIOS 損壞，有些新的主機板有備份的 BIOS ("雙BIOS"主機板)，主要是因為CIH病毒可破壞BIOS。
 
-當PC開機，BIOS 是由電路板上的ROM執行，並且他將晶片組和記憶體子系統順序起始化。他把自己從ROM中解壓縮到系統的主記憶體，並且從那邊開始執行。PC 的 BIOS 程式碼也包含診斷功能，以保證某些重要硬體元件的正確，像是鍵盤，磁碟裝置，輸出輸入埠等等，這些可以正常運作且正常地初始化。幾乎所有的 BIOS 都可以選擇性地執行 CMOS 記憶體的設定程式; 也就是儲存 BIOS 會存取的使用者自訂設定資料\(時間、日期、硬碟細節，等等\)。
+當PC開機，BIOS 是由電路板上的ROM執行，並且他將晶片組和記憶體子系統順序起始化。他把自己從ROM中解壓縮到系統的主記憶體，並且從那邊開始執行。PC 的 BIOS 程式碼也包含診斷功能，以保證某些重要硬體元件的正確，像是鍵盤，磁碟裝置，輸出輸入埠等等，這些可以正常運作且正常地初始化。幾乎所有的 BIOS 都可以選擇性地執行 CMOS 記憶體的設定程式; 也就是儲存 BIOS 會存取的使用者自訂設定資料(時間、日期、硬碟細節，等等)。
 
 現在的新式電腦用的基本都是UEFI啟動，早期的過渡電腦用的都是EFI啟動。其實EFI或UEFI的一部分也是儲存在一個晶片中，由於它們在表面形式、基本功能上和BIOS差不多，所以習慣上我們也把儲存EFI/UEFI的晶片叫做EFI/UEFI BIOS晶片，EFI/UEFI也叫做EFI/UEFI BIOS，但在實際上它們和BIOS根本是不一樣的設計。
 
 ## BIOS主要功能
 
-BIOS用於**硬體自檢 \(power on self test, POST\)**、**CMOS設定**、**引導作業系統啟動**、**提供硬體I/O**、硬體中斷等4項主要功能，
+BIOS用於**硬體自檢 (power on self test, POST)**、**CMOS設定**、**引導作業系統啟動**、**提供硬體I/O**、硬體中斷等4項主要功能，
 
 因此BIOS程式可以分為若干模組，主要有Boot Block引導模組、CMOS設定模組、擴充套件配置資料（ESCD）模組、DMI收集硬體資料模組。
 
@@ -49,29 +50,30 @@ BIOS用於**硬體自檢 \(power on self test, POST\)**、**CMOS設定**、**引
 
 BIOS的設定值，是儲存在主機板上的CMOS晶片，此晶片以主機板上的鋰電池供電。現代主機板將CMOS整合到南橋晶片或Super IO晶片
 
-## x86真實模式下的記憶體佈局
+x86真實模式下的記憶體佈局
+
 
 BIOS本身是組合語言程式碼，是在16位元真實模式下呼叫INT 13H中斷執行的。由於x86-64是一個高度相容的指令集，也為了遷就BIOS的16位元真實模式的執行環境，所以即使現在的CPU都已是64位元，還是在BIOS啟動（常見於09年以前的主機板），在開機時仍然都是在16位真實模式下執行的。16位真實模式直接能訪問的記憶體只有1MB。
 
 在這1MB記憶體中，頂層640K稱為基本記憶體，後面384K記憶體留給開機必要硬體和各類BIOS本身使用。
 
-相容x86的CPU\(如AMD，cyrix\)在BIOS設置或設置上有相似的配置。
+相容x86的CPU(如AMD，cyrix)在BIOS設置或設置上有相似的配置。
 
-| 起始 | 結束 | 大小 | 用途 |
-| :--- | :--- | :--- | :--- |
-| FFFF0 | FFFFF | 16 Bytes | BIOS入口地址，此地址也屬於BIOS程式碼，同樣屬於頂部的64 KB位元組。只是為了強調入口地址才單獨寫出。此處16位元組的內容是跳轉指令 `JMP F000:E05B`。 |
-| F0000 | FFFEF | 64KB~16B | 系統BIOS的範圍是F0000~FFFFF共640 KB，為了說明入口地址，將最上面的16 Bytes從此處扣除，所以結束地址是FFFEF。 |
-| C8000 | EFFFF | 160KB | 映射硬體配接器的ROM或是記憶體映射的I/O |
-| C0000 | C7FFF | 32KB | 顯示配接器BIOS |
-| B8000 | BFFFF | 32KB | 文字模式顯示的配接器 |
-| B0000 | B7FFF | 32KB | 用於黑白顯示配接器\(通常保留未用\) |
-| A0000 | AFFFF | 64KB | 用於彩色顯示配接器\(VGA\) |
-| 9FC00 | 9FFFF | 1KB | EBDA \(extended BIOS data area\) |
-| 7E00 | 9EBFF | 約608KB | 可用區域 |
-| 7C00 | 7DFF | 512B | MBR被BIOS加載到此處，共512B |
-| 500 | 7BFF | 約30KB | 可用區域 |
-| 400 | 4FF | 256B | BIOS data area |
-| 000 | 3FF | 1KB | Interrupt Vector Table\(中斷向量表\) |
+| 起始    | 結束    | 大小        | 用途                                                                                      |
+| ----- | ----- | --------- | --------------------------------------------------------------------------------------- |
+| FFFF0 | FFFFF | 16 Bytes  | BIOS入口地址，此地址也屬於BIOS程式碼，同樣屬於頂部的64 KB位元組。只是為了強調入口地址才單獨寫出。此處16位元組的內容是跳轉指令 `JMP F000:E05B`。 |
+| F0000 | FFFEF | 64KB\~16B | 系統BIOS的範圍是F0000\~FFFFF共640 KB，為了說明入口地址，將最上面的16 Bytes從此處扣除，所以結束地址是FFFEF。                 |
+| C8000 | EFFFF | 160KB     | 映射硬體配接器的ROM或是記憶體映射的I/O                                                                  |
+| C0000 | C7FFF | 32KB      | 顯示配接器BIOS                                                                               |
+| B8000 | BFFFF | 32KB      | 文字模式顯示的配接器                                                                              |
+| B0000 | B7FFF | 32KB      | 用於黑白顯示配接器(通常保留未用)                                                                       |
+| A0000 | AFFFF | 64KB      | 用於彩色顯示配接器(VGA)                                                                          |
+| 9FC00 | 9FFFF | 1KB       | EBDA (extended BIOS data area)                                                          |
+| 7E00  | 9EBFF | 約608KB    | 可用區域                                                                                    |
+| 7C00  | 7DFF  | 512B      | MBR被BIOS加載到此處，共512B                                                                     |
+| 500   | 7BFF  | 約30KB     | 可用區域                                                                                    |
+| 400   | 4FF   | 256B      | BIOS data area                                                                          |
+| 000   | 3FF   | 1KB       | Interrupt Vector Table(中斷向量表)                                                           |
 
 ## BIOS啟動流程
 
@@ -82,7 +84,7 @@ BIOS本身是組合語言程式碼，是在16位元真實模式下呼叫INT 13H�
 5. 再次被啟動的程式碼（二階段程式碼）（即啟動引導）會查閱支援和配置檔案。
 6. 根據配置檔案中的資訊，啟動載入程式會將核心和initramfs檔案載入系統的RAM中，然後開始啟動核心。
 
-![&#x901A;&#x96FB;&#x81EA;&#x6AA2;\(POST\)](../.gitbook/assets/post_test.png)
+![通電自檢(POST)](../.gitbook/assets/post\_test.png)
 
 硬體初始化工作中，主要說明兩點，首先經過POST檢測後，電腦終於出現了開機啟動畫面，這就是已經檢測到了顯示卡並完成了初始化。但是請注意，由於BIOS是在16位真實模式執行，因此該畫面是以VGA解析度（640\*480，縱橫比4:3）顯示的，因為真實模式最高支援的就是VGA。
 
@@ -92,524 +94,50 @@ BIOS只識別到由主開機記錄（MBR）初始化的硬碟，之所以說明�
 
 最後這一步中，BIOS根據CMOS中使用者指定的硬體啟動順序，讀取相應裝置的啟動或引導記錄，引導相應裝置上的作業系統啟動，進入作業系統，此後便由作業系統接替BIOS負責硬體和軟體間的相互通訊。如果發現所有硬體都沒有能引導作業系統的記錄，則會在螢幕上顯示相應錯誤資訊，並將電腦維持在16位真實模式。
 
-## BIOS 中斷向量表 \(interrupt vector table\)
+## BIOS 中斷向量表 (interrupt vector table)
 
-<table>
-  <thead>
-    <tr>
-      <th style="text-align:left">&#x4E2D;&#x65B7;&#x7DE8;&#x78BC;</th>
-      <th style="text-align:left">&#x63CF;&#x8FF0;</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style="text-align:left">INT 00h</td>
-      <td style="text-align:left">CPU&#xFF1A;&#x9664;&#x4EE5;&#x96F6;&#x932F;&#xFF0C;&#x6216;&#x5546;&#x4E0D;&#x5408;&#x6CD5;&#x6642;&#x89F8;&#x767C;
-        <br
-        />&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 01h</td>
-      <td style="text-align:left">CPU&#xFF1A;&#x55AE;&#x6B65;&#x9677;&#x9631;&#xFF0C;TF&#x6A19;&#x8A18;&#x70BA;&#x6253;&#x958B;&#x72C0;&#x614B;&#x6642;&#xFF0C;&#x6BCF;&#x689D;&#x6307;&#x4EE4;&#x57F7;&#x884C;&#x5F8C;&#x89F8;&#x767C;
-        <br
-        />&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 02h</td>
-      <td style="text-align:left">CPU&#xFF1A;&#x975E;&#x53EF;&#x5C01;&#x9396;&#x4E2D;&#x65B7;&#xFF0C;&#x5982;&#x555F;&#x52D5;&#x81EA;&#x6211;&#x6E2C;&#x8A66;&#x6642;&#x767C;&#x751F;&#x8A18;&#x61B6;&#x9AD4;&#x932F;&#x8AA4;&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 03h</td>
-      <td style="text-align:left">CPU&#xFF1A;&#x7B2C;&#x4E00;&#x500B;&#x672A;&#x5B9A;&#x7FA9;&#x7684;&#x4E2D;&#x65B7;&#x5411;&#x91CF;&#xFF0C;&#x7D04;&#x5B9A;&#x4FD7;&#x6210;&#x50C5;&#x7528;&#x65BC;&#x9664;&#x932F;&#x7A0B;&#x5F0F;
-        <br
-        />&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 04h</td>
-      <td style="text-align:left">CPU&#xFF1A;&#x7B97;&#x6578;&#x6EA2;&#x4F4D;&#x3002;&#x901A;&#x5E38;&#x7531;INTO&#x6307;&#x4EE4;&#x5728;&#x7F6E;&#x6EA2;&#x4F4D;&#x4F4D;&#x6642;&#x89F8;&#x767C;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 05h</td>
-      <td style="text-align:left">&#x5728;&#x6309;&#x4E0B;Shift-Print Screen&#x6216;BOUND&#x6307;&#x4EE4;&#x6AA2;&#x6E2C;&#x5230;&#x7BC4;&#x570D;&#x7570;&#x5E38;&#x6642;&#x89F8;&#x767C;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 06h</td>
-      <td style="text-align:left">CPU&#xFF1A;&#x975E;&#x6CD5;&#x6307;&#x4EE4;&#x3002;
-        <br />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 07h</td>
-      <td style="text-align:left">CPU&#xFF1A;&#x6C92;&#x6709;&#x6578;&#x5B78;&#x5354;&#x8655;&#x7406;&#x5668;&#x6642;&#x5617;&#x8A66;&#x57F7;&#x884C;&#x6D6E;&#x9EDE;&#x6307;&#x4EE4;&#x89F8;&#x767C;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 08h</td>
-      <td style="text-align:left">IRQ0&#xFF1A;&#x53EF;&#x7A0B;&#x5F0F;&#x5316;&#x4E2D;&#x65B7;&#x63A7;&#x5236;&#x5668;&#x6BCF;
-        55 &#x6BEB;&#x79D2;&#x89F8;&#x767C;&#x4E00;&#x6B21;&#xFF0C;&#x5373;&#x6BCF;&#x79D2;
-        18.2 &#x6B21;&#x3002;
-        <br />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 09h</td>
-      <td style="text-align:left">IRQ1&#xFF1A;&#x6BCF;&#x6B21;&#x9375;&#x76E4;&#x6309;&#x4E0B;&#x3001;&#x6309;&#x4F4F;&#x3001;&#x91CB;&#x653E;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 0Ah</td>
-      <td style="text-align:left">IRQ2&#xFF1A;
-        <br />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 0Bh</td>
-      <td style="text-align:left">IRQ3&#xFF1A;COM2/COM4&#x3002;
-        <br />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 0Ch</td>
-      <td style="text-align:left">IRQ4&#xFF1A;COM1/COM3&#x3002;
-        <br />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 0Dh</td>
-      <td style="text-align:left">IRQ5&#xFF1A;&#x786C;&#x789F;&#x63A7;&#x5236;&#x5668;&#xFF08;PC/XT &#x4E0B;&#xFF09;&#x6216;&#xA0;LPT2&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 0Eh</td>
-      <td style="text-align:left">IRQ6&#xFF1A;&#x9700;&#x8981;&#x6642;&#x7531;&#x8EDF;&#x789F;&#x63A7;&#x5236;&#x5668;&#x547C;&#x53EB;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 0Fh</td>
-      <td style="text-align:left">IRQ7&#xFF1A;LPT1&#x3002;
-        <br />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 10h</td>
-      <td style="text-align:left">
-        <p>&#x986F;&#x793A;&#x670D;&#x52D9; - &#x7531;BIOS&#x6216;&#x4F5C;&#x696D;&#x7CFB;&#x7D71;&#x8A2D;&#x5B9A;&#x4EE5;&#x4F9B;&#x8EDF;&#x9AD4;&#x547C;&#x53EB;&#x3002;
-          <br
-          />
-        </p>
-        <ul>
-          <li>AH=00h
-            <br />&#xFF1A;&#x8A2D;&#x5B9A;&#x986F;&#x793A;&#x6A21;&#x5F0F;</li>
-          <li>AH=01h
-            <br />&#xFF1A;&#x8A2D;&#x5B9A;&#x6E38;&#x6A19;&#x5F62;&#x614B;
-            <br />
-          </li>
-          <li>AH=02h
-            <br />&#xFF1A;&#x8A2D;&#x5B9A;&#x6E38;&#x6A19;&#x4F4D;&#x7F6E;
-            <br />
-          </li>
-          <li>AH=03h
-            <br />&#xFF1A;&#x53D6;&#x5F97;&#x6E38;&#x6A19;&#x4F4D;&#x7F6E;&#x8207;&#x5F62;&#x614B;
-            <br
-            />
-          </li>
-          <li>AH=04h
-            <br />&#xFF1A;&#x53D6;&#x5F97;&#x6E38;&#x6A19;&#x4F4D;&#x7F6E;
-            <br />
-          </li>
-          <li>AH=05h
-            <br />&#xFF1A;&#x8A2D;&#x5B9A;&#x986F;&#x793A;&#x9801;
-            <br />
-          </li>
-          <li>AH=06h
-            <br />&#xFF1A;&#x6E05;&#x9664;&#x6216;&#x6372;&#x8EF8;&#x756B;&#x9762;(&#x4E0A;)
-            <br
-            />
-          </li>
-          <li>AH=07h
-            <br />&#xFF1A;&#x6E05;&#x9664;&#x6216;&#x6372;&#x8EF8;&#x756B;&#x9762;(&#x4E0B;)
-            <br
-            />
-          </li>
-          <li>AH=08h
-            <br />&#xFF1A;&#x8B80;&#x53D6;&#x6E38;&#x6A19;&#x8655;&#x5B57;&#x5143;&#x8207;&#x5C6C;&#x6027;
-            <br
-            />
-          </li>
-          <li>AH=09h
-            <br />&#xFF1A;&#x66F4;&#x6539;&#x6E38;&#x6A19;&#x8655;&#x5B57;&#x5143;&#x8207;&#x5C6C;&#x6027;
-            <br
-            />
-          </li>
-          <li>AH=0Ah
-            <br />&#xFF1A;&#x66F4;&#x6539;&#x6E38;&#x6A19;&#x8655;&#x5B57;&#x5143;
-            <br />
-          </li>
-          <li>AH=0Bh
-            <br />&#xFF1A;&#x8A2D;&#x5B9A;&#x908A;&#x754C;&#x984F;&#x8272;
-            <br />
-          </li>
-          <li>AH=0Eh
-            <br />&#xFF1A;&#x5728;TTY&#x6A21;&#x5F0F;&#x4E0B;&#x5BEB;&#x5B57;&#x5143;
-            <br
-            />
-          </li>
-          <li>AH=0Fh
-            <br />&#xFF1A;&#x53D6;&#x5F97;&#x76EE;&#x524D;&#x986F;&#x793A;&#x6A21;&#x5F0F;
-            <br
-            />
-          </li>
-          <li>AH=13h
-            <br />&#xFF1A;&#x5BEB;&#x5B57;&#x4E32;
-            <br />
-          </li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 11h</td>
-      <td style="text-align:left">&#x8FD4;&#x56DE;&#x88DD;&#x7F6E;&#x5217;&#x8868;&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 12h</td>
-      <td style="text-align:left">&#x53D6;&#x5F97;&#x5E38;&#x898F;&#x8A18;&#x61B6;&#x9AD4;&#x5BB9;&#x91CF;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 13h</td>
-      <td style="text-align:left">
-        <p>&#x4F4E;&#x968E;&#x78C1;&#x789F;&#x670D;&#x52D9;&#x3002;
-          <br />
-        </p>
-        <ul>
-          <li>AH=00h&#xFF1A;&#x5FA9;&#x4F4D;&#x78C1;&#x789F;&#x6A5F;&#x3002;
-            <br />
-          </li>
-          <li>AH=01h&#xFF1A;&#x6AA2;&#x67E5;&#x78C1;&#x789F;&#x6A5F;&#x72C0;&#x614B;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=02h&#xFF1A;&#x8B80;&#x78C1;&#x5340;&#x3002;
-            <br />
-          </li>
-          <li>AH=03h&#xFF1A;&#x5BEB;&#x78C1;&#x5340;&#x3002;
-            <br />
-          </li>
-          <li>AH=04h&#xFF1A;&#x6821;&#x9A57;&#x78C1;&#x5340;&#x3002;
-            <br />
-          </li>
-          <li>AH=05h&#xFF1A;&#x683C;&#x5F0F;&#x5316;&#x78C1;&#x8ECC;&#x3002;
-            <br />
-          </li>
-          <li>AH=08h&#xFF1A;&#x53D6;&#x5F97;&#x9A45;&#x52D5;&#x5668;&#x5F15;&#x6578;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=09h&#xFF1A;&#x521D;&#x59CB;&#x5316;&#x786C;&#x789F;&#x6A5F;&#x5F15;&#x6578;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=0Ch&#xFF1A;&#x5C0B;&#x9053;&#x3002;
-            <br />
-          </li>
-          <li>AH=0Dh&#xFF1A;&#x5FA9;&#x4F4D;&#x786C;&#x789F;&#x63A7;&#x5236;&#x5668;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=15h&#xFF1A;&#x53D6;&#x5F97;&#x9A45;&#x52D5;&#x5668;&#x578B;&#x5225;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=16h&#xFF1A;&#x53D6;&#x5F97;&#x8EDF;&#x789F;&#x6A5F;&#x4E2D;&#x789F;&#x7247;&#x7684;&#x72C0;&#x614B;&#x3002;
-            <br
-            />
-          </li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 14h</td>
-      <td style="text-align:left">
-        <p>&#x5E8F;&#x5217;&#x57E0;&#x901A;&#x8A0A;&#x5E38;&#x5F0F;&#x3002;
-          <br />
-        </p>
-        <ul>
-          <li>AH=00h&#xFF1A;&#x521D;&#x59CB;&#x5316;&#x5E8F;&#x5217;&#x57E0;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=01h&#xFF1A;&#x5BEB;&#x51FA;&#x5B57;&#x5143;&#x3002;
-            <br />
-          </li>
-          <li>AH=02h&#xFF1A;&#x8B80;&#x5165;&#x5B57;&#x5143;&#x3002;
-            <br />
-          </li>
-          <li>AH=03h&#xFF1A;&#x72C0;&#x614B;&#x3002;
-            <br />
-          </li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 15h</td>
-      <td style="text-align:left">
-        <p>&#x5176;&#x5B83;&#xFF08;&#x7CFB;&#x7D71;&#x652F;&#x63F4;&#x5E38;&#x5F0F;&#xFF09;&#x3002;
-          <br
-          />
-        </p>
-        <ul>
-          <li>AH=4Fh&#xFF1A;&#x9375;&#x76E4;&#x6514;&#x622A;&#x3002;
-            <br />
-          </li>
-          <li>AH=83h&#xFF1A;&#x4E8B;&#x4EF6;&#x7B49;&#x5F85;&#x3002;
-            <br />
-          </li>
-          <li>AH=84h&#xFF1A;&#x8B80;&#x904A;&#x6232;&#x687F;&#x3002;
-            <br />
-          </li>
-          <li>AH=85h&#xFF1A;SysRq &#x9375;&#x3002;
-            <br />
-          </li>
-          <li>AH=86h&#xFF1A;&#x7B49;&#x5F85;&#x3002;
-            <br />
-          </li>
-          <li>AH=87h&#xFF1A;&#x584A;&#x79FB;&#x52D5;&#x3002;
-            <br />
-          </li>
-          <li>AH=88h&#xFF1A;&#x53D6;&#x5F97;&#x64F4;&#x5145;&#x8A18;&#x61B6;&#x9AD4;&#x5BB9;&#x91CF;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=C0h&#xFF1A;&#x53D6;&#x5F97;&#x7CFB;&#x7D71;&#x5F15;&#x6578;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=C1h&#xFF1A;&#x53D6;&#x5F97;&#x64F4;&#x5145; BIOS &#x8CC7;&#x6599;&#x5340;&#x6BB5;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=C2h&#xFF1A;&#x6307;&#x6A19;&#x88DD;&#x7F6E;&#x529F;&#x80FD;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=E8h, AL=01h (AX = E801h)&#xFF1A;&#x53D6;&#x5F97;&#x64F4;&#x5145;&#x8A18;&#x61B6;&#x9AD4;&#x5BB9;&#x91CF;&#xFF08;&#x81EA;&#x5F9E;
-            1994 &#x5E74;&#x5F15;&#x5165;&#x7684;&#x65B0;&#x529F;&#x80FD;&#xFF09;&#xFF0C;&#x53EF;&#x53D6;&#x5F97;&#x5230;
-            64MB &#x4EE5;&#x4E0A;&#x7684;&#x8A18;&#x61B6;&#x9AD4;&#x5BB9;&#x91CF;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=E8h, AL=20h (AX = E820h) &#x67E5;&#x8A62;&#x7CFB;&#x7D71;&#x4F4D;&#x5740;&#x5C0D;&#x6620;&#x3002;&#x8A72;&#x529F;&#x80FD;&#x53D6;&#x4EE3;&#x4E86;
-            AX=E801h &#x548C; AH=88h&#x3002;
-            <br />
-          </li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 16h</td>
-      <td style="text-align:left">
-        <p>&#x9375;&#x76E4;&#x901A;&#x8A0A;&#x5E38;&#x5F0F;&#x3002;
-          <br />
-        </p>
-        <ul>
-          <li>AH=00h&#xFF1A;&#x8B80;&#x5B57;&#x5143;&#x3002;
-            <br />
-          </li>
-          <li>AH=01h&#xFF1A;&#x8B80;&#x8F38;&#x5165;&#x72C0;&#x614B;&#x3002;
-            <br />
-          </li>
-          <li>AH=02h&#xFF1A;&#x8B80; Shift &#x9375;&#xFF08;&#x4FEE;&#x6539;&#x9375;&#xFF09;&#x72C0;&#x614B;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=10h&#xFF1A;&#x8B80;&#x5B57;&#x5143;&#xFF08;&#x589E;&#x5F37;&#x7248;&#xFF09;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=11h&#xFF1A;&#x8B80;&#x8F38;&#x5165;&#x72C0;&#x614B;&#xFF08;&#x589E;&#x5F37;&#x7248;&#xFF09;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=12h&#xFF1A;&#x8B80; Shift &#x9375;&#xFF08;&#x4FEE;&#x6539;&#x9375;&#xFF09;&#x72C0;&#x614B;&#xFF08;&#x589E;&#x5F37;&#x7248;&#xFF09;&#x3002;
-            <br
-            />
-          </li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 17h</td>
-      <td style="text-align:left">
-        <p>&#x5217;&#x5370;&#x670D;&#x52D9;&#x3002;
-          <br />
-        </p>
-        <ul>
-          <li>AH=00h&#xFF1A;&#x5217;&#x5370;&#x5B57;&#x5143;&#x3002;
-            <br />
-          </li>
-          <li>AH=01h&#xFF1A;&#x521D;&#x59CB;&#x5316;&#x5370;&#x8868;&#x6A5F;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=02h&#xFF1A;&#x6AA2;&#x67E5;&#x5370;&#x8868;&#x6A5F;&#x72C0;&#x614B;&#x3002;
-            <br
-            />
-          </li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 18h</td>
-      <td style="text-align:left">&#x57F7;&#x884C;&#x78C1;&#x5E36;&#x4E0A;&#x7684; BASIC &#x7A0B;&#x5F0F;&#xFF1A;&#x300C;&#x771F;&#x6B63;&#x7684;&#x300D;IBM
-        &#x76F8;&#x5BB9;&#x6A5F;&#x5728; ROM &#x88E1;&#x5167;&#x5EFA; BASIC &#x7A0B;&#x5F0F;&#xFF0C;&#x7576;&#x555F;&#x52D5;&#x5931;&#x6557;&#x6642;&#x7531;
-        BIOS &#x547C;&#x53EB;&#x6B64;&#x5E38;&#x5F0F;&#x89E3;&#x91CB;&#x57F7;&#x884C;&#x3002;&#xFF08;&#x4F8B;&#xFF1A;&#x5217;&#x5370;&#x300C;Boot
-        disk error. Replace disk and press any key to continue...&#x300D;&#x9019;&#x985E;&#x63D0;&#x793A;&#x8CC7;&#x8A0A;&#xFF09;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 19h</td>
-      <td style="text-align:left">&#x52A0;&#x96FB;&#x81EA;&#x6AA2;&#x4E4B;&#x5F8C;&#x8F09;&#x5165;&#x4F5C;&#x696D;&#x7CFB;&#x7D71;&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 1Ah</td>
-      <td style="text-align:left">
-        <p>&#x6642;&#x937E;&#x670D;&#x52D9;&#x3002;
-          <br />
-        </p>
-        <ul>
-          <li>AH=00h&#xFF1A;&#x8B80;&#x53D6;&#x5373;&#x6642;&#x937E;&#x3002;
-            <br />
-          </li>
-          <li>AH=01h&#xFF1A;&#x8A2D;&#x5B9A;&#x5373;&#x6642;&#x937E;&#x3002;
-            <br />
-          </li>
-          <li>AH=02h&#xFF1A;&#x8B80;&#x53D6;&#x5373;&#x6642;&#x937E;&#x6642;&#x9593;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=03h&#xFF1A;&#x8A2D;&#x5B9A;&#x5373;&#x6642;&#x937E;&#x6642;&#x9593;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=04h&#xFF1A;&#x8B80;&#x53D6;&#x5373;&#x6642;&#x937E;&#x65E5;&#x671F;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=05h&#xFF1A;&#x8A2D;&#x5B9A;&#x5373;&#x6642;&#x937E;&#x65E5;&#x671F;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=06h&#xFF1A;&#x8A2D;&#x5B9A;&#x5373;&#x6642;&#x937E;&#x9B27;&#x9234;&#x3002;
-            <br
-            />
-          </li>
-          <li>AH=07h&#xFF1A;&#x91CD;&#x8A2D;&#x5373;&#x6642;&#x937E;&#x9B27;&#x9234;&#x3002;</li>
-        </ul>
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 1Bh</td>
-      <td style="text-align:left">Ctrl+Break&#xFF0C;&#x7531; IRQ 9 &#x81EA;&#x52D5;&#x547C;&#x53EB;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 1Ch</td>
-      <td style="text-align:left">&#x9810;&#x7559;&#xFF0C;&#x7531; IRQ 8 &#x81EA;&#x52D5;&#x547C;&#x53EB;&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 1Dh</td>
-      <td style="text-align:left">&#x4E0D;&#x53EF;&#x547C;&#x53EB;&#xFF1A;&#x6307;&#x5411;&#x5F71;&#x7247;&#x5F15;&#x6578;&#x5217;&#xFF08;&#x5305;&#x542B;&#x5F71;&#x7247;&#x6A21;&#x5F0F;&#x7684;&#x8CC7;&#x6599;&#xFF09;&#x7684;&#x6307;&#x6A19;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 1Eh</td>
-      <td style="text-align:left">&#x4E0D;&#x53EF;&#x547C;&#x53EB;&#xFF1A;&#x6307;&#x5411;&#x8EDF;&#x789F;&#x6A21;&#x5F0F;&#x8868;&#xFF08;&#x5305;&#x542B;&#x95DC;&#x65BC;&#x8EDF;&#x789F;&#x6A5F;&#x7684;&#x5927;&#x91CF;&#x8CC7;&#x8A0A;&#xFF09;&#x7684;&#x6307;&#x6A19;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 1Fh</td>
-      <td style="text-align:left">&#x4E0D;&#x53EF;&#x547C;&#x53EB;&#xFF1A;&#x6307;&#x5411;&#x5F71;&#x7247;&#x5716;&#x5F62;&#x5B57;&#x5143;&#x8868;&#xFF08;&#x5305;&#x542B;&#x5F9E;
-        80h &#x5230; FFh &#x7684;&#xA0;ASCII&#xA0;&#x5B57;&#x5143;&#x7684;&#x8CC7;&#x6599;&#xFF09;&#x7684;&#x8CC7;&#x8A0A;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 41h</td>
-      <td style="text-align:left">&#x4F4D;&#x5740;&#x6307;&#x6A19;&#xFF1A;&#x786C;&#x789F;&#x5F15;&#x6578;&#x5217;&#xFF08;&#x7B2C;&#x4E00;&#x786C;&#x789F;&#xFF09;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 46h</td>
-      <td style="text-align:left">&#x4F4D;&#x5740;&#x6307;&#x6A19;&#xFF1A;&#x786C;&#x789F;&#x5F15;&#x6578;&#x5217;&#xFF08;&#x7B2C;&#x4E8C;&#x786C;&#x789F;&#xFF09;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 4Ah</td>
-      <td style="text-align:left">&#x5373;&#x6642;&#x937E;&#x5728;&#x9B27;&#x9234;&#x6642;&#x547C;&#x53EB;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 70h</td>
-      <td style="text-align:left">IRQ8&#xFF1A;&#x7531;&#x5373;&#x6642;&#x9418;&#x547C;&#x53EB;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 74h</td>
-      <td style="text-align:left">IRQ12&#xFF1A;&#x7531;&#x6ED1;&#x9F20;&#x547C;&#x53EB;
-        <br />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 75h</td>
-      <td style="text-align:left">IRQ13&#xFF1A;&#x7531;&#x6578;&#x5B78;&#x5354;&#x8655;&#x7406;&#x5668;&#x547C;&#x53EB;&#x3002;
-        <br
-        />
-      </td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 76h</td>
-      <td style="text-align:left">IRQ14&#xFF1A;&#x7531;&#x7B2C;&#x4E00;&#x500B; IDE &#x63A7;&#x5236;&#x5668;&#x6240;&#x547C;&#x53EB;
-        <br
-        />&#x3002;</td>
-    </tr>
-    <tr>
-      <td style="text-align:left">INT 77h</td>
-      <td style="text-align:left">IRQ15&#xFF1A;&#x7531;&#x7B2C;&#x4E8C;&#x500B; IDE &#x63A7;&#x5236;&#x5668;&#x6240;&#x547C;&#x53EB;
-        <br
-        />&#x3002;</td>
-    </tr>
-  </tbody>
-</table>
+| 中斷編碼    | 描述                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| INT 00h | CPU：除以零錯，或商不合法時觸發&#xD;。                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| INT 01h | CPU：單步陷阱，TF標記為打開狀態時，每條指令執行後觸發&#xD;。                                                                                                                                                                                                                                                                                                                                                                                                      |
+| INT 02h | CPU：非可封鎖中斷，如啟動自我測試時發生記憶體錯誤。                                                                                                                                                                                                                                                                                                                                                                                                              |
+| INT 03h | CPU：第一個未定義的中斷向量，約定俗成僅用於除錯程式&#xD;。                                                                                                                                                                                                                                                                                                                                                                                                        |
+| INT 04h | CPU：算數溢位。通常由INTO指令在置溢位位時觸發。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                         |
+| INT 05h | 在按下Shift-Print Screen或BOUND指令檢測到範圍異常時觸發。&#xD;                                                                                                                                                                                                                                                                                                                                                                                            |
+| INT 06h | CPU：非法指令。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| INT 07h | CPU：沒有數學協處理器時嘗試執行浮點指令觸發。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                            |
+| INT 08h | IRQ0：可程式化中斷控制器每 55 毫秒觸發一次，即每秒 18.2 次。&#xD;                                                                                                                                                                                                                                                                                                                                                                                               |
+| INT 09h | IRQ1：每次鍵盤按下、按住、釋放。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| INT 0Ah | IRQ2：&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| INT 0Bh | IRQ3：COM2/COM4。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| INT 0Ch | IRQ4：COM1/COM3。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| INT 0Dh | IRQ5：硬碟控制器（PC/XT 下）或 LPT2。                                                                                                                                                                                                                                                                                                                                                                                                               |
+| INT 0Eh | IRQ6：需要時由軟碟控制器呼叫。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| INT 0Fh | IRQ7：LPT1。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| INT 10h | <p>顯示服務 - 由BIOS或作業系統設定以供軟體呼叫。</p><ul><li>AH=00h：設定顯示模式</li><li>AH=01h：設定游標形態</li><li>AH=02h：設定游標位置</li><li>AH=03h：取得游標位置與形態</li><li>AH=04h：取得游標位置</li><li>AH=05h：設定顯示頁</li><li>AH=06h：清除或捲軸畫面(上)</li><li>AH=07h：清除或捲軸畫面(下)</li><li>AH=08h：讀取游標處字元與屬性</li><li>AH=09h：更改游標處字元與屬性</li><li>AH=0Ah：更改游標處字元</li><li>AH=0Bh：設定邊界顏色</li><li>AH=0Eh：在TTY模式下寫字元</li><li>AH=0Fh：取得目前顯示模式</li><li>AH=13h：寫字串</li></ul> |
+| INT 11h | 返回裝置列表。                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| INT 12h | 取得常規記憶體容量。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| INT 13h | <p>低階磁碟服務。</p><ul><li>AH=00h：復位磁碟機。</li><li>AH=01h：檢查磁碟機狀態。</li><li>AH=02h：讀磁區。</li><li>AH=03h：寫磁區。</li><li>AH=04h：校驗磁區。</li><li>AH=05h：格式化磁軌。</li><li>AH=08h：取得驅動器引數。</li><li>AH=09h：初始化硬碟機引數。</li><li>AH=0Ch：尋道。</li><li>AH=0Dh：復位硬碟控制器。</li><li>AH=15h：取得驅動器型別。</li><li>AH=16h：取得軟碟機中碟片的狀態。</li></ul>                                                                                                                    |
+| INT 14h | <p>序列埠通訊常式。</p><ul><li>AH=00h：初始化序列埠。</li><li>AH=01h：寫出字元。</li><li>AH=02h：讀入字元。</li><li>AH=03h：狀態。</li></ul>                                                                                                                                                                                                                                                                                                                        |
+| INT 15h | <p>其它（系統支援常式）。</p><ul><li>AH=4Fh：鍵盤攔截。</li><li>AH=83h：事件等待。</li><li>AH=84h：讀遊戲桿。</li><li>AH=85h：SysRq 鍵。</li><li>AH=86h：等待。</li><li>AH=87h：塊移動。</li><li>AH=88h：取得擴充記憶體容量。</li><li>AH=C0h：取得系統引數。</li><li>AH=C1h：取得擴充 BIOS 資料區段。</li><li>AH=C2h：指標裝置功能。</li><li>AH=E8h, AL=01h (AX = E801h)：取得擴充記憶體容量（自從 1994 年引入的新功能），可取得到 64MB 以上的記憶體容量。</li><li>AH=E8h, AL=20h (AX = E820h)	查詢系統位址對映。該功能取代了 AX=E801h 和 AH=88h。</li></ul>  |
+| INT 16h | <p>鍵盤通訊常式。</p><ul><li>AH=00h：讀字元。</li><li>AH=01h：讀輸入狀態。</li><li>AH=02h：讀 Shift 鍵（修改鍵）狀態。</li><li>AH=10h：讀字元（增強版）。</li><li>AH=11h：讀輸入狀態（增強版）。</li><li>AH=12h：讀 Shift 鍵（修改鍵）狀態（增強版）。</li></ul>                                                                                                                                                                                                                                      |
+| INT 17h | <p>列印服務。</p><ul><li>AH=00h：列印字元。</li><li>AH=01h：初始化印表機。</li><li>AH=02h：檢查印表機狀態。</li></ul>                                                                                                                                                                                                                                                                                                                                            |
+| INT 18h | 執行磁帶上的 BASIC 程式：「真正的」IBM 相容機在 ROM 裡內建 BASIC 程式，當啟動失敗時由 BIOS 呼叫此常式解釋執行。（例：列印「Boot disk error. Replace disk and press any key to continue...」這類提示資訊）&#xD;                                                                                                                                                                                                                                                                                  |
+| INT 19h | 加電自檢之後載入作業系統。                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| INT 1Ah | <p>時鍾服務。</p><ul><li>AH=00h：讀取即時鍾。</li><li>AH=01h：設定即時鍾。</li><li>AH=02h：讀取即時鍾時間。</li><li>AH=03h：設定即時鍾時間。</li><li>AH=04h：讀取即時鍾日期。</li><li>AH=05h：設定即時鍾日期。</li><li>AH=06h：設定即時鍾鬧鈴。</li><li>AH=07h：重設即時鍾鬧鈴。</li></ul>                                                                                                                                                                                                                |
+| INT 1Bh | Ctrl+Break，由 IRQ 9 自動呼叫。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                            |
+| INT 1Ch | 預留，由 IRQ 8 自動呼叫。                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| INT 1Dh | 不可呼叫：指向影片引數列（包含影片模式的資料）的指標。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                         |
+| INT 1Eh | 不可呼叫：指向軟碟模式表（包含關於軟碟機的大量資訊）的指標。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                      |
+| INT 1Fh | 不可呼叫：指向影片圖形字元表（包含從 80h 到 FFh 的 ASCII 字元的資料）的資訊。&#xD;                                                                                                                                                                                                                                                                                                                                                                                     |
+| INT 41h | 位址指標：硬碟引數列（第一硬碟）。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| INT 46h | 位址指標：硬碟引數列（第二硬碟）。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| INT 4Ah | 即時鍾在鬧鈴時呼叫。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| INT 70h | IRQ8：由即時鐘呼叫。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| INT 74h | IRQ12：由滑鼠呼叫&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| INT 75h | IRQ13：由數學協處理器呼叫。&#xD;                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| INT 76h | IRQ14：由第一個 IDE 控制器所呼叫&#xD;。                                                                                                                                                                                                                                                                                                                                                                                                              |
+| INT 77h | IRQ15：由第二個 IDE 控制器所呼叫&#xD;。                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ## 為什麼電腦開機第一幕顯示的是顯示卡資訊?
 
@@ -621,13 +149,13 @@ BIOS只識別到由主開機記錄（MBR）初始化的硬碟，之所以說明�
 
 ## 為何只有x86系統有BIOS？主流ARM體系就不用BIOS呢？
 
-在某種意義上來說，x86體系比ARM體系更加開放。x86是很多廠商\(作業系統廠商、CPU廠商、主機板廠商、獨立硬體廠商\)一起玩，以生態圈的概念提供產品，並對自己那部分負責；而ARM體系雖然也依賴生態圈，但最終有個大廠商\(品牌廠如三星、SONY、華為等\)統合整個生態鏈，提供最後產品並對該產品負總責。
+在某種意義上來說，x86體系比ARM體系更加開放。x86是很多廠商(作業系統廠商、CPU廠商、主機板廠商、獨立硬體廠商)一起玩，以生態圈的概念提供產品，並對自己那部分負責；而ARM體系雖然也依賴生態圈，但最終有個大廠商(品牌廠如三星、SONY、華為等)統合整個生態鏈，提供最後產品並對該產品負總責。
 
 在x86生態圈十分強勢的微軟責作業系統開發，跳過品牌直接服務最終用戶，因此它要直接面對數千數萬種千奇百怪的硬體產品，**如何才能用一個軟體安裝包服務於這麼多種設備呢？必須要一個軟件抽象層封裝這些硬體差別**。
 
 這就引出了BIOS的最主要的功能：**初始化硬體和提供硬體的軟體抽象層**。
 
-* ARM體系也要初始化具體主機板相關硬體如GPIO和記憶體等，這些一般在BSP中完成。與x86體系不同之處在於這些硬體完全客製化，初始化的時候就預先知道有哪些設備，到時候就初始化一大堆規劃好的暫存器而已。x86系統配置情況在開機時候是不知道的，需要探測（Probe）、Training\(記憶體和PCIe\)和枚舉（PCIe等等即插即用設備），相對較復雜。
+* ARM體系也要初始化具體主機板相關硬體如GPIO和記憶體等，這些一般在BSP中完成。與x86體系不同之處在於這些硬體完全客製化，初始化的時候就預先知道有哪些設備，到時候就初始化一大堆規劃好的暫存器而已。x86系統配置情況在開機時候是不知道的，需要探測（Probe）、Training(記憶體和PCIe)和枚舉（PCIe等等即插即用設備），相對較復雜。
 * BIOS提供了整個主機板、包括主機板上外插的設備的軟體抽象。通過探測、Training和枚舉，BIOS就有了系統所有硬體的資訊。它通過幾組詳細定義好的介面，把這些資訊抽象後傳遞給作業系統，這些資訊包括**SMBIOS、ACPI表（ACPI與UEFI），記憶體對映表（E820或者UEFI運行時）**等等。通過這層對映，才能做到做到作業系統完全不改而能夠適配到所有機型和硬體。
 
 在某種程度上來講，BIOS是將作業系統BSP部分單獨封裝後下放到主機板或者BIOS提供商來完成。這在過去帶來了巨大的好處，舊的作業系統如WinXP、Win7現在還可以運行在更新的電腦硬體上，新的硬體只要自己更改一下就行了，相容性是ARM體系所不能比擬的。
@@ -642,6 +170,4 @@ ARM社群最近為了進入x86的傳統優勢領域，也開始接受UEFI，不�
 * ACPI表和代碼（Method）。DSDT和SSDT都有不少程式碼，這些都會被作業系統頻繁調度。
 * UEFI 運行時。根據UEFI規範，BIOS提供了作業系統運行時需要的一些支援函數，例如讀寫存貯在BIOS Flash上的variable操作，reset等等。
 * 其他。EC或者BMC等等都在監控系統，它們都有可能觸發事件，喊來BIOS幫忙。還有些特殊硬體，如顯卡還需要和opRegion進行互動。
-
-
 

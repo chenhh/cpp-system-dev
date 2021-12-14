@@ -33,11 +33,11 @@ IA-32 的保護機制，基本上是架構在**「特權等級」上（在 segme
 * **要求特權等級（Requested Privilege Level, RPL）：在存取一個 segment 時，可以在 segment selector 中指定 RPL（參考「記憶體管理」的「分段架構」），來要求以某個特定的特權等級來存取該 segment**。處理器在檢查特權等級是否相符時，會以 CPL 和 RPL 中較低者來決定。所以，即使 CPL 的等級可以存取某個 segment，若 RPL 的等級不足，還是不能存取該 segment。
   * RPL 可以用來避免系統程式以不正確的特權等級存取某個 segment。例如，某個作業系統中的 API 會把一些資料寫到使用者程式提供的 segment 中。假設系統 API 在 ring 0 中執行，而程式在 ring 3 中執行。若沒有特別檢查，則使用者可以把一個 DPL 為 0 的 segment（使用者程式不能存取它）傳到該 API 中，因為 API 有寫入該 segment 的權力，因此使用者程式就可以破壞該 segment 中的資料。為了避免這個問題，系統 API 在存取使用者傳入的 segment 時，可以先把 segment selector 的 RPL 設定成和使用者程式的 CPL 相同，就不會意外寫入原先使用者無權存取的 segment 了。
 
-**特權等級的檢查，是在把 segment selector 載入分段暫存器的時候進行的**。對堆疊 segment 而言，雖然在性質上類似資料 segment，但是堆疊 segment 的 segment selector 在載入 SS 暫存器時，其 CPL 和 segment 的 DPL 必需相同（如同 non-conforming 的程式 segment 一般），否則會導致 general-protection fault（\#GP）。
+**特權等級的檢查，是在把 segment selector 載入分段暫存器的時候進行的**。對堆疊 segment 而言，雖然在性質上類似資料 segment，但是堆疊 segment 的 segment selector 在載入 SS 暫存器時，其 CPL 和 segment 的 DPL 必需相同（如同 non-conforming 的程式 segment 一般），否則會導致 general-protection fault（#GP）。
 
 ### 特權指令
 
-有一些系統方面的指令，只有特權等級為 0（權限最高）的程序才可以使用。如果一個 CPL 不為 0 的程序試圖執行這些指令，會導致 general-protection fault（\#GP）。其中的一些指令則可以設定為可在 CPL 不為 0 的程序中執行。
+有一些系統方面的指令，只有特權等級為 0（權限最高）的程序才可以使用。如果一個 CPL 不為 0 的程序試圖執行這些指令，會導致 general-protection fault（#GP）。其中的一些指令則可以設定為可在 CPL 不為 0 的程序中執行。
 
 下面列出這些特權指令：
 
@@ -61,9 +61,10 @@ IA-32 的保護機制，基本上是架構在**「特權等級」上（在 segme
 
 在 EFLAGS 旗標中的 IOPL（第 12 bit 和第 13 bit），設定存取輸出入位址空間（I/O address space）所需的最低權限。例如，如果 IOPL 設為 1，則只有 CPL 為 0 和 1 的程序可以執行 I/O 指令，和存取 I/O 記憶體。這個旗標只能在 CPL 為 0 的程序中，利用 POPF 或 IRET 命令更改。
 
- 
+&#x20;
 
-## 控制權轉移
+控制權轉移
+
 
 程式可以經由執行 JMP、CALL、RET、INT n、和 IRET 指令來轉移控制權。在處理器發生例外（exception）、或是中斷（interrupt）、及 IRET 指令是比較特別的（參考「中斷／例外處理」）。
 
@@ -72,9 +73,9 @@ IA-32 的保護機制，基本上是架構在**「特權等級」上（在 segme
 * 直接跳躍到另一個程式 segment
 * 經由 gate
 
-直接跳躍到另一個程式 segment，當使用 CALL 或 JMP 直接跳躍到另一個程式 segment 時，會檢查目前的 CPL、目標 segment descriptor 的 DPL、目標 segment selector 的 RPL、和目標 segment descriptor 的 C 旗標。如果 C 旗標是 0，表示目標 segment 是一個 nonconforming 的程式 segment。在跳躍到 nonconforming 的 segment 時，CPL 一定要和目標的 DPL 相同，而且 RPL 一定要小於或等於 CPL，否則會導致 general-protection fault（\#GP）。而且，在跳躍到 nonconforming 的 segment 時，CPL 並不會改變，即使 RPL 比較小也是一樣。
+直接跳躍到另一個程式 segment，當使用 CALL 或 JMP 直接跳躍到另一個程式 segment 時，會檢查目前的 CPL、目標 segment descriptor 的 DPL、目標 segment selector 的 RPL、和目標 segment descriptor 的 C 旗標。如果 C 旗標是 0，表示目標 segment 是一個 nonconforming 的程式 segment。在跳躍到 nonconforming 的 segment 時，CPL 一定要和目標的 DPL 相同，而且 RPL 一定要小於或等於 CPL，否則會導致 general-protection fault（#GP）。而且，在跳躍到 nonconforming 的 segment 時，CPL 並不會改變，即使 RPL 比較小也是一樣。
 
-如果 C 旗標是 1，表示目標 segment 是一個 conforming 的程式 segment。在跳躍到 conforming 的程式 segment 中時，CPL 可以大於（權力較低）或等於 DPL；只有在 CPL 小於 DPL 時，才會導致 general-protection fault（\#GP），而 RPL 則沒有任何影響。即使是在跳躍到 DPL 比較高的 conforming 的 segment 時，CPL 也不會改變，且因為 CPL 沒有改變，也不會進行堆疊切換（stack-switch）。
+如果 C 旗標是 1，表示目標 segment 是一個 conforming 的程式 segment。在跳躍到 conforming 的程式 segment 中時，CPL 可以大於（權力較低）或等於 DPL；只有在 CPL 小於 DPL 時，才會導致 general-protection fault（#GP），而 RPL 則沒有任何影響。即使是在跳躍到 DPL 比較高的 conforming 的 segment 時，CPL 也不會改變，且因為 CPL 沒有改變，也不會進行堆疊切換（stack-switch）。
 
 在作業系統中，可以把一些不會使用系統保護的部分的 API（例如，大部分的數學函式、和例外處理程式），設成 conforming 的 segment。這樣，一般的應用程式就可以直接使用這些 API。在呼叫這些 segment 時，CPL 並不會改變，可以避免在一個應用程式呼叫一個 DPL 權力較高的 segment 時，以較高的權力改變了某些應用程式不能改變或存取的地方。
 
@@ -86,7 +87,7 @@ Gate 有四種：call gates、trap gates、interrupt gates、和 task gates。�
 
 ### call gate
 
-![](../../.gitbook/assets/call_gate.gif)
+![](../../.gitbook/assets/call\_gate.gif)
 
 Call gate descriptor 可以在 GDT 或 LDT 中，不過不能在 IDT（Interrupt descriptor table）中。它指出了程式所在的 segment（由 Segment Selector 欄位指定），並指出了程式在該 segment 中的偏移量（程式的進入點），及呼叫者所需要的特權等級（由 DPL 指定）。如果需要堆疊切換，它還指出需要參數的個數。而上面的 P 則是表示 call gate 是否有效。
 
@@ -116,25 +117,25 @@ P 通常是設為 1，表示這是一個有效的 call gate。有時候，在某
 
 ## 分頁保護
 
-除了分段形式的保護機制之外，還有分頁的保護機制。分頁的保護機制是以分頁為單位，有兩個特權層次：一是 supervisor 等級（等級 0）、一是 user 等級（等級 1）。分頁保護和分段保護一樣，是在存取記憶體位址之前進行的。如果違反了分頁保護，則不會存取記憶體的內容，而且會導致 page-fault（\#PF）的例外。
+除了分段形式的保護機制之外，還有分頁的保護機制。分頁的保護機制是以分頁為單位，有兩個特權層次：一是 supervisor 等級（等級 0）、一是 user 等級（等級 1）。分頁保護和分段保護一樣，是在存取記憶體位址之前進行的。如果違反了分頁保護，則不會存取記憶體的內容，而且會導致 page-fault（#PF）的例外。
 
 分頁保護除了等級的保護之外，還有讀寫權的保護。一個分頁若設定為唯讀，就不能把資料寫到這個分頁中了。
 
 在分頁目錄和分頁表的 entry 中，有兩個旗標：R/W 旗標和 U/S 旗標，分別代表分頁的讀寫權和特權層次。這兩種保護機制對分頁目錄和分頁表都有效。
 
-### 分頁的特權層次
+### 分頁的特權層次&#xD;
 
 在分頁目錄和分頁表的 entry 中，U/S 旗標表示一個分頁的特權層次。若 U/S 為 0，則分頁是 supervisor 等級，否則為 user 等級。所有的程序都可以存取 user 等級的分頁，但是只有 CPL 為 0、1、2 的程序才可以存取 supervisor 等級的分頁。因此，我們把 CPL 為 3 的程序稱為 user 模式；而把 CPL 為 0、1、2 的程序稱為 supervisor 模式。在一個簡單的系統中，可能會使用最簡單的分段方式，即把所有的資料、程式分段都混合在一起。這時，分頁保護就可以提供最基本的保護。把系統程式放在 supervisor 等級的分頁，而把使用者程式放在 user 等級的分頁，就可以做到最起碼的保護能力了。
 
 分頁的特權層次，是由分頁目錄和分頁表的特權合併而成的。在分頁目錄或分頁表中，其中一個的等級是設為 supervisor 時，則分頁的等級就視為 supervisor。只有在分頁目錄和分頁表中的特權層次都是 user 時，分頁的等級才是 user。在讀寫權的設定也是一樣。只有在分頁目錄和分頁表的讀寫權都是可任意讀寫時，分頁才可以任意讀寫；否則，分頁會被視為唯讀的分頁。
 
-### 分頁的讀寫權
+### 分頁的讀寫權&#xD;
 
 把分頁的 R/W 旗標設為 0，表示分頁是唯讀的，否則表示分頁是可以任意寫入的。當 CR0 中的 WP 旗標（第 16 bit）設為 0 時，對 supervisor 等級的程式來說，所有的分頁都是可任意讀寫的，即分頁的 R/W 旗標只對 user 等級的程式有效。而在 WP 旗標設為 1 時，則 R/W 旗標對所有等級的程式都有效；也就是說，即使是 supervisor 等級的程式，也不能寫入唯讀的分頁。
 
 這個功能可以在某些場合中，節省記憶體的使用。例如，在 UNIX 作業系統中，使用 fork 函式來建立子程序時，必須把資料節區複製一份給子程序。但是，利用這個功能，系統可以先不複製節區，而把母程序的節區的分頁對映到子程序，讓子程序使用，但是把子程序中的分頁設為唯讀。當子程序試圖寫入其中一個分頁時，會產生例外，這時系統才需要為子程序建立一個自己的分頁，並把資料複製一份。這樣就可以節省很多記憶體和時間。
 
-### 分頁保護和分段保護
+### 分頁保護和分段保護&#xD;
 
 處理器在存取記憶體時，會先考慮分段保護。如果分段保護的設定允許讀取動作，處理器才會考慮分頁保護。只有在分段保護和分頁保護的檢查都通過時，處理器才會存取記憶體的內容。因此，分頁保護的設定並不能取代分段保護的設定。分頁保護可以用來加強分段保護，在一個可任意讀寫的分段中，可以把某些分頁設定為只能讀取。
 
@@ -197,9 +198,8 @@ LDTR 或工作暫存器的檢查：
 
 IDT 的 entry 必須是 interrupt gate、trap gate、或是 task gate。
 
- 
+&#x20;
 
 
 
- 
-
+&#x20;

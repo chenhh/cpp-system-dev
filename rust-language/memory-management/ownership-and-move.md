@@ -33,7 +33,7 @@
 
 **這代表當綁定離開有效範圍，Rust 就會釋放所綁定的資源**。
 
-### 變數作用域
+### 變數作用域(scope)
 
 ```rust
 {                      // s 在這裡無效, 它尚未聲明
@@ -45,17 +45,21 @@
 
 ```rust
 fn main() {
+    // 從此處起，s 是有效的
     let mut s = String::from("hello");
-    // 因為對s有寫入的操作，因此必須宣告為mut S
+    // 因為對s有寫入的操作，因此必須宣告為mut
     s.push_str(" world");
     println!("{}", s);
 }
+// 此作用域已結束，
+// s 不再有效
 ```
 
 * 當我們聲明一個變數s，並用String類型對它進行初始化的時候，這個變數s就成了這個字串的“所有者” let將s繫結至String，但這個所有權，是有範圍限制的，這個範圍就是<mark style="color:red;">作用域（scope</mark>），準確來說，應該叫擁有域（owner scope）。
 * 如果我們希望修改這個變數，可以使用mut修飾s，然後調用String類型的成員方法來實現。
 * 當main函數結束的時候，s將會被解構，它管理的記憶體（不論是堆積上的，還是堆疊上的）則會被釋放。
 * <mark style="color:blue;">我們一般把變數從出生到死亡的整個階段，叫作一個變數的“生命週期”（lifetime）</mark>。比如這個例子中的區域變數s，它的生命週期就是從let語句開始，到main函數結束。
+* 當 s 離開作用域的時候。當變量離開作用域，Rust 為我們調用一個特殊的解構函數`drop`。Rust 在結尾的 } 處自動調用 drop。
 
 ```rust
 fn main() {
@@ -84,10 +88,16 @@ scope 1 {
 
 一個變數可以把它擁有的值轉移給另外一個變數，稱為“所有權轉移”。設定陳述式、函式呼叫、函數返回等，都有可能導致所有權轉移。
 
-**Rust中所有權轉移的重要特點是，它是所有類型的預設語義**。Rust中的變數綁定操作，預設是move語義，執行了新的變數綁定後，原來的變數就不能再被使用！一定要記住！
+<mark style="color:red;">**Rust中所有權轉移的重要特點是，它是所有類型的預設語義**</mark>。Rust中的變數綁定操作，預設是move語義，執行了新的變數綁定後，原來的變數就不能再被使用！一定要記住！
 
 ```rust
-fn create() -> String {
+let s1 = String::from("hello");
+let s2 = s1;
+```
+
+![將值 "hello" 綁定給 s1 的 String 在記憶體中的表現形式](<../../.gitbook/assets/string\_ctor-min (1).png>)
+
+```rust
     let s = String::from("hello");
     return s; // 所有權轉移,從函數內部移動到外部
 }

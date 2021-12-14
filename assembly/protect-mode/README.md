@@ -1,4 +1,4 @@
-# 保護模式\(protect mode\)
+# 保護模式(protect mode)
 
 ## Intel architecture架構概觀
 
@@ -21,7 +21,7 @@ Intel Architecture 系列的處理器中，最早的 8086 是一 16 bit 的處�
 
 而在保護模式中，有四個重要的部分：記憶體管理、保護機制、中斷／例外處理、和多工處理。
 
-### 系統暫存器
+### 系統暫存器&#xD;
 
 在處理器中有一些暫存器，是用來控制系統的一些行為的，這些暫存器通常只有作業系統會使用。這些暫存器中，和保護模式有關的，有：
 
@@ -56,11 +56,11 @@ Intel Architecture 系列的處理器中，最早的 8086 是一 16 bit 的處�
 
 不過，和真實模式不同的是，segment 的意義不同；在保護模式中，segment 的位置不再是固定的，而是可以自由決定的。
 
-Segment 暫存器（稱為 Segment Selector）則是用來選擇想要使用的 segment。同時，**在保護模式中，segment 也可以有大小限制**，不像在真實模式中，一個 segment 一定是 64KB\(16 bit的上限\)（雖然 segment 的實際大小可以比 64KB 小，但是處理器並不會檢查存取動作是否超出了 segment 的範圍）。
+Segment 暫存器（稱為 Segment Selector）則是用來選擇想要使用的 segment。同時，**在保護模式中，segment 也可以有大小限制**，不像在真實模式中，一個 segment 一定是 64KB(16 bit的上限)（雖然 segment 的實際大小可以比 64KB 小，但是處理器並不會檢查存取動作是否超出了 segment 的範圍）。
 
 **在保護模式中，每一個 segment 都有一個 segment descriptor，描述這個 segment 的位置、大小、型態、存取權限等等資料。**Segment 的位置是以「基底位址」來表示，基底位址是一個線性位址。要存取 segment 中的某個位址，需要指定一個 offset 位址，而實際的線性位址則是將 segment 的基底位址加上 offset 就可以得到。
 
-![](../../.gitbook/assets/linear_and_logical_address.gif)
+![](../../.gitbook/assets/linear\_and\_logical\_address.gif)
 
 上圖中，顯示出 segment 的 segment descriptor 是存放在 Global Descriptor Table（GDT）或 Local Descriptor Table（LDT）中。GDT 和 LDT 都是由 segment descriptor 所組成的陣列。Segment selector 則可以視為這個陣列的 index。
 
@@ -68,7 +68,7 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 分段架構可以有效地解決多工環境中，程式和資料的重定位（Reallocation）問題。利用分段架構，為程式和資料分別指定一個 @segment，程式和資料都可以從 00000000H 開始取用，而不受程式和資料在記憶體中的位址影響。同時，分段架構也可以避免錯誤的程式意外地存取到不該存取的位址。
 
-## 分頁架構\(paging\)
+## 分頁架構(paging)
 
 當分頁功能開啟時，線性記憶體就不是直接對映到實體記憶體上了。線性記憶空間會分割成許多固定大小的頁（Pages），通常是 4KB。
 
@@ -84,11 +84,11 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 下圖中，目錄中可定址$$2^{10}$$個分頁表，而每一個分頁表中又可定址$$2^{10}$$個實體，每個實體可定址$$2^{12}$$位元組，因此總共可定址空間 $$2^{10} \times 2^{10} \times 2^{12} = 2^{32} = 4\ \text{GB}$$。
 
-![&#x7531;&#x76EE;&#x9304;&#x627E;&#x5230;&#x5206;&#x9801;&#x8868;&#xFF0C;&#x518D;&#x78BA;&#x5B9A;&#x9801;&#x9762;&#x5F8C;&#xFF0C;&#x8A08;&#x7B97;&#x504F;&#x79FB;&#x91CF;&#x5F97;&#x5BE6;&#x9AD4;&#x4F4D;&#x5740;](../../.gitbook/assets/paging_4kb.gif)
+![由目錄找到分頁表，再確定頁面後，計算偏移量得實體位址](../../.gitbook/assets/paging\_4kb.gif)
 
- 4MB 分頁模式，即一頁的大小是 4MB。4MB 分頁模式和 4KB 分頁模式很類似，但是**在 4MB 分頁模式中，只有分頁目錄，沒有分頁表**；即分頁目錄中的 Directory Entry 直接指向分頁的基底位址，而在線性位址中的表索引則和偏移量合併成 22 bits（4MB）的偏移量。
+&#x20;4MB 分頁模式，即一頁的大小是 4MB。4MB 分頁模式和 4KB 分頁模式很類似，但是**在 4MB 分頁模式中，只有分頁目錄，沒有分頁表**；即分頁目錄中的 Directory Entry 直接指向分頁的基底位址，而在線性位址中的表索引則和偏移量合併成 22 bits（4MB）的偏移量。
 
-![](../../.gitbook/assets/pagin_4mb.gif)
+![](../../.gitbook/assets/pagin\_4mb.gif)
 
 4MB 分頁模式和 4KB 分頁模式可以共用。例如，在作業系統中，可能會想把整個核心（Kernel）都放在同一頁中，以減少 swap 所產生的額外負擔，而在其它的地方則使用 4KB 的分頁空間。
 
@@ -98,7 +98,7 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 * PG（CR0 的 bit 31）
 * PSE（CR4 的 bit 4，在 Pentium 和以後的處理器才有）
-*  PAE（CR4 的 bit 5，在 Pentium Pro 和 Pentium II 以後的處理器才有）
+* &#x20;PAE（CR4 的 bit 5，在 Pentium Pro 和 Pentium II 以後的處理器才有）
 
 
 
@@ -114,14 +114,14 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 分頁目錄和分頁表的實例格式如下：
 
-![](../../.gitbook/assets/paging_entity.gif)
+![](../../.gitbook/assets/paging\_entity.gif)
 
 * **分頁表基底位址、分頁基底位址：存放分頁表／分頁的基底位址（以實體位址）**。
   * 在 4KB 的分頁中，分頁表和分頁的位址都必須是 4KB 的倍數，所以用 20 bits 來表示基底位址的最左邊的（most-significant）20 bits。
   * 在 4MB 的分頁中，分頁的位址必須是 4MB 的倍數，因此用 10 bits 表示基底位址最左數的 10 bits。
 * **P（present）旗標：表示這個分頁（或分頁表）目前是否存在記憶體中。**
   * 若 P = 1，則表示這個分頁或分頁表在記憶體中，可以進行位址轉換。
-  * 若 P = 0，則表示這個分頁不在記憶體中，若對這個分頁進行存取動作，會導致 page fault（\#PF）例外。
+  * 若 P = 0，則表示這個分頁不在記憶體中，若對這個分頁進行存取動作，會導致 page fault（#PF）例外。
   * 作業系統在將分頁 swap 到硬碟時，要把 P 設為 0；而在把分頁由硬碟中讀入時，則要把 P 設為 1。
 * **R/W（read/write）旗標：當 R/W = 1 時，表示分頁可以寫入；當 R/W = 0 時，表示分頁只能讀取（read-only）。**
   * 當 CR0 的 WP 旗標（第 16 bit）設為 1 時，所有的程式都不能寫入唯讀的分頁；
@@ -143,7 +143,8 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 要把 TLB 設為無效，只要重新載入 CR3 就可以了。要重新載入 CR3，可以用 MOV 指令（例如：MOV CR3, EAX），或是在工作切換時，處理器也會重新載入 CR3 的值。此外，INVLPG 指令可以把某個特定的 TLB entry 設成無效。不過，在某些狀況下，它會把一些 TLB entries 甚至整個 TLB 都設為無效。INVLPG 的參數是該分頁的位址，處理器會把 TLB 中存放該分頁的 entry 設為無效。
 
-## 分頁的規劃
+分頁的規劃
+
 
 在多工作業系統中，往往同時執行很多個程式，因此，記憶體可能常常會用盡。但是，即使一個程式載入大量的資料到記憶體中，也很少會同時使用到全部的資料。這時候，把暫時不需要的資料寫入硬碟（或其它類似的裝置）中，就可以空出位置載入其它的程式了。
 
@@ -153,7 +154,7 @@ GDT 的基底位址存放在 GDTR 中（GDTR 是一個暫存器），而 LDT 的
 
 此外，在 Linux 作業系統中還有一種用法：Linux 作業系統的核心部分常常需要使用實體位址，因此在 Linux 中，應用程式和核心是使用不同的分頁目錄。核心的分頁目錄便是將線性記憶體直接對映到實體記憶體中。在這種情形下，就很適合使用 4MB 的分頁模式。不過，要注意一點：4MB 的分頁模式，只有在 Pentium 及以後的處理器才能使用。
 
-## 分段架構\(segment\)
+## 分段架構(segment)
 
 **在保護模式中，分段暫存器是存放 segment selector 的。**共有六個分段暫存器：CS、DS、ES、FS、GS、和 SS，它們的用途和在真實模式中類似（例如，CS 指向程式碼的 segment，而 SS 指向堆疊的 segment）。
 
@@ -163,7 +164,7 @@ Segment selector 由三個欄位組成：索引、Table Indicator（TI）、和 
 * TI 表示所要使用的 descriptor table（GDT 或 LDT），
 * RPL 則是該 selector 的特權等級。
 
-![](../../.gitbook/assets/segment_selector.gif)
+![](../../.gitbook/assets/segment\_selector.gif)
 
 索引共有 13 bits，因此在一個 descriptor table 中，最多可以有 8192 個 segment。
 
@@ -181,7 +182,7 @@ RPL 有 2 bits，範圍可以由 0 至 3（0 的特權等級最高，而 3 最�
 
 Segement Descriptor 存放在 GDT 或 LDT 中，是描述一個 segment 的資料結構。每一個 segment descriptor 都是 8 bytes。
 
-![](../../.gitbook/assets/segment_descriptor.gif)
+![](../../.gitbook/assets/segment\_descriptor.gif)
 
 在 Segment Descriptor 中，基底位址（共 32 bits）被分為三個部份，而分段邊界（共 20 bits）則被分為兩個部份。
 
@@ -191,7 +192,7 @@ Segement Descriptor 存放在 GDT 或 LDT 中，是描述一個 segment 的資�
 * **P 是用來指示 segment 是否存在記憶體中**。
   * 如果 P = 0，則表示 segment 目前不在記憶中；反之，若 P = 1，則表示 segment 在記憶體中。
   * 當把一個 P = 0 的 segment descriptor 載入到分段暫存器中的時候，處理器會發出一個 segment-not-present 的例外。
-  * 記憶體管理程式可以利用這個特性，來進行虛擬記憶體管理。這提供了一個不使用分頁功能，也可以進行虛擬記憶體管理的方式。當 P = 0 時，segment descriptor 中的低字組（在上面標示為 0 的字組）可供系統程式自由使用，而高字組（標示為 4 的字組）的 bit 0 ~ bit 7 和 bit 16 ~ bit 31 也都可以供系統程式使用。作業系統可以利用這些空間來存放相關的資訊，例如分段在 swap file 中的位置等等。
+  * 記憶體管理程式可以利用這個特性，來進行虛擬記憶體管理。這提供了一個不使用分頁功能，也可以進行虛擬記憶體管理的方式。當 P = 0 時，segment descriptor 中的低字組（在上面標示為 0 的字組）可供系統程式自由使用，而高字組（標示為 4 的字組）的 bit 0 \~ bit 7 和 bit 16 \~ bit 31 也都可以供系統程式使用。作業系統可以利用這些空間來存放相關的資訊，例如分段在 swap file 中的位置等等。
 * Segment descriptor 的高字組中的第 20 個 bit 是可供系統程式自由使用的 bit，作業系統可以在這裡存放相關的資訊。第 21 個 bit 則保留，一定要設為 0。
 * D/B 在不同的狀況下，有不同的意義。**當 segment 是一個可執行的程式碼的 segment，則這個旗標叫 D**。
   * D = 0 表示在這個 segment 中的程式內定使用 16-bit 的位址，而 D = 1 表示在這個 segment 中的程式內定使用 32-bit 的位址。
@@ -217,25 +218,25 @@ Segement Descriptor 存放在 GDT 或 LDT 中，是描述一個 segment 的資�
 
 系統 segment（S = 0）則有很多種，種類同樣是由型態位元決定。例如，有些 segment 是存放 LDT 的，有些是存放 gate 的。系統 segment 的型態位元如下表所示：
 
-| bit 11 | bit 10 | bit 9 | bit 8 | 描述 |
-| :--- | :--- | :--- | :--- | :--- |
-| 0 | 0 | 0 | 0 | 保留 |
-| 0 | 0 | 0 | 1 | 16 bit TSS \(Available\) |
-| 0 | 0 | 1 | 0 | LDT |
-| 0 | 0 | 1 | 1 | 16 bit TSS \(Busy\) |
-| 0 | 1 | 0 | 0 | 16 bit Call Gate |
-| 0 | 1 | 0 | 1 | Task Gate |
-| 0 | 1 | 1 | 1 | 16 bit Interrupt Gate |
-| 1 | 0 | 0 | 0 | 保留 |
-| 1 | 0 | 0 | 1 | 32 bit TTS \(Available\) |
-| 1 | 0 | 1 | 0 | 保留 |
-| 1 | 0 | 1 | 1 | 32 bit TSS \(Busy\) |
-| 1 | 1 | 0 | 0 | 32 bit Call Gate |
-| 1 | 1 | 0 | 1 | 保留 |
-| 1 | 1 | 1 | 0 | 32 bit Interrupt Gate |
-| 1 | 1 | 1 | 1 | 32 bit Trap Gate |
+| bit 11 | bit 10 | bit 9 | bit 8 | 描述                     |
+| ------ | ------ | ----- | ----- | ---------------------- |
+| 0      | 0      | 0     | 0     | 保留                     |
+| 0      | 0      | 0     | 1     | 16 bit TSS (Available) |
+| 0      | 0      | 1     | 0     | LDT                    |
+| 0      | 0      | 1     | 1     | 16 bit TSS (Busy)      |
+| 0      | 1      | 0     | 0     | 16 bit Call Gate       |
+| 0      | 1      | 0     | 1     | Task Gate              |
+| 0      | 1      | 1     | 1     | 16 bit Interrupt Gate  |
+| 1      | 0      | 0     | 0     | 保留                     |
+| 1      | 0      | 0     | 1     | 32 bit TTS (Available) |
+| 1      | 0      | 1     | 0     | 保留                     |
+| 1      | 0      | 1     | 1     | 32 bit TSS (Busy)      |
+| 1      | 1      | 0     | 0     | 32 bit Call Gate       |
+| 1      | 1      | 0     | 1     | 保留                     |
+| 1      | 1      | 1     | 0     | 32 bit Interrupt Gate  |
+| 1      | 1      | 1     | 1     | 32 bit Trap Gate       |
 
- 從上表可以可以看出，除了 LDT 和 Task Gate 之外（這兩者沒有 16 bit 和 32 bit 之分），bit 11 為 1 的均為 32 bit，而 bit 11 為 0 者為 16 bit，且其它 bit 完全相同。
+&#x20;從上表可以可以看出，除了 LDT 和 Task Gate 之外（這兩者沒有 16 bit 和 32 bit 之分），bit 11 為 1 的均為 32 bit，而 bit 11 為 0 者為 16 bit，且其它 bit 完全相同。
 
 ## Segment Descriptor Table
 
@@ -254,4 +255,3 @@ Segment 的彈性很大，可以應用在各種環境中。例如，在簡單的
 而在比較複雜的系統上，可以把程式 segment 和資料 segment 分開（不重疊），甚至有多個不同的 segment。例如，在多工作業系統中，可以把一個（segment descriptor 在 GDT 中的）segment 分配給一個 process，在該 process 中再以 LDT 來分配區域性的 segment（如程式 segment、資料 segment 等等）。即使是在單工作業系統中，區分適當的 segment 也會有些好處。例如，segment 的保護機制（參考「保護機制」的「邊界和型態檢查」），可以加強系統的強固性，也可以幫助程式設計師找出程式中的錯誤。
 
 有些系統的 segment（例如：各種 gate、TSS、LDT 等）也是很重要的。把這些系統的 segment 和一般的 segment 分開，也可以避免程式意外破壞了這些系統 segment 的內容。當然，這樣就必須把修改這些系統 segment 內容獨立成為作業系統的 API，可能會稍微影響效率（經由作業系統提供的 API 來改變這些資料，總是比直接修改慢一點）。
-

@@ -4,7 +4,7 @@
 
 Rust用了兩個概念來管理專案：一個是crate，一個是mod。
 
-* crate簡單理解就是一個項目 \(project\)。crate是Rust中的獨立編譯單元。每個crate對應生成一個庫或者可執行檔（如.lib.dll.so.exe等）。
+* crate簡單理解就是一個項目 (project)。crate是Rust中的獨立編譯單元。每個crate對應生成一個庫或者可執行檔（如.lib.dll.so.exe等）。
   * 官方有一個crate倉庫 https://crates.io/，可以供用戶發佈各種各樣的庫，用戶也可以直接使用這裡面的開源庫。
 * mod簡單理解就是命名空間。mod可以嵌套，還可以控制內部元素的可見性。
 * **crate和mod有一個重要區別是：crate之間不能出現迴圈引用；而mod是無所謂的，mod1要使用mod2的內容，同時mod2要使用mod1的內容，是完全沒問題的**。
@@ -126,7 +126,7 @@ Rust裡面的crate都是自帶版本號的。基本意思如下：
 * 在1.0.0版本之後，如果出現了不相容的改動，需要升級主版本號，比如從1.2.3升級到2.0.0；
 * 在1.0.0版本之後，如果是相容性的增加API，雖然不會導致下游用戶編譯失敗，但是增加公開的API情況，應該升級次版本號。
 
-### 在\[dependencies\]裡面的幾種依賴項的格式
+### 在\[dependencies]裡面的幾種依賴項的格式
 
 #### 来自crates.io的依賴
 
@@ -139,13 +139,13 @@ lazy_static = "1.0"
 
 指定版本號的時候，可以使用模糊匹配的方式。
 
-* ^符號，如^1.2.3代表1.2.3&lt;=version&lt;2.0.0；
-* ~符號，如~1.2.3代表1.2.3&lt;=version&lt;1.3.0；
-* \*符號，如1.\*代表1.0.0&lt;=version&lt;2.0.0；
-* 比較符號，比如&gt;=1.2.3、&gt;1.2.3、&lt;2.0.0、=1.2.3含義基本上一目了然。
-* 還可以把多個限制條件合起來用逗號分開，比如version="&gt;1.2，  &lt;1.9"。
+* ^符號，如^1.2.3代表1.2.3<=version<2.0.0；
+* \~符號，如\~1.2.3代表1.2.3<=version<1.3.0；
+* \*符號，如1.\*代表1.0.0<=version<2.0.0；
+* 比較符號，比如>=1.2.3、>1.2.3、<2.0.0、=1.2.3含義基本上一目了然。
+* 還可以把多個限制條件合起來用逗號分開，比如version=">1.2，  <1.9"。
 
-直接寫一個數位的話，等同於^符號的意思。所以lazy\_static="1.0"等同於lazy\_static="^1.0"，含義是1.0.0&lt;=version&lt;2.0.0。cargo會到網上找到當前符合這個約束條件的最新的版本下載下來。
+直接寫一個數位的話，等同於^符號的意思。所以lazy\_static="1.0"等同於lazy\_static="^1.0"，含義是1.0.0<=version<2.0.0。cargo會到網上找到當前符合這個約束條件的最新的版本下載下來。
 
 #### 來自git倉庫的依賴
 
@@ -192,7 +192,7 @@ cargo的workspace概念，是為了解決多crate的互相協調問題而存在�
 
 為了讓不同的crate之間能共用一些資訊，cargo提供了一個workspace的概念。一個workspace可以包含多個專案；所有的項目共用一個Cargo.lock檔，共用同一個輸出目錄；一個workspace內的所有項目的公共依賴項都是同樣的版本，輸出的目的檔案都在同一個資料夾內。workspace同樣是用Cargo.toml來管理的。我們可以把所有的項目都放到一個資料夾下面。在這個資料夾下寫一個Cargo.toml來管理這裡的所有專案。
 
-Cargo.toml檔中要寫一個\[workspace\]的配置：
+Cargo.toml檔中要寫一個\[workspace]的配置：
 
 ```rust
 [workspace]
@@ -252,4 +252,3 @@ use std::prelude::*;
 ```
 
 這樣，標準庫裡面的這些最重要的類型、trait等名字就可以直接使用，而無須每次都寫全稱或者use語句。Prelude模組的程式碼在[rust/library/std/src/prelude/mod.rs](https://github.com/rust-lang/rust/blob/master/library/std/src/prelude/mod.rs)資料夾下。目前的mod.rs中，直接匯出了v1模組中的內容，而v1.rs中，則是編譯器為我們自動導入的相關trait和類型。
-
