@@ -97,6 +97,8 @@ let s2 = s1;
 
 ![將值 "hello" 綁定給 s1 的 String 在記憶體中的表現形式](<../../.gitbook/assets/string\_ctor-min (1).png>)
 
+![s1對hello的所有權移動至s2](../../.gitbook/assets/string\_move-min.png)
+
 ```rust
     let s = String::from("hello");
     return s; // 所有權轉移,從函數內部移動到外部
@@ -327,7 +329,7 @@ Copy的全名是`std::marker::Copy`。請大家注意，[std::marker](https://do
 
 **它們的特殊之處在於:它們是跟編譯器密切綁定的，impl這些trait對編譯器的行為有重要影響**。在編譯器眼裡，它們與其他的trait不一樣。**這幾個trait內部都沒有方法，它們的唯一任務是給類型打一個“標記”，表明它符合某種約定——這些約定會影響編譯器的靜態檢查以及程式碼生成**。
 
-Copy這個trait在編譯器的眼裡代表的是什麼意思呢？簡單點總結就是，如果一個類型impl了Copy trait，意味著任何時候，我們都可以通過簡單的記憶體複製（在C語言裡按位元組複製memcpy）實現該類型的複製，並且不會產生任何記憶體安全問題。**一旦一個類型實現了Copy trait，那麼它在變數綁定、函數參數傳遞、函數返回值傳遞等場景下，都是copy語義，而不再是預設的move語義**。
+Copy這個trait在編譯器的眼裡代表的是什麼意思呢？簡單點總結就是，如果一個類型impl了Copy trait，意味著任何時候，我們都可以通過簡單的記憶體複製（在C語言裡按位元組複製memcpy）實現該類型的複製，並且不會產生任何記憶體安全問題。<mark style="color:red;">**一旦一個類型實現了Copy trait，那麼它在變數綁定、函數參數傳遞、函數返回值傳遞等場景下，都是copy語義，而不再是預設的move語義**</mark>。
 
 下面用最簡單的設定陳述式`x=y`來說明move語義和copy語義的根本區別。
 
@@ -342,9 +344,9 @@ Copy這個trait在編譯器的眼裡代表的是什麼意思呢？簡單點總�
 
 並不是所有的類型都可以實現Copy trait。
 
-**Rust規定，對於自訂類型，只有所有成員都實現了Copy trait，這個類型才有資格實現Copy trait**。
+<mark style="color:red;">**Rust規定，對於自訂類型，只有所有成員都實現了Copy trait，這個類型才有資格實現Copy trait**</mark>。
 
-常見的數字（整數、浮點數）類型、bool類型、共用借用指標&，都是具有Copy屬性的類型。而Box、Vec、可寫借用指標\&mut等類型都是不具備Copy屬性的類型。
+<mark style="color:red;">常見的數字（整數、浮點數）類型、bool類型、共用借用指標&，都是具有Copy屬性的類型</mark>。而Box、Vec、可寫借用指標\&mut等類型都是不具備Copy屬性的類型。
 
 對於陣列類型，如果它內部的元素類型是Copy，那麼這個陣列也是Copy類型。對於元組tuple類型，如果它的每一個元素都是Copy類型，那麼這個tuple也是Copy類型。
 
@@ -376,13 +378,13 @@ pub trait Clone: Sized {
 }
 ```
 
-它有兩個關聯方法，分別是clone\_from和clone，clone\_from是有預設實現的，依賴於clone方法的實現。clone方法沒有預設實現，需要手動實現。c
+它有兩個關聯方法，分別是clone\_from和clone，clone\_from是有預設實現的，依賴於clone方法的實現。clone方法沒有預設實現，需要手動實現。
 
-lone方法一般用於“基於語義的複製”操作。所以，它做什麼事情，跟具體類型的作用息息相關。比如，對於Box類型，clone執行的是“深複製”；而對於Rc類型，clone做的事情就是把引用計數值加1。
+clone方法一般用於“基於語義的複製”操作。所以，它做什麼事情，跟具體類型的作用息息相關。比如，對於Box類型，clone執行的是“深複製”；而對於Rc類型，clone做的事情就是把引用計數值加1。
 
 雖然Rust中的clone方法一般是用來執行複製操作的，但是如果在自訂的clone函數中做點別的什麼工作，編譯器也沒辦法禁止。你可以根據需要在clone函數中編寫任意的邏輯。
 
-**但是有一條規則需要注意：對於實現了copy的類型，它的clone方法應該跟copy語義相容，等同於按位元組複製**。
+<mark style="color:red;">**但是有一條規則需要注意：對於實現了copy的類型，它的clone方法應該跟copy語義相容，等同於按位元組複製**</mark>。
 
 ## 自動derive
 
