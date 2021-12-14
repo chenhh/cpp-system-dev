@@ -84,6 +84,72 @@ scope 1 {
 
 在Rust裡面，不可以做“設定運算子重載”，<mark style="color:red;">若需要“深複製” (deep copy)（指的是對於複雜結構中所有元素的複製，而不是單純以共享指標指向該結構），必須手工調用clone方法。</mark>這個clone方法來自於std:clone::Clone這個trait。clone方法裡面的行為是可以自訂的。
 
+### 所有權與函數
+
+將值傳遞給函數在語義上與給變量賦值相似。向函數傳遞值可能會移動或者復制(依傳入類型是否實作copy trait決定行為)，就像賦值語句一樣。
+
+```rust
+fn main() {
+    let s = String::from("hello"); // s 進入作用域
+
+    takes_ownership(s); // s 的值移動到函數裡 ...
+                        // ... 所以到這裡不再有效
+                        // hello
+
+    let x = 5; // x 進入作用域
+
+    makes_copy(x); // x 應該移動函數裡，
+                   // 但 i32 是 Copy 的，所以在後面可繼續使用 x
+} // 這裡, x 先移出了作用域，然後是 s。但因為 s 的值已被移走，
+  // 所以不會有特殊操作
+
+fn takes_ownership(some_string: String) {
+    // some_string 進入作用域
+    // 因為String沒有實作copy trait，為move操作
+    println!("{}", some_string);    
+} // 這裡，some_string 移出作用域並調用 `drop` 方法。佔用的內存被釋放
+
+fn makes_copy(some_integer: i32) {
+    // some_integer 進入作用域
+    // 因為i32有實作copy trait,所以為copy操作
+    println!("{}", some_integer);
+} // 這裡，some_integer 移出作用域。不會有特殊
+```
+
+### 返回值與作用域
+
+返回值也可以轉移所有權。
+
+```rust
+fn main() {
+    let s1 = gives_ownership(); // gives_ownership 將返回值
+                                // 移給 s1
+
+    let s2 = String::from("hello"); // s2 進入作用域
+
+    let s3 = takes_and_gives_back(s2); // s2 被移動到
+                                       // takes_and_gives_back 中,
+                                       // 它也將返回值移給 s3
+} // 這裡, s3 移出作用域並被丟棄。s2 也移出作用域，但已被移走，
+  // 所以什麼也不會發生。s1 移出作用域並被丟棄
+
+fn gives_ownership() -> String {
+    // gives_ownership 將返回值移動給
+    // 調用它的函數
+
+    let some_string = String::from("hello"); // some_string 進入作用域.
+
+    some_string // 返回 some_string 並移出給調用的函數
+}
+
+// takes_and_gives_back 將傳入字串並返回該值
+fn takes_and_gives_back(a_string: String) -> String {
+    // a_string 進入作用域
+
+    a_string // 返回 a_string 並移出給調用的函數
+}
+```
+
 ## 移動語意(move)
 
 一個變數可以把它擁有的值轉移給另外一個變數，稱為“所有權轉移”。設定陳述式、函式呼叫、函數返回等，都有可能導致所有權轉移。
