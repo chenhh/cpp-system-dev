@@ -214,13 +214,13 @@ fn main() {
 
 ## 借用檢查
 
-Rust的設計者們在一系列的“記憶體不安全”的問題中觀察到了這樣的一個結論：**Danger arises from Aliasing + Mutation** (兩者同時發生時才會發生記憶體安全問題)。
+Rust的設計者們在一系列的“記憶體不安全”的問題中觀察到了這樣的一個結論：<mark style="color:red;">**Danger arises from Aliasing + Mutation**</mark> <mark style="color:red;"></mark><mark style="color:red;">(兩者同時發生時才會發生記憶體安全問題)</mark>。
 
 Rust保證記憶體安全的一個重要原則就是，如果能保證alias和mutation不同時出現，那麼程式碼就一定是安全的。
 
 Rust 希望達成的目標是，當你對某一塊記憶體寫入資料時，編譯器可以保證這塊記憶體沒有其它的別名 (alias)，從而避免對變數的寫入行為，會破壞所有指向該變數的參考問題。
 
-簡單的做法就是「**共享不可變，可變不共享**」。
+簡單的做法就是<mark style="color:red;">「</mark><mark style="color:red;">**共享不可變，可變不共享**</mark><mark style="color:red;">」</mark>。
 
 ### alias (別名)
 
@@ -230,7 +230,7 @@ Alias的意思是“別名”。如果一個變數可以通過多種Path來訪�
 
 Mutation的意思是“改變”。如果我們通過某個變數修改了一塊記憶體，就是發生了mutation。Mutation意味著擁有“修改”許可權，我們可以寫入資料。
 
-`&mut`型借用也經常被稱為“獨佔指標”，`&`型借用也經常被稱為“共用指標”。
+<mark style="color:blue;">`&mut`</mark><mark style="color:blue;">型借用也經常被稱為“獨佔指標”，</mark><mark style="color:blue;">`&`</mark><mark style="color:blue;">型借用也經常被稱為“共用指標</mark>”。
 
 ### 不可變的借用
 
