@@ -120,6 +120,8 @@ fn makes_copy(some_integer: i32) {
 
 返回值也可以轉移所有權。
 
+<mark style="color:red;">變量的所有權總是遵循相同的模式：將值賦給另一個變量時移動它。當持有堆積中資料值的變量離開作用域時，其值將通過 drop 被清理掉，除非資料被移動為另一個變量所有</mark>。
+
 ```rust
 fn main() {
     let s1 = gives_ownership(); // gives_ownership 將返回值
