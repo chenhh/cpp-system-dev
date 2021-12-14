@@ -90,13 +90,13 @@ fn main(){
 
 
 
-| 整數類型 | 有符號 | 無符號 |
-| :--- | :--- | :--- |
-| 8-bit | i8 | u8 |
-| 16- bit | i16 | u16 |
-| 32-bit | i32 | u32 |
-| 64-bit | i64 | u64 |
-| 128-bit | i128 | u128 |
+| 整數類型         | 有符號   | 無符號   |
+| ------------ | ----- | ----- |
+| 8-bit        | i8    | u8    |
+| 16- bit      | i16   | u16   |
+| 32-bit       | i32   | u32   |
+| 64-bit       | i64   | u64   |
+| 128-bit      | i128  | u128  |
 | pointer size | isize | usize |
 
 關於各個整數類型所佔據的空間大小，在名字中就已經表現得很明確了，Rust原生支持了從8位元到128位元的整數。
@@ -126,7 +126,7 @@ fn main() {
 }
 ```
 
-在Rust中，我們可以為任何一個類型增加\(實作\)方法，整數也不例外。如std中對所有整數類型都有實作[pow](https://doc.rust-lang.org/std/primitive.i32.html#method.pow)方法。
+在Rust中，我們可以為任何一個類型增加(實作)方法，整數也不例外。如std中對所有整數類型都有實作[pow](https://doc.rust-lang.org/std/primitive.i32.html#method.pow)方法。
 
 ```rust
 
@@ -147,8 +147,8 @@ fn main() {
 
 Rust在這個問題上選擇的處理方式為：
 
-* 在debug模式下編譯器會自動插入整數溢出檢查，一旦發生溢出，則會引發panic；
-* 在release模式下，不檢查整數溢出，而是採用自動捨棄高位的方式。
+* <mark style="color:red;">在debug模式下編譯器會自動插入整數溢出檢查，一旦發生溢出，則會引發panic</mark>；
+* <mark style="color:red;">在release模式下，不檢查整數溢出，而是採用自動捨棄高位的方式</mark>。
 
 ```rust
 fn arithmetic(m: i8, n: i8) {
@@ -170,7 +170,7 @@ Rust編譯器還提供了一個獨立的編譯開關供我們使用，通過這�
 $ rustc -C overflow-checks=no test.rs
 ```
 
-如果在某些場景下，使用者確實需要更精細地自主控制整數溢出的行為，可以調用標準庫中的[checked\_\*](https://doc.rust-lang.org/std/primitive.i32.html#method.checked_add)、[saturating\_\*](https://doc.rust-lang.org/std/primitive.i32.html#method.saturating_add)和wrapping\_\*系列函數。
+如果在某些場景下，使用者確實需要更精細地自主控制整數溢出的行為，可以調用標準庫中的[checked\_\*](https://doc.rust-lang.org/std/primitive.i32.html#method.checked\_add)、[saturating\_\*](https://doc.rust-lang.org/std/primitive.i32.html#method.saturating\_add)和wrapping\_\*系列函數。
 
 ```rust
 fn main() {
@@ -200,7 +200,7 @@ fn main() {
 
 ## 浮點數類型
 
-Rust提供了基於IEEE 754-2008標準的浮點類型。按佔據空間大小區分，分別為f32和f64\(未明確指定類型時，預設為f64\)，其使用方法與整數差別不大。
+Rust提供了基於IEEE 754-2008標準的浮點類型。按佔據空間大小區分，分別為f32和f64(未明確指定類型時，預設為f64)，其使用方法與整數差別不大。
 
 ```rust
 fn main() {
@@ -224,11 +224,11 @@ pub enum FpCategory {
 }
 ```
 
-![IEEE754 &#x55AE;&#x7CBE;&#x5EA6;&#x6D6E;&#x9EDE;&#x6578;&#x3002;](../../.gitbook/assets/ieee754_single-precision-min.png)
+![IEEE754 單精度浮點數。](../../.gitbook/assets/ieee754\_single-precision-min.png)
 
 ### normal狀態
 
-在IEEE 754標準中，規定了浮點數的二進位表達方式：`x=（-1）^sign *（1+fraction）* 2^exponent`。其中sign\(s\)是符號位元，fraction\(M\)是分數\(fraction\)，exponent\(e\)是指數。分數M是一個\[0，1）範圍內的二進位表示的小數。
+在IEEE 754標準中，規定了浮點數的二進位表達方式：`x=（-1）^sign *（1+fraction）* 2^exponent`。其中sign(s)是符號位元，fraction(M)是分數(fraction)，exponent(e)是指數。分數M是一個\[0，1）範圍內的二進位表示的小數。
 
 以32位浮點為例，如果只有normal形式的話，0表示為所有位數全0，則最小的非零正數將是尾數最後一位元為1的數字，就是（1+ 2^（-23））\*2^（-127），而次小的數字為（1+2^（-22））\*2^（-127），這兩個數字的差距為2^（-23）\*2^（-127）=2^（-150），然而最小的數字和0之間的差距有（1+2^（-23））\*2^（-127），約等於2^（-127），**也就是說，數字在漸漸減少到0的過程中突然降到了0。**
 
@@ -275,7 +275,7 @@ fn main() {
 }
 ```
 
-NaN這個特殊值有個特殊的麻煩，主要問題還在於它不具備“全序”\(total order\)的特點。一個數字可以不等於自己。因為NaN的存在，浮點數是不具備“全序關係”（total order）的。關於“全序”和“偏序”的問題與 PartialOrd和Ord這兩個trait有關。
+NaN這個特殊值有個特殊的麻煩，主要問題還在於它不具備“全序”(total order)的特點。一個數字可以不等於自己。因為NaN的存在，浮點數是不具備“全序關係”（total order）的。關於“全序”和“偏序”的問題與 PartialOrd和Ord這兩個trait有關。
 
 ```rust
 fn main() {
@@ -289,21 +289,21 @@ fn main() {
 
 Rust裡面也有指標類型，而且不止一種指標類型。常見的幾種指標如下：
 
-| 類型名稱 | 說明 |
-| :--- | :--- |
-| Box&lt;T&gt; | 指向類型T，具有所有權的指標，有權釋放記憶體。 |
-| &T | 指向類型T的借用指標，也稱為引用，無權釋放記憶體，不可寫入資料。 |
-| &mut T | 指向類型T的mut型借用指標，無權釋放記憶體，可寫入資料。 |
-| \*const T | 指向類型T的唯讀裸指標，沒有生命週期資訊，不可寫入資料。 |
-| \*mut T | 指向類型T的唯讀裸指標，沒有生命週期資訊，可寫入資料。 |
+| 類型名稱      | 說明                               |
+| --------- | -------------------------------- |
+| Box\<T>   | 指向類型T，具有所有權的指標，有權釋放記憶體。          |
+| \&T       | 指向類型T的借用指標，也稱為引用，無權釋放記憶體，不可寫入資料。 |
+| \&mut T   | 指向類型T的mut型借用指標，無權釋放記憶體，可寫入資料。    |
+| \*const T | 指向類型T的唯讀裸指標，沒有生命週期資訊，不可寫入資料。     |
+| \*mut T   | 指向類型T的唯讀裸指標，沒有生命週期資訊，可寫入資料。      |
 
 除此之外，在標準庫中還有一種封裝起來的可以當作指標使用的類型，叫“智慧指標”（smart pointer）。
 
-| 類型名稱 | 說明 |
-| :--- | :--- |
-| Rc&lt;T&gt; | 指向類型T的引用計數指標，共享所有權，線程不安全。 |
-| Arc&lt;T&gt; | 指向類型T的原子型引用計數指標，共享所有權，線程安全。 |
-| Cow&lt;'a, T&gt; | Clone-on-write，寫入時複製指標。可能是借用指標，也可能是具有所有權的指標。 |
+| 類型名稱       | 說明                                           |
+| ---------- | -------------------------------------------- |
+| Rc\<T>     | 指向類型T的引用計數指標，共享所有權，線程不安全。                    |
+| Arc\<T>    | 指向類型T的原子型引用計數指標，共享所有權，線程安全。                  |
+| Cow<'a, T> | Clone-on-write，寫入時複製指標。可能是借用指標，也可能是具有所有權的指標。 |
 
 ## 類型轉換
 
@@ -319,7 +319,7 @@ fn main() {
 }
 ```
 
-as關鍵字也不是隨便可以用的，它只允許編譯器認為合理的類型轉換。任意類型轉換是不允許的，有些時候，甚至需要連續寫多個as才能轉成功，比如&i32類型就不能直接轉換為\*mut i32類型。
+as關鍵字也不是隨便可以用的，它只允許編譯器認為合理的類型轉換。任意類型轉換是不允許的，有些時候，甚至需要連續寫多個as才能轉成功，比如\&i32類型就不能直接轉換為\*mut i32類型。
 
 ```rust
 fn main() {
@@ -338,18 +338,17 @@ fn main() {
 
 as關鍵字對於表達式`e as U`，e為表達式，U為轉換的目標類型，合法的轉換型別如下表：
 
-| e的類型 | 目標類型 |
-| :--- | :--- |
+| e的類型                  | 目標類型                  |
+| --------------------- | --------------------- |
 | integer or float type | integer or float type |
-| C-like enum | Integer type |
-| bool or char | integer type |
-| u8 | char |
-| \*T | \*V where V: sized \* |
-| \*T where T: Sized | numeric type |
-| Integer type | \*V where V: sized |
-| &\[T; n\] | \*const T |
-| Function pointer | \*V where V: sized |
-| Function pointer | Integer |
+| C-like enum           | Integer type          |
+| bool or char          | integer type          |
+| u8                    | char                  |
+| \*T                   | \*V where V: sized \* |
+| \*T where T: Sized    | numeric type          |
+| Integer type          | \*V where V: sized    |
+| &\[T; n]              | \*const T             |
+| Function pointer      | \*V where V: sized    |
+| Function pointer      | Integer               |
 
 更複雜的類型轉換，可使用標準庫的From, Into等trait。
-
