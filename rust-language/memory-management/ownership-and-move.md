@@ -1,4 +1,4 @@
-# 所有權與移動\(ownership and move\)
+# 所有權與移動(ownership and move)
 
 ## 簡介
 
@@ -8,12 +8,12 @@
 * 借用（borrowing），及其相關功能「參照」（references）。
 * 生命週期 （lifetime），借用的進階概念。
 
-變數的所有權 \(ownership\) ，在 Rust 中每個變數都有其所屬的範圍 \(scope\) ，在變數的有效的範圍中，可以選擇將變數「借 \(borrow\)」給其它的 scope ，也可以將所有權整個轉移 \(move\) 出去，送給別人。
+變數的所有權 (ownership) ，在 Rust 中每個變數都有其所屬的範圍 (scope) ，在變數的有效的範圍中，可以選擇將變數「借 (borrow)」給其它的 scope ，也可以將所有權整個轉移 (move) 出去，送給別人。
 
-* 當然，送出去\(move\)的東西如果別人不還你的話是拿不回來。
-* 但借出去\(borrow\)的就只是暫時的給別人使用而已。
+* 當然，送出去(move)的東西如果別人不還你的話是拿不回來。
+* 但借出去(borrow)的就只是暫時的給別人使用而已。
 
-![rust&#x8A9E;&#x7FA9;&#x6A39;](../../.gitbook/assets/rust-min.jpg)
+![rust語義樹](../../.gitbook/assets/rust-min.jpg)
 
 語義樹，主要是想表達下面幾層意思：
 
@@ -21,9 +21,9 @@
 2. let繫結，繫結了什麼？變數 + 作用域 + 資料（記憶體）。
 3. move、lifetime、RAII都是和作用域相關的，所以想理解它們就先要理解作用域。
 
-## 所有權\(ownership\)
+## 所有權(ownership)
 
-所有權，顧名思義，至少應該包含兩個物件：“所有者”和“所有物”。在Rust中，“所有者”就是變數，“所有物”是資料，抽象來說，就是指某一片記憶體。let關鍵字，允許你繫結“所有者”和“所有物”。
+所有權，顧名思義，至少應該包含兩個物件：“所有者”和“所有物”。<mark style="color:red;">在Rust中，“所有者”就是變數，“所有物”是資料，抽象來說，就是指某一片記憶體。let關鍵字，允許你繫結“所有者”和“所有物”</mark>。
 
 “所有權”代表著以下意義：
 
@@ -32,6 +32,16 @@
 * 當變數所在的作用域結束的時候，變數以及它代表的值將會被銷毀。
 
 **這代表當綁定離開有效範圍，Rust 就會釋放所綁定的資源**。
+
+### 變數作用域
+
+```rust
+{                      // s 在這裡無效, 它尚未聲明
+    let s = "hello";   // 從此處起，s 是有效的
+
+    // 使用 s
+}                      // 此作用域已結束，s 不再有效r
+```
 
 ```rust
 fn main() {
@@ -42,10 +52,10 @@ fn main() {
 }
 ```
 
-* 當我們聲明一個變數s，並用String類型對它進行初始化的時候，這個變數s就成了這個字串的“所有者” let將s繫結至String，但這個所有權，是有範圍限制的，這個範圍就是作用域（scope），準確來說，應該叫擁有域（owner scope）。
+* 當我們聲明一個變數s，並用String類型對它進行初始化的時候，這個變數s就成了這個字串的“所有者” let將s繫結至String，但這個所有權，是有範圍限制的，這個範圍就是<mark style="color:red;">作用域（scope</mark>），準確來說，應該叫擁有域（owner scope）。
 * 如果我們希望修改這個變數，可以使用mut修飾s，然後調用String類型的成員方法來實現。
 * 當main函數結束的時候，s將會被解構，它管理的記憶體（不論是堆積上的，還是堆疊上的）則會被釋放。
-* 我們一般把變數從出生到死亡的整個階段，叫作一個變數的“生命週期”（lifetime）。比如這個例子中的區域變數s，它的生命週期就是從let語句開始，到main函數結束。
+* <mark style="color:blue;">我們一般把變數從出生到死亡的整個階段，叫作一個變數的“生命週期”（lifetime）</mark>。比如這個例子中的區域變數s，它的生命週期就是從let語句開始，到main函數結束。
 
 ```rust
 fn main() {
@@ -68,9 +78,9 @@ scope 1 {
 }
 ```
 
-在Rust裡面，不可以做“設定運算子重載”，若需要“深複製” \(deep copy\)（指的是對於複雜結構中所有元素的複製，而不是單純以共享指標指向該結構），必須手工調用clone方法。這個clone方法來自於std:clone::Clone這個trait。clone方法裡面的行為是可以自訂的。
+在Rust裡面，不可以做“設定運算子重載”，<mark style="color:red;">若需要“深複製” (deep copy)（指的是對於複雜結構中所有元素的複製，而不是單純以共享指標指向該結構），必須手工調用clone方法。</mark>這個clone方法來自於std:clone::Clone這個trait。clone方法裡面的行為是可以自訂的。
 
-## 移動語意\(move\)
+## 移動語意(move)
 
 一個變數可以把它擁有的值轉移給另外一個變數，稱為“所有權轉移”。設定陳述式、函式呼叫、函數返回等，都有可能導致所有權轉移。
 
@@ -94,12 +104,12 @@ fn main() {
 所有權轉移的步驟分解如下。
 
 1. main函式呼叫create函數。
-2. 在調用create函數的時候創建了字串，在堆疊上\(s\)和堆積上\(hello\)都分配有記憶體。區域變數s是這些記憶體的所有者。
+2. 在調用create函數的時候創建了字串，在堆疊上(s)和堆積上(hello)都分配有記憶體。區域變數s是這些記憶體的所有者。
 3. create函數返回的時候，需要將區域變數s移動到函數外面，這個過程就是簡單地按位元組複製memcpy。
 4. 同理，在調用consume函數的時候，需要將main函數中的區域變數轉移到consume函數，這個過程也是簡單地按位元組複製memcpy。
 5. 當consume函數結束的時候，它並沒有把內部的區域變數再轉移出來，這種情況下，consume內部區域變數的生命週期就該結束了。這個區域變數s生命週期結束的時候，會自動釋放它所擁有的記憶體，因此字串也就被釋放了。
 
-C++的做法就不一樣了，它允許賦值構造函數\(copy constructor\)、設定運算子\(assignment operator\)重載，因此在出現“構造”或者“賦值”操作的時候，有可能表達的是完全不同的含義，這取決於程式設計師如何實現重載。C++的這個設計具有巨大的靈活性，但是不恰當的實現也可能造成記憶體不安全。
+C++的做法就不一樣了，它允許賦值構造函數(copy constructor)、設定運算子(assignment operator)重載，因此在出現“構造”或者“賦值”操作的時候，有可能表達的是完全不同的含義，這取決於程式設計師如何實現重載。C++的這個設計具有巨大的靈活性，但是不恰當的實現也可能造成記憶體不安全。
 
 在C++裡面，`std::vector<int>v1=v2`；是複製語義，而Rust裡面的`let v1:Vec<i32>=v2`；是移動語義。如果要在Rust裡面實現複製語義，需要顯式寫出函式呼叫`let v1:Vec<i32>=v2.clone()`；
 
@@ -107,10 +117,10 @@ C++的做法就不一樣了，它允許賦值構造函數\(copy constructor\)、
 
 編譯器可以提前在當前調用堆疊中把大物件的空間分配好，然後把這個物件的指標傳遞給子函數，由子函數執行這個變數的初始化。這樣就避免了大物件的複製工作，參數傳遞只是一個指標而已。這麼做是完全滿足移動語義要求的，而且編譯器還有權利做更多類似的優化。
 
-## 複製語意\(copy\)
+## 複製語意(copy)
 
 * 此處的複製指的是隱式的copy，而非顯式的clone。
-* move可以類比成作業系統中的剪下\(或移動\)操作，移動後，原始的資料就不可再被使用。
+* move可以類比成作業系統中的剪下(或移動)操作，移動後，原始的資料就不可再被使用。
 
 預設的move語義是Rust的一個重要設計，但是任何時候需要複製都去調用clone函數會顯得非常煩瑣。對於一些簡單類型，比如整數、bool，讓它們在賦值的時候默認採用複製操作會讓語言更簡單。
 
@@ -130,14 +140,14 @@ fn main() {
 
 因為在Rust中有一部分特殊的類型，其變數綁定操作是copy語義。**所謂的copy語義，是指在執行變數綁定操作的時候，v2是對v1所屬資料的一份複製。v1所管理的這塊記憶體依然存在，並未失效，而v2是新開闢了一塊記憶體，它的內容是從v1管理的記憶體中複製而來的**。
 
-和手動調用clone方法效果一樣，`let v2=v1；`等效於`let v2=v1.clone（）；`。使用檔案系統來打比方。
+和手動調用clone方法效果一樣，`let v2=v1；`等效於`let v2=v1.clone();`。使用檔案系統來打比方。
 
 * copy語義就像“複製、粘貼”操作。操作完成後，原來的資料依然存在，而新的資料是原來資料的複製品。
 * move語義就像“剪切、粘貼”操作。操作完成後，原來的資料就不存在了，被移動到了新的地方。
 
 這兩個操作本身是一樣的，都是簡單的記憶體複製，區別在於複製完以後，原先那個變數的生命週期是否結束。
 
-Rust中，在普通變數綁定、函數傳參、模式匹配等場景下，凡是實現了`std::marker::Copy` trait的類型，都會執行copy語義。**基本類型，比如整數、浮點數、字元、bool等，都實現了Copy trait，因此具備copy語義。對於自訂類型，預設是沒有實現Copy trait的，但是我們可以手動實現**。
+Rust中，在普通變數綁定、函數傳參、模式匹配等場景下，<mark style="color:red;">凡是實現了</mark><mark style="color:red;">`std::marker::Copy`</mark> <mark style="color:red;"></mark><mark style="color:red;">trait的類型，都會執行copy語義</mark>。**基本類型，比如整數、浮點數、字元、bool等，都實現了Copy trait，因此具備copy語義。對於自訂類型，預設是沒有實現Copy trait的，但是我們可以手動實現**。
 
 ```rust
 struct Foo {
@@ -163,7 +173,7 @@ fn main() {
 
 編譯通過。現在Foo類型也擁有了複製語義。在執行變數綁定、函數參數傳遞的時候，原來的變數不會失效，而是會新開闢一塊記憶體，將原來的資料複製過來。
 
-絕大部分情況下，實現Copy trait和Clone trait是一個非常機械化的、重複性的工作，clone方法的函數體要對每個成員調用一下clone方法。**Rust提供了一個編譯器擴展derive attribute，來幫我們寫這些程式碼，其使用方式為`#[derive（Copy，Clone）]`。只要一個類型的所有成員都具有Clone trait，我們就可以使用這種方法來讓編譯器幫我們實現Clone trait了**。
+絕大部分情況下，實現Copy trait和Clone trait是一個非常機械化的、重複性的工作，clone方法的函數體要對每個成員調用一下clone方法。<mark style="color:red;">**Rust提供了一個編譯器擴展derive attribute，來幫我們寫這些程式碼，其使用方式為**</mark><mark style="color:red;">**`#[derive（Copy，Clone）]`**</mark><mark style="color:red;">**。只要一個類型的所有成員都具有Clone trait，我們就可以使用這種方法來讓編譯器幫我們實現Clone trait了**</mark>。
 
 ```rust
 // 由編譯器自動實現Foo的copy與clone trait
@@ -283,7 +293,7 @@ Rust裡面還有一個保留關鍵字box（注意是小寫）。它可以用於�
 
 ## clone與copy trait
 
-Rust中的[std::marker::Copy](https://doc.rust-lang.org/std/marker/trait.Copy.html)是一個特殊的trait，它給類型提供了“複製”語義。在Rust標準庫裡面，還有一個跟它很相近的trait，叫作[std::clone::Clone](https://doc.rust-lang.org/std/clone/trait.Clone.html) \(copy繼承自clone trait\)。很容易把這兩者混淆。
+Rust中的[std::marker::Copy](https://doc.rust-lang.org/std/marker/trait.Copy.html)是一個特殊的trait，它給類型提供了“複製”語義。在Rust標準庫裡面，還有一個跟它很相近的trait，叫作[std::clone::Clone](https://doc.rust-lang.org/std/clone/trait.Clone.html) (copy繼承自clone trait)。很容易把這兩者混淆。
 
 ```rust
 //  std::marker::Copy
@@ -297,13 +307,13 @@ pub trait Copy: Clone { }
 * Copy trait規定了這個類型在執行變數綁定、函數參數傳遞、函數返回等場景下的操作方式。即這個類型在這種場景下，必然執行的是“簡單記憶體複製”操作，這是由編譯器保證的，程式師無法控制。
 * Clone trait裡面的clone方法究竟會執行什麼操作，則是取決於程式師自己寫的邏輯。一般情況下，clone方法應該執行一個“深複製”操作，但這不是強制性的。
 * 如果你確實不需要Clone trait執行其他自訂操作（絕大多數情況都是這樣），編譯器提供了一個工具，我們可以在一個類型上添加`#[derive（Clone）]`，來讓編譯器幫我們自動生成那些重複的程式碼。_編譯器自動生成的clone方法非常機械，就是依次調用每個成員的clone方法_。
-* Rust語言規定了在`T：Copy` \(類型必須有實現copy\)的情況下，Clone trait代表的含義。即：當某變數`t：T`符合`T：Copy`時，它調用`t.clone（）`方法的含義必須等同於“簡單記憶體複製”。也就是說，clone的行為必須等同於`let x=std::ptr::read(&t);`，也等同於`let x=t;`。當`T:Copy`時，我們不要在Clone trait裡面亂寫自己的邏輯。所以，當我們需要指定一個類型是Copy的時候，最好使用`#[derive（Copy，Clone）]`方式，避免手動實現Clone導致錯誤。
+* Rust語言規定了在`T：Copy` (類型必須有實現copy)的情況下，Clone trait代表的含義。即：當某變數`t：T`符合`T：Copy`時，它調用`t.clone（）`方法的含義必須等同於“簡單記憶體複製”。也就是說，clone的行為必須等同於`let x=std::ptr::read(&t);`，也等同於`let x=t;`。當`T:Copy`時，我們不要在Clone trait裡面亂寫自己的邏輯。所以，當我們需要指定一個類型是Copy的時候，最好使用`#[derive（Copy，Clone）]`方式，避免手動實現Clone導致錯誤。
 
-### 
+###
 
 ### copy的含意
 
-Copy的全名是`std::marker::Copy`。請大家注意，[std::marker](https://doc.rust-lang.org/std/marker/index.html)模組裡面所有的trait都是特殊的trait。目前穩定的有四個，它們是Copy、Send、Sized、Sync、\(目前多了一個unpin\)。
+Copy的全名是`std::marker::Copy`。請大家注意，[std::marker](https://doc.rust-lang.org/std/marker/index.html)模組裡面所有的trait都是特殊的trait。目前穩定的有四個，它們是Copy、Send、Sized、Sync、(目前多了一個unpin)。
 
 **它們的特殊之處在於:它們是跟編譯器密切綁定的，impl這些trait對編譯器的行為有重要影響**。在編譯器眼裡，它們與其他的trait不一樣。**這幾個trait內部都沒有方法，它們的唯一任務是給類型打一個“標記”，表明它符合某種約定——這些約定會影響編譯器的靜態檢查以及程式碼生成**。
 
@@ -324,7 +334,7 @@ Copy這個trait在編譯器的眼裡代表的是什麼意思呢？簡單點總�
 
 **Rust規定，對於自訂類型，只有所有成員都實現了Copy trait，這個類型才有資格實現Copy trait**。
 
-常見的數字（整數、浮點數）類型、bool類型、共用借用指標&，都是具有Copy屬性的類型。而Box、Vec、可寫借用指標&mut等類型都是不具備Copy屬性的類型。
+常見的數字（整數、浮點數）類型、bool類型、共用借用指標&，都是具有Copy屬性的類型。而Box、Vec、可寫借用指標\&mut等類型都是不具備Copy屬性的類型。
 
 對於陣列類型，如果它內部的元素類型是Copy，那麼這個陣列也是Copy類型。對於元組tuple類型，如果它的每一個元素都是Copy類型，那麼這個tuple也是Copy類型。
 
@@ -379,5 +389,4 @@ struct MyStruct(i32);
 
 ## 參考資料
 
-* [\[知乎\] Rust所有權語義模型](https://zhuanlan.zhihu.com/p/27571264?group_id=862978524611497984)
-
+* [\[知乎\] Rust所有權語義模型](https://zhuanlan.zhihu.com/p/27571264?group\_id=862978524611497984)
