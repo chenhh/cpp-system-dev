@@ -124,6 +124,27 @@ enum Result<T, E>{
 
 在Rust標準庫中，可以找到許多以Result命名的型別，它們通常是Result泛型的特定版本，比如<mark style="color:blue;">File::open</mark>的返回值就是把T替換成了<mark style="color:blue;">std::fs::File</mark>，把E替換成了`std::io::Error`。
 
+```rust
+use std::fs::File;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => {
+            panic!("Problem opening the file: {:?}", error)
+        },
+    };
+}
+```
+
+注意與 Option 枚舉一樣，Result 枚舉和其成員也被導入到了 prelude 中，所以就不需要在 match 分支中的 Ok 和 Err 之前指定 Result::。
+
+當結果是 Ok 時，返回 Ok 成員中的 file 值，然後將這個檔案控制代碼賦值給變量 f。match 之後，我們可以利用這個檔案控制代碼來進行讀寫。
+
+從 File::open 得到 Err 值的情況。在這種情況下，我們選擇調用 panic! 巨集。
+
 ### panic::catch\_unwind
 
 ```cpp
