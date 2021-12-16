@@ -2,11 +2,12 @@
 
 ## 簡介
 
-Rust的字串有點複雜，主要是跟所有權有關。Rust的字串涉及兩種類型，一種是`&str`，另外一種是`String`。
+Rust的字串有點複雜，主要是跟所有權有關。Rust的字串涉及兩種類型，一種是`&str(slice類型)`，另外一種是`String`。
 
 ## \&str
 
-str是Rust的內置類型，不可修改指向的字串。\&str是對str的借用。**Rust的字串內部預設是使用utf-8編碼格式的。而內置的char類型是4位元組長度的，存儲的內容是Unicode Scalar Value**。所以，Rust裡面的字串不能視為char類型的陣列，而更接近u8類型的陣列。
+* \&str是Rust的內置類型，不可修改指向的字串。\&str是對str的借用。
+* **Rust的字串內部預設是使用utf-8編碼格式的。而內置的char類型是4位元組長度的，存儲的內容是Unicode Scalar Value**。所以，Rust裡面的字串不能視為char類型的陣列，而更接近u8類型的陣列。
 
 ```rust
 fn main() {
