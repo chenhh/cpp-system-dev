@@ -107,15 +107,19 @@ fn main() {
 
 Rust的記憶體管理方式和C++有很大的相似之處。如果用C++來對比，Rust的String類型類似於std::string，而Rust的\&str類型類似於std::string\_view。
 
-```cpp
-#include <iostream>
-#include <string>
-#include <string_view>
+## string slice
 
-int main() {
-    std::string s = "Hello world";
-    std::string_view v( & s[5], 5);
-    std::cout << "Size of string_view:" << sizeof(v) << "\n" <<
-        "Value: " << v << std::endl;
+字串 slice（string slice）是 String 中一部分值的引用。它不是對整個 String 的引用，而是對部分 String 的引用。
+
+```rust
+fn main() {
+    let s = String::from("hello world");
+
+    let hello = &s[0..5];
+    let world = &s[6..11];
+    println!("{}-{}", hello, world);
 }
 ```
+
+![hello world slice](../../.gitbook/assets/hello\_world\_slice-min.png)
+
