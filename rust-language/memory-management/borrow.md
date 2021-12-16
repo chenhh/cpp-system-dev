@@ -160,6 +160,7 @@ Rust 沒有 null pointer。在你拿一個合法物件的位址來初始化指�
 借用規則
 ----
 
+* <mark style="color:red;">引用必須總是有效的</mark>。
 * <mark style="color:red;">借用指標不能比它指向的變數存在的時間更長</mark>。
   * **借用指標只能臨時地擁有對這個變數讀或寫的許可權，沒有義務管理這個變數的生命週期。**因此，借用指標的生命週期絕對不能大於它所引用的原來變數的生命週期，否則就是<mark style="color:red;">懸空指標(dangling pointer)</mark>，會導致記憶體不安全。
 * 使用 `&` 取得變數的參考後，你只能透過參考讀取內容，而不能寫入資料。這樣的取址行為，Rust 稱之為 immutable borrow。
@@ -208,6 +209,8 @@ fn main() {
 }
 ```
 
+指標借用後，會被凍結：
+
 ```rust
 fn main() {
     let mut x = 1_i32;
@@ -216,6 +219,20 @@ fn main() {
     // 因此x不可再被存取
     x = 2; // compile error
     println!("value of pointed : {}", p);
+}
+```
+
+可以使用大括號來創建一個新的作用域，以允許擁有多個可變引用，只是不能在同一作用域同時存在。
+
+```rust
+fn main() {
+    let mut s = String::from("hello");
+    let r2 = &s; // 沒問題
+    //let r3 = &mut s; // 大問題
+    {
+        let r3 = &mut s;
+    } // r3 在這裡離開了作用域，所以我們完全可以創建一個新的引用
+    println!("s={}", s);
 }
 ```
 
@@ -315,9 +332,7 @@ fn main() {
 
 
 
-
-
-### 不可同時有多個可變借用
+### &#xD;不可同時有多個可變借用
 
 ```rust
 fn main() {
