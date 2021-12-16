@@ -1,6 +1,6 @@
 # 複合資料類型
 
-## tuple\(元組\)
+## tuple(元組)
 
 tuple指的是“元組”類型，它通過圓括號包含一組運算式構成。tuple內的元素沒有名字。tuple是把幾個相同或相異類型組合到一起的最簡單的方式。
 
@@ -30,7 +30,7 @@ fn main() {
 }
 ```
 
-### unit\(單元類型\)
+### unit(單元類型)
 
 元組內部也可以一個元素都沒有。這個類型單獨有一個名字，叫unit（單元類型）。
 
@@ -54,7 +54,7 @@ Empty emp;
 assert(sizeof(emp) != 0);
 ```
 
-## struct\(結構體\)
+## struct(結構體)
 
 struct與tuple類似，也可以把多個類型組合到一起，作為新的類型。**區別在於，struct每個元素都有自己的名字**。
 
@@ -196,6 +196,8 @@ fn main() {
 
 ## enum
 
+枚舉允許你通過列舉可能的 成員（variants） 來定義一個類型。
+
 enum類型在Rust中代表的就是多個成員的OR關係（同時間只有一個成員可被使用）。
 
 在Rust中，enum和struct為內部成員創建了新的名字空間。如果要訪問內部成員，可以使用：：符號。因此，不同的enum中重名的元素也不會互相衝突。
@@ -317,9 +319,9 @@ fn main() {
 }
 ```
 
-### 標準庫內的Option&lt;T&gt;
+### 標準庫內的Option\<T>
 
-Rust的core與std庫中有一個極其常用的enum類型[Option&lt;T&gt;](https://doc.rust-lang.org/core/option/index.html)，它的定義如下：
+Rust的core與std庫中有一個極其常用的enum類型[Option\<T>](https://doc.rust-lang.org/core/option/index.html)，它的定義如下：
 
 ```rust
 enum Option<T> {
@@ -330,7 +332,18 @@ enum Option<T> {
 
 由於它實在是太常用，標準庫將Option以及它的成員Some、None都加入到了Prelude中，使用者甚至不需要use語句聲明就可以直接使用。
 
-它表示的含義是“類型T的值要麼存在、要麼不存在”。比如Option&lt;i32&gt;表達的意思就是“可以是一個i32類型的值，或者沒有任何值”。
+它表示的含義是“<mark style="color:red;">類型T的值要麼存在、要麼不存在</mark>”。比如Option\<i32>表達的意思就是“可以是一個i32類型的值，或者沒有任何值”。
+
+從類型系統的角度來表達這個概念就意味著<mark style="color:blue;">編譯器需要檢查是否處理了所有應該處理的情況</mark>，這樣就可以避免在其他編程語言中非常常見的 bug。
+
+Rust 並沒有空值，不過它確實擁有一個可以編碼存在或不存在概念的枚舉，即為Option\<T>。
+
+```rust
+let some_number = Some(5);
+let some_string = Some("a string");
+
+let absent_number: Option<i32> = None;
+```
 
 ## 類型遞迴定義
 
@@ -360,7 +373,7 @@ error[E0072]: recursive type `Recursive` has infinite size
 
 。Rust是允許使用者手工控制記憶體佈局的語言。直接使用類型遞迴定義的問題在於，當編譯器計算Recursive這個類型大小的時候：`size_of::<Recursive>() == 4 + size_of::<Recursive>()` 這個方程在實數範圍內無解。
 
-解決辦法很簡單，用指標間接引用就可以了，因為指標的大小是固定的\(32-bit或64-bit\)。
+解決辦法很簡單，用指標間接引用就可以了，因為指標的大小是固定的(32-bit或64-bit)。
 
 ```rust
 struct Recursive {
@@ -368,4 +381,3 @@ struct Recursive {
     rec: Box<Recursive>,
 }
 ```
-
