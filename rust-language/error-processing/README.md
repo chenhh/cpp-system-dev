@@ -145,6 +145,36 @@ fn main() {
 
 從 File::open 得到 Err 值的情況。在這種情況下，我們選擇調用 panic! 巨集。
 
+### 匹配不同的錯誤
+
+如果 File::open 因為檔案不存在而失敗，我們希望創建這個檔案並返回新檔案的控制代碼。如果 File::open 因為任何其他原因失敗，例如沒有打開檔案的權限，我們仍然希望 panic!
+
+```rust
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let f = File::open("hello.txt");
+
+    let f = match f {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
+            other_error => panic!("Problem opening the file: {:?}", other_error),
+        },
+    };
+}
+```
+
+io::ErrorKind 是一個標准庫提供的枚舉，它的成員對應 io 操作可能導致的不同錯誤類型。我們感興趣的成員是 ErrorKind::NotFound，它代表嘗試打開的檔案並不存在。
+
+這樣，match 就匹配完 f 了，不過對於 error.kind() 還有一個內層 match。
+
+我們希望在內層 match 中檢查的條件是 error.kind() 的返回值是否為 ErrorKind的 NotFound 成員。如果是，則嘗試通過 File::create 創建檔案。然而因為 File::create 也可能會失敗，還需要增加一個內層 match 語句。當檔案不能被打開，會列印出一個不同的錯誤資訊。外層 match 的最後一個分支保持不變，這樣對任何除了檔案不存在的錯誤會使程式 panic。
+
 ### panic::catch\_unwind
 
 ```cpp
