@@ -94,26 +94,26 @@ catch(Exception e) {
 
 ## Rust的Panic！
 
-Rust裡沒有異常。但如果非要和異常機制進行對映，Rust可以說做的相當決絕。
+Rust裡沒有異常。但如果非要和異常機制進行對映，Rust可以說做的相當徹底。
 
-Rust把錯誤分成了兩大類。
+Rust把錯誤分成了兩大類：
 
-* 一類是不可修復錯誤，建議使用panic來處理。對於不可修復錯誤，本質上沒有辦法在程式執行階段做好處理的，那麼就應該用panic讓程式主動退出，由開發者來修復源碼，這是唯一合理的方案。
-* 另外一類錯誤是可修復錯誤，一般使用返回值來處理。比如打開檔出錯這種問題，應該是設計階段能預計到的，可以在執行階段更好處理的問題，就適合採用這種方案。
+* <mark style="color:purple;">一類是不可修復錯誤，建議使用panic來處理</mark>。對於不可修復錯誤，本質上沒有辦法在程式執行階段做好處理的，那麼就應該用panic讓程式主動退出，由開發者來修復程式碼，這是唯一合理的方案。
+* <mark style="color:purple;">另外一類錯誤是可修復錯誤，一般使用返回值來處理</mark>。比如打開檔案出錯這種問題，應該是設計階段能預計到的，可以在執行階段更好處理的問題，就適合採用這種方案。
 
 ### 0 正常，以返回值的形式。&#xD;
 
 相當於壓縮了上一節中的0、1、2項。沒有什麼情理中的意外，網絡連不上、檔案找不到、非法輸入，統統都用返回值的方式。
 
-### 1 致命錯誤，不可恢復，非崩不可。
+### 1 致命錯誤，不可恢復，非崩潰不可。
 
-* 一旦存在不可恢復的錯誤，Rust使用Panic！巨集來終止程式（執行緒）。一旦Panic！巨集出手，基本沒得救（panic::catch\_unwind是個例外，稍後說）。執行時預設會進行stack unwind（棧反解），一層層上去，直到執行緒的頂端。
-* 有些情況Panic！是你的程式所依賴的庫產生的，比如陣列越界存取時的實現。
-* 另一種情況，是你自己的程式邏輯判斷產生了不可恢復的錯誤，可以手動觸發Panic！巨集來終止程式。Panic！的使用與throw很類似。
+* 一旦存在不可恢復的錯誤，Rust使用Panic！巨集來終止程式（執行緒）。一旦Panic！巨集出手，基本沒得救（`panic::catch_unwind`是個例外，稍後說）。執行時預設會進行stack unwind（堆疊反解），一層層上去，直到執行緒的頂端。
+* 有些情況panic！是你的程式所依賴的函式庫產生的，比如陣列越界存取時的實現。
+* 另一種情況，是你自己的程式邏輯判斷產生了不可恢復的錯誤，可以手動觸發panic！巨集來終止程式。panic！的使用與throw很類似。
 
 ## &#x20;Rust的返回值Result
 
-對於可恢復的錯誤，Rust一律使用返回值來進行檢查，而且提倡採用內建列舉Result，還在實踐層面給了一定的約束：對於返回值為Result型別的函式，呼叫方如果沒有進行接收，編譯期會產生警告。很多庫函式都通過Result來告知呼叫方執行結果，讓呼叫方來決定是否嚴重到了使用Panic！的程度。
+<mark style="color:red;">對於可恢復的錯誤，Rust一律使用返回值來進行檢查，而且提倡採用內建列舉</mark><mark style="color:red;">`Result`</mark>，還在實作層面給了一定的約束：<mark style="color:blue;">對於返回值為Result型別的函式，呼叫方如果沒有進行接收，編譯期會產生警告</mark>。很多庫函式都通過Result來告知呼叫方執行結果，讓呼叫方來決定是否嚴重到了使用Panic！的程度。
 
 ```cpp
 enum Result<T, E>{
@@ -122,7 +122,7 @@ enum Result<T, E>{
 }
 ```
 
-在Rust標準庫中，可以找到許多以Result命名的型別，它們通常是Result泛型的特定版本，比如File::open的返回值就是把T替換成了std::fs::File，把E替換成了std::io::Error。
+在Rust標準庫中，可以找到許多以Result命名的型別，它們通常是Result泛型的特定版本，比如<mark style="color:blue;">File::open</mark>的返回值就是把T替換成了<mark style="color:blue;">std::fs::File</mark>，把E替換成了`std::io::Error`。
 
 ### panic::catch\_unwind
 
@@ -152,7 +152,7 @@ catch\_unwind 一般是用來在多執行緒程式裡面在將掛掉的執行緒
 
 Rust 錯誤處理本質上還是基於返回值的，很多基於返回值做錯誤處理的語言是將錯誤直接硬編碼到正確值上，或者返回兩個值，前者例如 C 在很多時候都是直接把正常情況永遠不會出現的值作為錯誤值，後者例如 Go 同時返回兩個值來進行錯誤處理。
 
-而 Rust 則將兩個可能的值用 enum 類型表示，enum 在函數式語言裡面叫做代數數據類型(algebraic data type)，而且是和類型(sum type)，表示兩個可能的值一次只能取一個。
+而 Rust 則將兩個可能的值用 enum 類型表示，enum 在函數式語言裡面叫做代數資料類型(algebraic data type)，而且是和類型(sum type)，表示兩個可能的值一次只能取一個。
 
 ```cpp
 enum Option<T> {
@@ -166,9 +166,9 @@ enum Result<T, E> {
 }
 ```
 
-Rust用於錯誤處理的最基本的類型就是我們常見的Option\<T>類型。**用 Option\<T> 表示錯誤時一般不關心錯誤原因，出錯時直接返回空值 None** 。一般就直接用 Option\<T> 例如從 HashMap 裡面取值或者對 Vector 進行 pop 操作，前者出錯了只可能是對應的 key 不存在，後者出錯只可能是 Vector 已經是空的了。
+Rust用於錯誤處理的最基本的類型就是我們常見的Option\<T>類型。<mark style="color:red;">**用 Option\<T> 表示錯誤時一般不關心錯誤原因，出錯時直接返回空值 None**</mark> 。一般就直接用 Option\<T> 例如從 HashMap 裡面取值或者對 Vector 進行 pop 操作，前者出錯了只可能是對應的 key 不存在，後者出錯只可能是 Vector 已經是空的了。
 
-而 Result\<T, E> 則將錯誤的不同原因包括進來了，Option\<T> 相當於 Result\<T, ()>。而如果錯誤可能是多種原因造成的則用 Result\<T, E> 來表示，例如 IO 錯誤，原因可能是 NotFound, PermissionDenied, AlreadyExists, InvalidData…。
+<mark style="color:red;">而 Result\<T, E> 則將錯誤的不同原因包括進來了，Option\<T> 相當於 Result\<T, ()></mark>。而如果錯誤可能是多種原因造成的則用 Result\<T, E> 來表示，例如 IO 錯誤，原因可能是 NotFound, PermissionDenied, AlreadyExists, InvalidData…。
 
 在看各種文檔或讀別人的程式碼時發現 Result\<T> 的錯誤類型時可能會有點小疑惑。因為Result\<T> 是用到了類型別名。
 
