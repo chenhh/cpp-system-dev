@@ -382,3 +382,67 @@ fn main() {
     }
 }
 ```
+
+## match
+
+Rust 有一個叫做 match 的極為強大的控制流運算符，它允許我們將一個值與一系列的模式相比較，並根據相匹配的模式執行相應代碼。模式可由字面值、變量、萬用字元和許多其他內容構成；
+
+<mark style="color:blue;">當 match 表達式執行時，它將結果值按順序與每一個分支的模式相比較</mark>。如果模式匹配了這個值，這個模式相關聯的代碼將被執行。如果模式並不匹配這個值，將繼續執行下一個分支
+
+```rust
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+// 表達式較簡短時，不需使用括號，也可用括號將結果部份包起來
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => {
+            println!("Lucky penny!");
+            1
+        },
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+}
+```
+
+<mark style="color:green;">一個分支有兩個部分：一個模式和一些代碼</mark>。第一個分支的模式是值 Coin::Penny 而之後的 => 運算符將模式和將要運行的代碼分開。這裡的代碼就僅僅是值 1。每一個分支之間使用逗號分隔。
+
+### 匹配 Option
+
+R<mark style="color:red;">ust 中的匹配是 窮盡的（exhaustive）：必須窮舉到最後的可能性來使代碼有效</mark>。特別的在這個 Option 的例子中，Rust 防止我們忘記明確的處理 None 的情況。
+
+```rust
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
+
+let five = Some(5);
+let six = plus_one(five);
+let none = plus_one(None);
+```
+
+### 通配模式和 \_ 佔位符
+
+我們希望對一些特定的值採取特殊操作，而對其他的值採取默認操作。
+
+```rust
+let dice_roll = 9;
+match dice_roll {
+    3 => add_fancy_hat(),
+    7 => remove_fancy_hat(),
+    _ => reroll(), // other conditions, 滿足窮舉性要求
+}
+
+fn add_fancy_hat() {}
+fn remove_fancy_hat() {}
+fn reroll() {}
+```
