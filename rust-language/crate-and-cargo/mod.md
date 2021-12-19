@@ -55,7 +55,7 @@ fn work2() {}
 fn work3() {}
 ```
 
-因為lib.rs是這個crate的入口，我們需要在這裡聲明它的所有子模組，否則caller.rs和worker.rs都不會被當成這個項目的源碼編譯。
+<mark style="color:blue;">因為lib.rs是這個crate的入口，我們需要在這裡聲明它的所有子模組，否則caller.rs和worker.rs都不會被當成這個項目的程式碼編譯</mark>。
 
 ### 方案三：如果worker.rs這個檔包含的內容太多，我們還可以繼續分成幾個檔
 
@@ -85,8 +85,8 @@ fn work3() {}
 
 * 一是用pub修飾的trait內部的關聯元素（associated item），預設是公開的；
 * 二是pub enum內部的成員預設是公開的。
-
-·如果一個元素是私有的，那麼只有本模組內的元素以及它的子模組可以訪問；·如果一個元素是公開的，那麼上一層的模組就有權訪問它。
+* <mark style="color:blue;">如果一個元素是私有的，那麼只有本模組內的元素以及它的子模組可以訪問</mark>；
+* <mark style="color:red;">如果一個元素是公開的，那麼上一層的模組就有權訪問它</mark>。
 
 
 
@@ -112,7 +112,7 @@ fn call_fn_outside() {
 }
 ```
 
-top\_mod1外部的函數call\_fn\_outside\(\)，有權訪問method1\(\)，因為它是用pub修飾的。同樣也可以訪問method2\(\)，因為inner\_mod1是pub的，而且method2也是pub的。而inner\_mod2不是pub的，所以外部的函數是沒法訪問method4的。但是call\_fn\_inside是有權訪問method4的，因為它在method4所處模組的子模組中。
+top\_mod1外部的函數call\_fn\_outside()，有權訪問method1()，因為它是用pub修飾的。同樣也可以訪問method2()，因為inner\_mod1是pub的，而且method2也是pub的。而inner\_mod2不是pub的，所以外部的函數是沒法訪問method4的。但是call\_fn\_inside是有權訪問method4的，因為它在method4所處模組的子模組中。
 
 ### 重新導出
 
@@ -177,7 +177,7 @@ mod top_mod {
 
 Rust裡面的路徑有不同寫法，它們代表的含義如下：
 
-### 以::開頭的路徑，代表全域路徑。它是從crate的根部開始算。
+### 以::開頭的路徑，代表全域路徑。它是從crate的根部開始算。&#xD;
 
 ```rust
 mod top_mod1 {
@@ -256,4 +256,3 @@ fn call() {
 use std::result::Result as StdResult;
 use std::io::Result as IoResult;
 ```
-

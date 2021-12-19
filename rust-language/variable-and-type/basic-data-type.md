@@ -35,6 +35,32 @@ fn main() {
 }
 ```
 
+```rust
+fn main() {
+    // 整数相加
+    println!("1 + 2 = {}", 1u32 + 2);
+
+    // 整数相减
+    println!("1 - 2 = {}", 1i32 - 2);
+    // 试一试 ^ 尝试将 `1i32` 改为 `1u32`，体会为什么类型声明这么重要
+
+    // 短路求值的布尔逻辑
+    println!("true AND false is {}", true && false); // false
+    println!("true OR false is {}", true || false); // true
+    println!("NOT true is {}", !true); // false
+
+    // 位运算
+    println!("0011 AND 0101 is {:04b}", 0b0011u32 & 0b0101); // 0001
+    println!("0011 OR 0101 is {:04b}", 0b0011u32 | 0b0101);  // 01111
+    println!("0011 XOR 0101 is {:04b}", 0b0011u32 ^ 0b0101); // 0110
+    println!("1 << 5 is {}", 1u32 << 5); // 32
+    println!("0x80 >> 2 is 0x{:x}", 0x80u32 >> 2); //0x20
+
+    // 使用下划线改善数字的可读性！
+    println!("One million is written as {}", 1_000_000u32);
+}
+```
+
 bool類型運算式可以用在if/while等運算式中，作為條件運算式。
 
 ```rust
@@ -122,7 +148,8 @@ fn main() {
     let var6 = 123usize; // i6變數是usize類型
     let var7 = 0x_ff_u8; // i7變數是u8類型
     let var8 = 32;       // 不寫類型,預設為 i32 類型
-    println!("{}, {}, {}", var6, var7, var8);
+    let an_integer   = 5i32; // 後缀说明
+    println!("{}, {}, {}, {}", var6, var7, var8, an_integer);
 }
 ```
 

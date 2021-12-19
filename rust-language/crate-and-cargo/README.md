@@ -190,7 +190,9 @@ cargo也支持設定檔。設定檔可以定制cargo的許多行為，就像我�
 
 cargo的workspace概念，是為了解決多crate的互相協調問題而存在的。假設現在我們有一個比較大的項目。我們把它拆分成了多個crate來組織，就會面臨一個問題：不同的crate會有各自不同的Cargo.toml，編譯的時候它們會各自產生不同的Cargo.lock檔，我們無法保證所有的crate對同樣的依賴項使用的是同樣的版本號。
 
-為了讓不同的crate之間能共用一些資訊，cargo提供了一個workspace的概念。一個workspace可以包含多個專案；所有的項目共用一個Cargo.lock檔，共用同一個輸出目錄；一個workspace內的所有項目的公共依賴項都是同樣的版本，輸出的目的檔案都在同一個資料夾內。workspace同樣是用Cargo.toml來管理的。我們可以把所有的項目都放到一個資料夾下面。在這個資料夾下寫一個Cargo.toml來管理這裡的所有專案。
+為了讓不同的crate之間能共用一些資訊，cargo提供了一個workspace的概念。
+
+<mark style="color:blue;">一個workspace可以包含多個專案；所有的項目共用一個Cargo.lock檔，共用同一個輸出目錄；</mark>一個workspace內的所有項目的公共依賴項都是同樣的版本，輸出的目的檔案都在同一個資料夾內。workspace同樣是用Cargo.toml來管理的。我們可以把所有的項目都放到一個資料夾下面。在這個資料夾下寫一個Cargo.toml來管理這裡的所有專案。
 
 Cargo.toml檔中要寫一個\[workspace]的配置：
 
@@ -245,7 +247,7 @@ build.rs裡面如果需要讀取當前crate的一些資訊，可以通過環境�
 
 ## prelude模組
 
-除此之外，標準庫中的某些type、trait、function、macro等實在是太常用了。每次都寫use語句確實非常無聊，因此標準庫提供了一個std：：prelude模組，在這個模組中匯出了一些最常見的類型、trait等東西，編譯器會為用戶寫的每個crate自動插入一句話：
+除此之外，標準庫中的某些type、trait、function、macro等實在是太常用了。每次都寫use語句確實非常無聊，因此標準庫提供了一個`std::prelude`模組，在這個模組中匯出了一些最常見的類型、trait等東西，編譯器會為用戶寫的每個crate自動插入一句話：
 
 ```rust
 use std::prelude::*;
