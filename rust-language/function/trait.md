@@ -11,7 +11,7 @@
 * trait可以不包含任何方法，用於給類型做標籤（marker），以此來描述類型的一些重要特性；
 * trait可以包含常量。
 
-## 成員函數\(membership function\)
+## 成員函數(membership function)
 
 trait中可以定義函數，稱為該trait的成員函數。該函數可直接實作，等到imp時再實作即可。
 
@@ -27,9 +27,9 @@ trait Shape {
 
 Rust中Self（大寫S）和self（小寫s）都是關鍵字，大寫S的是類型名，小寫s的是變數名，一定要注意區分。
 
-* trait中具有receiver參數的函數，我們稱為“方法”（method）可以通過變數實例使用小數點來調用。
-* trait中沒有receiver參數的函數，我們稱為“靜態函數”（static function），可以通過類型加雙冒號：：的方式來調用。
-* **在Rust中，函數和方法沒有本質區別**。
+* <mark style="color:blue;">trait中具有receiver參數的函數，我們稱為“方法”（method）</mark>可以通過變數實例使用小數點來調用。
+* <mark style="color:blue;">trait中沒有receiver參數的函數，我們稱為“靜態函數”（static function）</mark>，可以通過類型加雙冒號::的方式來調用。
+* **在Rust中，函數和方法沒有本質區別(與變數是否實例化無關?)**。
 
 對於第一個self參數，常見的類型有`self:Self`、`self:&Self`、`self:&mut Self`等類型。對於以上這些類型，Rust提供了一種簡化的寫法，我們可以將參數簡寫為`self`、`&self`、`&mut self`。
 
@@ -37,11 +37,11 @@ self參數只能用在第一個參數的位置。請注意“變數self”和“
 
 ```rust
 trait T {
-    // 參數為self, 類型為Self
+    // 參數為self, 類型為Self, copy or move
     fn method1(self: Self);
-    // 參數為self, 類型為&Self
+    // 參數為self, 類型為&Self, immutable borrow
     fn method2(self: &Self);
-    // 參數為self, 類型為&mut Self
+    // 參數為self, 類型為&mut Self, mutable borrow
     fn method3(self: &mut Self);
 }
 // 上下兩種寫法等價
@@ -214,7 +214,7 @@ fn main() {
 
 即使實作的類型不是在當前的專案中聲明的，我們依然可以為它增加一些成員方法。
 
-### 孤兒規則\(orphan rule\)
+### 孤兒規則(orphan rule)
 
 但我們也不是隨隨便便就可以這麼做的，Rust對此有一個規定。在聲明trait和impl trait的時候，**Rust規定了一個Coherence Rule（一致性規則）或稱為Orphan Rule（孤兒規則）：impl塊要麼與trait的聲明在同一個的crate中，要麼與類型的聲明在同一個crate中**。
 
@@ -236,7 +236,7 @@ Rust是一種使用者可以對記憶體有精確控制能力的強類型語言�
 
 而trait本身既不是具體類型，也不是指標類型，它只是定義了針對類型的、抽象的“約束”。不同的類型可以實現同一個trait，滿足同一個trait的類型可能具有不同的大小。因此，trait在編譯階段沒有固定大小，目前我們不能直接使用trait作為執行個體變數、參數、返回值。
 
-## 完整函式呼叫語法\(Fully Qualified Syntax\)
+## 完整函式呼叫語法(Fully Qualified Syntax)
 
 Fully Qualified Syntax提供一種無歧義的函式呼叫語法，允許程式師精確地指定想調用的是那個函數。以前也叫UFCS（universal function call syntax），也就是所謂的“通用函式呼叫語法”。
 
@@ -278,7 +278,7 @@ fn main() {
 
 成員方法可以通過變數加小數點的方式調用。變數加小數點的調用方式在大部分情況下看起來更簡單更美觀，完全可以視為一種語法糖。
 
-需要注意的是，通過小數點語法調用方法調用，有一個“隱藏著”的“取引用”步驟。雖然我們看起來原始程式碼長的是這個樣子me.start\(\)，但是大家心裡要清楚，真正傳遞給start\(\)方法的參數是&me而不是me，這一步是編譯器自動幫我們做的。不論這個方法接受的self參數究竟是Self、&Self還是&mut Self，最終在源碼上，我們都是統一的寫法：variable.method\(\)。而如果用UFCS語法來調用這個方法，我們就不能讓編譯器幫我們自動取引用了，必須手動寫清楚。
+需要注意的是，通過小數點語法調用方法調用，有一個“隱藏著”的“取引用”步驟。雖然我們看起來原始程式碼長的是這個樣子me.start()，但是大家心裡要清楚，真正傳遞給start()方法的參數是\&me而不是me，這一步是編譯器自動幫我們做的。不論這個方法接受的self參數究竟是Self、\&Self還是\&mut Self，最終在源碼上，我們都是統一的寫法：variable.method()。而如果用UFCS語法來調用這個方法，我們就不能讓編譯器幫我們自動取引用了，必須手動寫清楚。
 
 成員方法和普通函數其實沒什麼本質區別，只是多了一層名稱空間而已。
 
@@ -443,7 +443,7 @@ Debug則是主要為了調試使用，建議所有的作為API的“公開”類
 
 ### PartialOrd/Ord/PartialEq/Eq
 
-因為浮點數中存在Nan，因此浮點數滿足偏序非而全序\(Nan不滿足三一律，IEEE754規定\)，所以浮點數無法排序。
+因為浮點數中存在Nan，因此浮點數滿足偏序非而全序(Nan不滿足三一律，IEEE754規定)，所以浮點數無法排序。
 
 因此，Rust設計了兩個trait來描述這樣的狀態:一個是`std::cmp::PartialOrd`，表示“偏序”，一個是`std::cmp::Ord`，表示“全序”。
 
@@ -478,7 +478,7 @@ fn main() {
 }
 ```
 
-Rust中的PartialOrd trait實際上就是C++20中即將加入的three-waycomparison運算子&lt;=&gt;。同理，PartialEq和Eq兩個trait也就可以理解了，它們的作用是比較相等關係，與排序關係非常類似。
+Rust中的PartialOrd trait實際上就是C++20中即將加入的three-waycomparison運算子<=>。同理，PartialEq和Eq兩個trait也就可以理解了，它們的作用是比較相等關係，與排序關係非常類似。
 
 ### Sized
 
@@ -492,17 +492,17 @@ pub trait Sized {
 }
 ```
 
-這個trait定義在`std::marker`模組中，它沒有任何的成員方法。它有\#\[lang="sized"\]屬性，說明它與普通trait不同，編譯器對它有特殊的處理。
+這個trait定義在`std::marker`模組中，它沒有任何的成員方法。它有#\[lang="sized"]屬性，說明它與普通trait不同，編譯器對它有特殊的處理。
 
 用戶也不能針對自己的類型impl這個trait。**一個類型是否滿足Sized約束是完全由編譯器推導的，用戶無權指定**。
 
 在C/C++這一類的語言中，大部分變數、參數、返回值都應該是編譯階段固定大小的。**在Rust中，但凡編譯階段能確定大小的類型，都滿足Sized約束。**
 
-那還有什麼類型是不滿足Sized約束的呢？比如C語言裡的不定長陣列（Variable-length Array）。不定長陣列的長度在編譯階段是未知的，是在執行階段才確定下來的。Rust裡面也有類似的類型\[T\]。在Rust中VLA類型已經通過了RFC設計，只是暫時還沒有實現而已。
+那還有什麼類型是不滿足Sized約束的呢？比如C語言裡的不定長陣列（Variable-length Array）。不定長陣列的長度在編譯階段是未知的，是在執行階段才確定下來的。Rust裡面也有類似的類型\[T]。在Rust中VLA類型已經通過了RFC設計，只是暫時還沒有實現而已。
 
 不定長類型在使用的時候有一些限制，比如不能用它作為函數的返回類型，而必須將這個類型藏到指標背後才可以。但它作為一個類型，依然是有意義的，我們可以為它添加成員方法，用它產生實體泛型參數，等等。
 
-Rust中對於動態大小類型專門有一個名詞Dynamic Sized Type。我們後面將會看到的\[T\]，str以及dyn Trait都是DST。
+Rust中對於動態大小類型專門有一個名詞Dynamic Sized Type。我們後面將會看到的\[T]，str以及dyn Trait都是DST。
 
 ### Default
 
@@ -531,7 +531,6 @@ trait Default {
 }
 ```
 
-它只包含一個“靜態函數”default\(\)返回Self類型。標準庫中很多類型都實現了這個trait，它相當於提供了一個類型的預設值。
+它只包含一個“靜態函數”default()返回Self類型。標準庫中很多類型都實現了這個trait，它相當於提供了一個類型的預設值。
 
 在Rust中，單詞new並不是一個關鍵字。所以我們可以看到，很多類型中都使用了new作為函數名，用於命名那種最常用的創建新物件的情況。因為這些new函數差別甚大，所以並沒有一個trait來對這些new函數做一個統一抽象。
-
