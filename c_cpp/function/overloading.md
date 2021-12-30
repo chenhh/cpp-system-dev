@@ -84,7 +84,7 @@ int func(int &x){
 
 C++的編譯器會給每個函式名取不一樣的名字，同樣是foo函式，編譯器分別給他們取名叫做\_Z3foov().\_Z3fooi,\_Z3food。實際上他們就是三個不一樣的函式了。
 
-![overloading實作，編譯器會幫函數換名](../.gitbook/assets/overloading\_implementation.jpg)
+![overloading實作，編譯器會幫函數換名](../../.gitbook/assets/overloading\_implementation.jpg)
 
 ### &#xD;換名帶來的問題&#xD;
 
@@ -116,7 +116,7 @@ int main(){
 
 使用者在呼叫的時候，實際上是在呼叫\_Z6getmaxii，而這裡根本沒有\_Z6getmaxii的定義，只有getmax，所以編譯出錯了。
 
-![C++使用C的函式，會因換名而找不到函式](../.gitbook/assets/overloading\_name\_mangling.png)
+![C++使用C的函式，會因換名而找不到函式](../../.gitbook/assets/overloading\_name\_mangling.png)
 
 ### 解決換名的問題: extern "C"
 
