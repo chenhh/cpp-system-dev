@@ -417,3 +417,142 @@ as關鍵字對於表達式`e as U`，e為表達式，U為轉換的目標類型�
 | Function pointer      | Integer               |
 
 更複雜的類型轉換，可使用標準庫的From, Into等trait。
+
+### from trait
+
+From 和 Into 兩個 trait 是內部相關聯的，實際上這是它們實現的一部分。如果我們能夠從類型 B 得到類型 A，那麼很容易相信我們也能把類型 B 轉換為類型 A。
+
+From trait 允許一種類型定義 “怎麼根據另一種類型生成自己”，因此它提供了一種類型轉換的簡單機制。在標准庫中有無數 From 的實現，規定原生類型及其他常見類型的轉換功能。
+
+```rust
+// 把 str 轉換成 String
+let my_str = "hello";
+let my_string = String::from(my_str);
+```
+
+為我們自己的類型定義轉換機制：
+
+```rust
+use std::convert::From;
+
+#[derive(Debug)]
+struct Number {
+    value: i32,
+}
+
+impl From<i32> for Number {
+    fn from(item: i32) -> Self {
+        Number { value: item }
+    }
+}
+
+fn main() {
+    let num = Number::from(30);
+    println!("My number is {:?}", num);
+}
+```
+
+### into trait
+
+Into trait 就是把 From trait 倒過來而已。也就是說，如果你為你的類型實現了 From，那麼同時你也就免費獲得了 Into。
+
+使用 Into trait 通常要求指明要轉換到的類型，因為編譯器大多數時候不能推斷它。不過考慮到我們免費獲得了 Into，這點代價不值一提。
+
+```rust
+use std::convert::From;
+
+#[derive(Debug)]
+struct Number {
+    value: i32,
+}
+
+impl From<i32> for Number {
+    fn from(item: i32) -> Self {
+        Number { value: item }
+    }
+}
+
+fn main() {
+    let int = 5;
+    // 類型說明不可省略
+    let num: Number = int.into();
+    println!("My number is {:?}", num);
+}
+```
+
+TryFrom . TryInto trait
+
+類似於 From 和 Into，TryFrom 和 TryInto 是 類型轉換的通用 trait。不同於 From/Into 的是，TryFrom 和 TryInto trait 用於易出錯的轉換，也正因如此，其返回值是 Result 型。
+
+```rust
+use std::convert::TryFrom;
+use std::convert::TryInto;
+
+#[derive(Debug, PartialEq)]
+struct EvenNumber(i32);
+
+impl TryFrom<i32> for EvenNumber {
+    type Error = ();
+
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
+        if value % 2 == 0 {
+            Ok(EvenNumber(value))
+        } else {
+            Err(())
+        }
+    }
+}
+
+fn main() {
+    // TryFrom
+
+    assert_eq!(EvenNumber::try_from(8), Ok(EvenNumber(8)));
+    assert_eq!(EvenNumber::try_from(5), Err(()));
+
+    // TryInto
+
+    let result: Result<EvenNumber, ()> = 8i32.try_into();
+    assert_eq!(result, Ok(EvenNumber(8)));
+    let result: Result<EvenNumber, ()> = 5i32.try_into();
+    assert_eq!(result, Err(()));
+}
+```
+
+### ToString, FromStr trait
+
+要把任何類型轉換成 String，只需要實現那個類型的 ToString trait。然而不要直接這麼做，您應該實現fmt::Display trait，它會自動提供 ToString，並且還可以用來列印類型。
+
+```rust
+use std::string::ToString;
+
+struct Circle {
+    radius: i32
+}
+
+impl ToString for Circle {
+    fn to_string(&self) -> String {
+        format!("Circle of radius {:?}", self.radius)
+    }
+}
+
+fn main() {
+    let circle = Circle { radius: 6 };
+    println!("{}", circle.to_string());
+}
+```
+
+### 解析字串
+
+我們經常需要把字串轉成數字。完成這項工作的標准手段是用 parse 函數。我們得 提供要轉換到的類型，這可以通過不使用類型推斷，或者用 “渦輪魚” 語法（turbo fish，<>）實現。
+
+只要對目標類型實現了 FromStr trait，就可以用 parse 把字串轉換成目標類型。 標准庫中已經給無數種類型實現了 FromStr。如果要轉換到用戶定義類型，只要手動實現 FromStr 就行。
+
+```rust
+fn main() {
+    let parsed: i32 = "5".parse().unwrap();
+    let turbo_parsed = "10".parse::<i32>().unwrap();
+
+    let sum = parsed + turbo_parsed;
+    println!{"Sum: {:?}", sum};
+}
+```
