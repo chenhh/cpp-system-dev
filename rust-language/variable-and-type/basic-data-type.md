@@ -9,11 +9,11 @@ fn main() {
     let x = true;
     let y: bool = !x; // not運算
     
-    //false, logical and,帶短路功能
+    // false, logical and,帶短路功能
     let z = x && y; 
     println!("{}", z);
     
-    //true, logical or,帶短路功能
+    // true, logical or,帶短路功能
     let z = x || y; 
     println!("{}", z);
     
@@ -61,7 +61,7 @@ fn main() {
 }
 ```
 
-bool類型運算式可以用在if/while等運算式中，作為條件運算式。
+bool類型運算式可以用在if/while等運算式中，作為條件判斷式。
 
 ```rust
 if a >= b {
@@ -73,7 +73,9 @@ if a >= b {
 
 ## char
 
-字元類型由char表示。它可以描述任何一個符合unicode標準的字元值。在程式碼中，單個的字元字面量用單引號包圍。
+字元類型由char表示(<mark style="color:red;">固定為4 bytes</mark>)。它可以描述任何一個符合unicode標準的字元值。在程式碼中，單個的字元字面量用單引號包圍。
+
+[std::mem::size\_of\_val](https://doc.rust-lang.org/std/mem/fn.size\_of\_val.html)可以查看傳入指標的佔用的記憶體空間位元數。
 
 ```rust
 use std::mem;
@@ -112,7 +114,7 @@ fn main(){
 
 ## 整數類型
 
-各種整數類型之間的主要區分特徵是：有符號/無符號與佔據空間大小，未指明整數類型時預設為i32。
+各種整數類型之間的主要區分特徵是：有符號/無符號與佔據空間大小，<mark style="color:red;">未指明整數類型時預設為i32</mark>。
 
 
 
@@ -133,9 +135,9 @@ Rust的這一策略與C語言不同，C語言標準中對許多類型的大小�
 
 ```rust
 fn main() {
-    let var1: i32 = 32;   // 十進位表示
-    let var2: i32 = 0xFF; // 以0x開頭代表十六進位表示
-    let var3: i32 = 0o55; // 以0o開頭代表八進制表示
+    let var1: i32 = 32;     // 十進位表示
+    let var2: i32 = 0xFF;   // 以0x開頭代表十六進位表示
+    let var3: i32 = 0o55;   // 以0o開頭代表八進制表示
     let var4: i32 = 0b1001; // 以0b開頭代表二進位表示
     // 32, 255, 45, 9
     println!("{}, {}, {}, {}", var1, var2, var3, var4);
@@ -148,7 +150,7 @@ fn main() {
     let var6 = 123usize; // i6變數是usize類型
     let var7 = 0x_ff_u8; // i7變數是u8類型
     let var8 = 32;       // 不寫類型,預設為 i32 類型
-    let an_integer   = 5i32; // 後缀说明
+    let an_integer   = 5i32; // 後缀說明
     println!("{}, {}, {}, {}", var6, var7, var8, an_integer);
 }
 ```
@@ -227,7 +229,7 @@ fn main() {
 
 ## 浮點數類型
 
-Rust提供了基於IEEE 754-2008標準的浮點類型。按佔據空間大小區分，分別為f32和f64(未明確指定類型時，預設為f64)，其使用方法與整數差別不大。
+Rust提供了基於IEEE 754-2008標準的浮點類型。按佔據空間大小區分，分別為f32和f64(<mark style="color:red;">未明確指定類型時，預設為f64</mark>)，其使用方法與整數差別不大。
 
 ```rust
 fn main() {
