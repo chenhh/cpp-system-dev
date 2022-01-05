@@ -255,6 +255,19 @@ pub enum FpCategory {
 
 ![IEEE754 單精度浮點數。](../../.gitbook/assets/ieee754\_single-precision-min.png)
 
+### 整數與浮點數四則運算需明確轉型
+
+```rust
+fn main() {
+    let x = 32;
+    let y = 2.0;
+    // 必須明確轉型，否則會出現error
+    // no implementation for `{integer} + {float}`
+    let z = x as f64 + y;
+    println!("z={}", z);
+}
+```
+
 ### normal狀態
 
 在IEEE 754標準中，規定了浮點數的二進位表達方式：`x=（-1）^sign *（1+fraction）* 2^exponent`。其中sign(s)是符號位元，fraction(M)是分數(fraction)，exponent(e)是指數。分數M是一個\[0，1）範圍內的二進位表示的小數。
