@@ -181,6 +181,14 @@ Cargo.toml是我們的專案管理設定檔，這裡記錄了該專案相關的
 * 一般來說：如果我們的項目是庫，那麼最好不要把Cargo.lock檔納入到版本管理系統中，避免依賴庫的版本號被鎖死；
 * 如果我們的項目是可執行程式，那麼最好要把Cargo.lock檔納入到版本管理系統中，這樣可以保證，在不同機器上編譯使用的是同樣的版本，生成的是同樣的可執行程式。
 
+## project內多個crates的設定
+
+假設project位於資料夾/MYPROJECT，替每一個crate都開一個子資料夾，如/MYPROJECT/sub1, /MYPROJECT/sub2等。
+
+則在sub1資料夾中，加入Cargo.toml與src/main.rs檔， 在sub2資料夾中，加入Cargo.toml與src/main.rs檔，以此類推。
+
+則sub1可做為獨立的crate編譯，則sub2可做為獨立的crate編譯。
+
 ## 預設配置
 
 cargo也支持設定檔。設定檔可以定制cargo的許多行為，就像我們給git設置設定檔一樣。類似的，cargo的設定檔可以存在多份，它們之間有優先順序關係。
