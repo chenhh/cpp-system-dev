@@ -13,15 +13,59 @@ Rust語言是一門系統程式設計語言，它有三大特點：**執行快�
 
 目前，C和C++應該是業界最流行的系統程式設計語言。Rust的定位與它們類似，但是增加了安全性。C和C++都是編譯型語言，無須規模龐大的執行時（runtime）支援，也沒有自動記憶體回收（Garbage Collection）機制。
 
+### 資料夾
+
+不論是window或linux，安裝後的工具位於`${home}/.cargo/bin`資料夾中。
+
+rustup的目錄在`$RUST_HOME`中，預設為：
+
+* windows安裝後，指令位於`C:\Users\$USER\.rustup\toolchains\stable-x86_64-pc-windows-msvc\bin`的資料夾中。
+* Linux安裝後，指令位於`$HOME/.rustup/toolchain/stable-x86_64-unknown-linux-gnu/bin`中。
+
+1.61版本目前指令有：
+
+* `cargo`: rust的軟體包管理器。
+* `cargo-clippy`: 檢查軟體包裡的rust語法錯誤與改善品質的軟體。
+* `cargo-fmt`: 使用rust-fmt格式化bin/lib中所有rust的語法與排版。
+* `clippy-driver`: 同cago-clippy。
+* evcxr：
+* `rls`：
+* `rustc`: rust編譯器。
+* `rustdoc`
+* `rustfmt`：格式化rust原始碼。
+* `rust-gdb`: rust除錯器，命令列模式。
+* `rust-gdbgui`：rust除錯器，圖形化模式。
+* `rust-lldb`：
+* `rustup`：
+* `wasm-pack`：
+
 ### cmd命令
 
-* 版本更新：rustup update
-* 檢視版本：cargo --version
-* 構建專案：cargo build
-* 執行專案：cargo run
-* 測試專案：cargo test
-* 為專案構建檔案：cargo doc
-* 將庫發布到 crates.io：cargo publish
+* 檢視版本：`cargo --version`
+* 構建專案：`cargo build`
+* 執行專案：`cargo run`
+* 測試專案：`cargo test`
+* 為專案構建檔案：`cargo doc`
+* 將庫發布到 crates.io：`cargo publish`
+
+### rustup管理工具鏈(toolchain)
+
+Rust 以六星期為週期進行快速的版本發行，且支援多個作業系統。有三個頻道(channels): nightly, beta, stable。
+
+* 顯示目前已安裝與使用中的工具鏈頻道: `rustup show`
+  * 單獨顯示目前使用的工具鏈頻道：`rustup show active-toolchain`
+  * 顯示目前rustup的目錄：`rustup show home`
+  * 顯示目前的profile： `rustup show profile`
+  * 顯示目前的rust pgp公鑰： `rustup show keys`
+* rust版本直接更新，可單獨指定頻道或特定版本：`rustup update`
+* 檢查是否有可用的更新：`rustup check`
+* 指定預設的工具鏈頻道或版本：`rustup default {stable|beta|nightly}`
+* 顯示目前已下載的工具鏈： `rustup toolchain list`
+  * 安裝工具鏈：`rustup toolchain install {stable|beta|nightly}`
+  * 移除工具鏈：`rust toolchain uninstall {stable|beta|nightly}`
+* 安裝頻道: `rustup install {stable|beta|nightly}`
+* 切換工具鏈: `rustup override set {stable|beta|nightly}`
+* 反安裝: `rustup self uninstall`
 
 ## 記憶體安全(memory safe)
 
