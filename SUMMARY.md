@@ -164,6 +164,7 @@
   * [陣列](rust-language/variable-and-type/array.md)
   * [字串](rust-language/variable-and-type/string.md)
   * [泛型(generics)](rust-language/variable-and-type/generics.md)
+  * [動態尺寸類型](rust-language/variable-and-type/dong-tai-chi-cun-lei-xing.md)
   * [格式化輸出](rust-language/variable-and-type/format-output.md)
 * [語句與運算式](rust-language/statement-and-expression/README.md)
   * [模式解構(pattern destructure)](rust-language/statement-and-expression/pattern-destructure.md)
