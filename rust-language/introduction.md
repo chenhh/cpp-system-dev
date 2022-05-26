@@ -39,7 +39,7 @@ rustup的目錄在`$RUST_HOME`中，預設為：
 * `rustup`：
 * `wasm-pack`：
 
-### cmd命令
+### cargo命令
 
 * 檢視版本：`cargo --version`
 * 構建專案：`cargo build`
@@ -47,6 +47,8 @@ rustup的目錄在`$RUST_HOME`中，預設為：
 * 測試專案：`cargo test`
 * 為專案構建檔案：`cargo doc`
 * 將庫發布到 crates.io：`cargo publish`
+
+cargo命令詳見[crate與cargo](crate-and-cargo/)章節。
 
 ### rustup管理工具鏈(toolchain)
 
@@ -132,3 +134,5 @@ unsafe域裡面一切皆有可能（包括safe與unsafe的結合）。因為真�
 ## 參考資料
 
 [\[知乎\] 如何看待 Rust 這門語言？](https://www.zhihu.com/question/432640008/answer/1668000615)
+
+[This Week in Rust](https://this-week-in-rust.org/)

@@ -4,12 +4,14 @@
 
 Rust用了兩個概念來管理專案：一個是crate，一個是mod。
 
-* crate簡單理解就是一個項目 (project)。<mark style="color:red;">crate是Rust中的獨立編譯單元</mark>。每個crate對應生成一個庫或者可執行檔（如.lib.dll.so.exe等）。
+* <mark style="background-color:green;">crate簡單理解就是一個項目 (project)</mark>。<mark style="color:red;">crate是Rust中的獨立編譯單元</mark>。每個crate對應生成一個庫或者可執行檔（如.lib.dll.so.exe等）。
   * 官方有一個crate倉庫 https://crates.io/，可以供用戶發佈各種各樣的庫，用戶也可以直接使用這裡面的開源庫。
-* mod簡單理解就是命名空間。mod可以嵌套，還可以控制內部元素的可見性。
-* **crate和mod有一個重要區別是：crate之間不能出現迴圈引用；而mod是無所謂的，mod1要使用mod2的內容，同時mod2要使用mod1的內容，是完全沒問題的**。
+* <mark style="background-color:green;">mod簡單理解就是命名空間</mark>。mod可以嵌套，還可以控制內部元素的可見性。
+* **crate和mod有一個重要區別是：crate之間不能出現巡環引用；而mod是無所謂的，mod1要使用mod2的內容，同時mod2要使用mod1的內容，是完全沒問題的**。
 
-在Rust裡面，crate才是一個完整的編譯單元（compile unit）。也就是說，<mark style="color:blue;">rustc編譯器必須把整個crate的內容全部讀進去才能執行編譯</mark>，rustc不是基於單個的.rs檔或者mod來執行編譯的。作為對比，C/C++裡面的編譯單元是單獨的.c/.cpp檔以及它們所有的include檔。每個.c/.cpp檔都是單獨編譯，生成.o檔，再把這些.o檔連結起來。
+在Rust裡面，crate才是一個完整的編譯單元（compile unit）。也就是說，<mark style="color:blue;">rustc編譯器必須把整個crate的內容全部讀進去才能執行編譯</mark>，rustc不是基於單個的.rs檔或者mod來執行編譯的。
+
+作為對比，C/C++裡面的編譯單元是單獨的.c/.cpp檔以及它們所有的include檔。每個.c/.cpp檔都是單獨編譯，生成.o檔，再把這些.o檔連結起來。
 
 Rust有一個極簡標準庫，叫作std，除了極少數嵌入式系統下無法使用標準庫之外，絕大部分情況下，我們都需要用到標準庫裡面的東西。為了效率，Rust編譯器對標準庫有特殊處理。**預設情況下，使用者不需要手動添加對標準庫的依賴，編譯器會自動引入對標準庫的依賴(preclude)**。
 
@@ -52,17 +54,16 @@ Some common cargo commands are (see all commands with --list):
     uninstall   Uninstall a Rust binary
 ```
 
-Cargo是Rust的包管理工具，是隨著編譯器一起發佈的。在使用rustup安裝了官方發佈的Rust開發套裝之後，Cargo工具就已經安裝好了，無須單獨安裝。
+Cargo是rust的包管理工具，是隨著編譯器一起發佈的。在使用rustup安裝了官方發佈的rust開發套裝之後，Cargo工具就已經安裝好了，無須單獨安裝。
 
-cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是調用的rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用cargo build--verbose選項查看詳細的編譯命令。
+cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是呼叫rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用`cargo build--verbose`選項查看詳細的編譯命令。
 
 * `cargo new hello_world --bin`，建立名稱為hello\_world可執行檔專案。
 * `cargo new hello_world --lib`，建立名稱為hello\_world函式庫專案。
-* 程式碼在`{PROJ_DIR}/src`資料夾中
+* <mark style="background-color:red;">程式碼在</mark><mark style="background-color:red;">`{PROJ_DIR}/src`</mark><mark style="background-color:red;">資料夾中</mark>
   * `carge build`編譯產生的檔案在`{PROJ_DIR}/target/debug`資料夾中。
   * `cargo build release` 編譯產生的檔案在 `{PROJ_DIR}/target/release` 資料夾中。
 * `cargo run` 可以執行debug版的程式，`cargo run --release`可以執行release版的程式。
-* cargo只是一個包管理工具，並不是編譯器。Rust的編譯器是rustc，使用cargo編譯工程實際上最後還是調用的rustc來完成的。如果我們想知道cargo在後面是如何調用rustc完成編譯的，可以使用`cargo build--verbose`選項查看詳細的編譯命令。
 * `cargo check` ，可以只檢查編譯錯誤，而不做程式碼優化以及生成可執行程式，非常適合在開發過程中快速檢查語法、類型錯誤。
 * `cargo clean`，清理以前的編譯結果。
 * `cargo doc`，生成文件。
@@ -90,7 +91,7 @@ my_own_project = { path = "/my/local/path", version = "0.1.0" }
 ### 自建函式庫
 
 * `cargo new good_bye --lib`
-* `{PROJ_DIR}/src/lib.rs`是函式庫的入口檔案，
+* `{PROJ_DIR}/src/lib.rs`<mark style="background-color:red;">是函式庫的入口檔案</mark>，
 
 ```rust
 // lib.rs
@@ -139,8 +140,8 @@ lazy_static = "1.0"
 
 指定版本號的時候，可以使用模糊匹配的方式。
 
-* ^符號，如^1.2.3代表1.2.3<=version<2.0.0；
-* \~符號，如\~1.2.3代表1.2.3<=version<1.3.0；
+* <mark style="color:red;">^符號(主版號相同即可)</mark>，如^1.2.3代表1.2.3<=version<2.0.0；
+* <mark style="color:red;">\~符號(主、次版本均要相同)</mark>，如\~1.2.3代表1.2.3<=version<1.3.0；
 * \*符號，如1.\*代表1.0.0<=version<2.0.0；
 * 比較符號，比如>=1.2.3、>1.2.3、<2.0.0、=1.2.3含義基本上一目了然。
 * 還可以把多個限制條件合起來用逗號分開，比如version=">1.2，  <1.9"。
@@ -184,7 +185,7 @@ Cargo.toml是我們的專案管理設定檔，這裡記錄了該專案相關的
 
 cargo也支持設定檔。設定檔可以定制cargo的許多行為，就像我們給git設置設定檔一樣。類似的，cargo的設定檔可以存在多份，它們之間有優先順序關係。
 
-你可以為某個資料夾單獨提供一份設定檔，放置到當前資料夾的.cargo/config位置，也可以提供一個全域的預設配置，放在$HOME/.cargo/config位置。
+你可以為某個資料夾單獨提供一份設定檔，放置到當前資料夾的`.cargo/config`位置，也可以提供一個全域的預設配置，放在`$HOME/.cargo/config`位置。
 
 ## workspace
 
