@@ -160,6 +160,7 @@
 * [變數與類型](rust-language/variable-and-type/README.md)
   * [基本資料類型](rust-language/variable-and-type/basic-data-type.md)
   * [複合資料類型](rust-language/variable-and-type/compounded-data-type.md)
+  * [複合資料類型的記憶體配置](rust-language/variable-and-type/fu-he-zi-liao-lei-xing-de-ji-yi-ti-pei-zhi.md)
   * [陣列](rust-language/variable-and-type/array.md)
   * [字串](rust-language/variable-and-type/string.md)
   * [泛型(generics)](rust-language/variable-and-type/generics.md)

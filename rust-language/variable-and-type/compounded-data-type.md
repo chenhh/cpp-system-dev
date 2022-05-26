@@ -32,7 +32,7 @@ fn main() {
 
 ### unit(單元類型)
 
-元組內部也可以一個元素都沒有。這個類型單獨有一個名字，叫unit（單元類型）。
+元組內部也可以一個元素都沒有。這個類型單獨有一個名字，叫unit（單元類型），不佔記憶體空間。
 
 ```rust
 fn main() {
@@ -122,7 +122,7 @@ fn main() {
 struct內部成員也可以是空：
 
 ```cpp
-//以下三種都可以,內部可以沒有成員
+//以下三種語法都可以,內部可以沒有成員
 struct Foo1;
 struct Foo2();
 struct Foo3{}
@@ -161,7 +161,9 @@ fn main(){
 }
 ```
 
-tuple struct有一個特別有用的場景，那就是當它只包含一個元素的時候，就是所謂的newtype idiom。因為它實際上讓我們非常方便地在一個類型的基礎上創建了一個新的類型。
+<mark style="background-color:red;">tuple struct有一個特別有用的場景，那就是當它只包含一個元素的時候，就是所謂的newtype idiom</mark>。因為它實際上讓我們非常方便地在一個類型的基礎上創建了一個新的類型。
+
+<mark style="background-color:blue;">註：在實作中，常常會使用此方法限定資料的類別，比如說height, weight兩個變數都是浮點數，使用此方法可以替變數的類型取名，限定變數的類別</mark>。
 
 ```rust
 fn main() {
