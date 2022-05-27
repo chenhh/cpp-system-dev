@@ -10,7 +10,7 @@
 
 &#x20;我們把 `&T` 型別稱為「參照」（reference），它借用了所有權，而非掌握所有權。 一個借用東西的綁定不會在離開有效範圍時把資源釋放掉。 這代表在呼叫函數完之後，我們仍可再度使用我們原始的變數綁定。
 
-借用指標與普通指標的內部資料是一模一樣的，唯一的區別是語義層面上的。它的作用是告訴編譯器，它對指向的這塊記憶體區域沒有所有權。
+<mark style="color:blue;">借用指標與普通指標的內部資料是一模一樣的，唯一的區別是語義層面上的。它的作用是告訴編譯器，它對指向的這塊記憶體區域</mark><mark style="color:red;">沒有所有權</mark>。
 
 ```rust
 fn main() {
@@ -122,7 +122,7 @@ fn main() {
         first_name: String::from("Jobs"),
         last_name: String::from("Steve"),
     };
-    // mut a:& T, a可指向新的引用，但不可修改T
+    // mut a:& T, a可指向新的引用，但不可修改obj
     let mut a = &obj1;
     
     // a重新綁定到一個新的FullName的引用
@@ -170,6 +170,8 @@ fn main() {
 
 Rust 沒有 null pointer。在你拿一個合法物件的位址來初始化指標之前，任何操作指標的行為都會被編譯器阻止。因為 Rust 中不存在 null pointer，因此當你的函式接收到參考型別時，你可以假設它必然指向一個合法的物件，不需要進行額外檢查，編譯器也不會在執行時額外花時間去檢查參考是否合法，進而提昇執行效率。
 
+<mark style="color:red;">但是Rust有Option\<T>的類型，可以用其中的None表示沒有任何值的概念</mark>。
+
 ## 資料競爭（data race）
 
 類似於競態條件，它可由這三個行為(同時發生時)造成：
@@ -184,10 +186,10 @@ Rust 沒有 null pointer。在你拿一個合法物件的位址來初始化指�
 ----
 
 * <mark style="color:red;">引用必須總是有效的</mark>。
-* <mark style="color:red;">借用指標不能比它指向的變數存在的時間更長</mark>。
+* <mark style="color:red;">借用指標不能比它指向的變數存在的時間更長</mark>。(註：編譯器無法判定時，會要求明確加入生命週期)。
   * **借用指標只能臨時地擁有對這個變數讀或寫的許可權，沒有義務管理這個變數的生命週期。**因此，借用指標的生命週期絕對不能大於它所引用的原來變數的生命週期，否則就是<mark style="color:red;">懸空指標(dangling pointer)</mark>，會導致記憶體不安全。
-* 使用 `&` 取得變數的參考後，你只能透過參考讀取內容，而不能寫入資料。這樣的取址行為，Rust 稱之為 immutable borrow。
-* 若你想要透過參考寫入資料，必需透過 `&mut` 來取得位址。這樣的取址稱為 mutable borrow。
+* 使用 `&` 取得變數的參考後，你只能透過參考讀取內容，而不能寫入資料。這樣的取址行為，Rust 稱之為不可變借用( immutable borrow)。
+* 若你想要透過參考寫入資料，必需透過 `&mut` 來取得位址。這樣的取址稱為可變借用(mutable borrow)。
   * `&mut`型借用只能指向本身具有`mut`修飾的變數，對於唯讀變數，不可以有`&mut`型借用。
   * `&mut`型借用指標存在的時候，**被借用的變數本身會處於“凍結 (freeze)”狀態，即被借用的變數不可被存取**。
 * <mark style="color:red;">\[共享不可變] 如果作用域只有</mark><mark style="color:red;">`&`</mark><mark style="color:red;">型借用指標，那麼能同時存在多個</mark>；
@@ -240,8 +242,9 @@ fn main() {
     let p = &mut x;
     // 任何借用指標的存在，都會導致原來的變數被“凍結”（Frozen）。
     // 因此x不可再被存取
-    x = 2; // compile error
-    println!("value of pointed : {}", p);
+    //x = 2; // compile error, 不可被修改
+    // println!("value of x : {x}"); // 也不可被讀取
+    println!("value of pointed : {p}");
 }
 ```
 
@@ -318,7 +321,7 @@ fn main() {
     let p1 = &mut i;
     *p1 = 2;
     // i  = 3;   // error
-    println!("{}", p1); // 2
+    println!("{p1}"); // 2
 }
 ```
 
@@ -329,14 +332,14 @@ fn main() {
  
     *y += 1;
     // 如果只有x傳給println是合法的操作
-    println!("x={}", x);
+    println!("x={x}");
     // 若同時將borrow與mut borrow傳給println，
     // 會產生編譯錯誤
-    println!("x={}, y={}", x, y);
+    println!("x={x}, y={y}");
 }
 ```
 
-* 上例這是因為我們違反了規則：我們有一個指向 x 的 \&mut T，所以我們不被允許建立任何其他 \&T。 必須要在兩者間做出選擇。&#x20;
+* 上例這是因為我們違反了規則：我們有一個指向 x 的 `&mut T`，所以我們不被允許建立任何其他 `&T`。 必須要在兩者間做出選擇。&#x20;
 * 解法：所以我們希望可變借用能在我們呼叫 println! 並建立不可變借用 之前 能結束掉。可變借用會在我們建立不可變借用前離開有效範圍。 有效範圍是個看清借用持續多久的關鍵。
 
 ```rust
@@ -371,15 +374,15 @@ fn main() {
 
 ### 疊代器失效（Iterator invalidation）
 
-當你試圖改變一個正在疊代的集合（collection）時會發生。 Rust 的借用檢查器會預防這件事發生。
+當你試圖改變一個正在疊代的集合（collection）時會發生。 Rust 的借用檢查器會預防這件事發生。避免迭代容器到一半時，容器改變而造成迭代子指向其它地方。
 
 ```rust
 fn main() {
     let mut v = vec![1, 2, 3];
 
-    // 當我們疊代這個向量時，我們只會被給予其中元素的 references。
+    // 當我們疊代這個向量時，我們只會被給予其中元素的引用
     for i in &v {
-        println!("{}", i);
+        println!("{i}");
         // v 是一個不可變的借用，所以我們在疊代時不能更改它
         // v.push(34);
     }
@@ -388,7 +391,7 @@ fn main() {
 
 ### 在釋放之後使用（use after free）
 
-References 不能存活得比所參考的資源還久。 Rust 會檢查你的 references 的有效範圍來確保符合這個條件。
+References 不能存活得比所參考的資源還久。 Rust 會檢查你的引用的有效範圍來確保符合這個條件。
 
 
 

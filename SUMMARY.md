@@ -179,6 +179,7 @@
   * [記憶體洩漏](rust-language/memory-management/memory-leak.md)
   * [所有權與移動(ownership and move)](rust-language/memory-management/ownership-and-move.md)
   * [解構函數(destructor)](rust-language/memory-management/destructor.md)
+  * [智慧指標(smart pointer)](rust-language/memory-management/zhi-hui-zhi-biao-smart-pointer.md)
   * [ref關鍵字](rust-language/memory-management/ref-keyword.md)
   * [解引用(deref)](rust-language/memory-management/deref.md)
   * [生命週期(lifetime)](rust-language/memory-management/lifetime.md)
