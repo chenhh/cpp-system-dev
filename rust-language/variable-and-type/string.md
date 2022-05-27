@@ -4,6 +4,15 @@
 
 Rust的字串有點複雜，主要是跟所有權有關。Rust的字串涉及兩種類型，一種是`&str(slice類型)`，另外一種是`String`。
 
+## 字元和字串
+
+| 名稱   | 範例       | 類別                       |
+| ---- | -------- | ------------------------ |
+| 字元   | 'H'      | unicode(UTF-16), 4 bytes |
+| 位元組  | b'H'     | ASCII, 1byte             |
+| 字串   | "hello"  | u8 array                 |
+| 位元字串 | b"hello" | ASCII array              |
+
 ## \&str
 
 * \&str是Rust的內置類型，不可修改指向的字串。\&str是對str的借用。
