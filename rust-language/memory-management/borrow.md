@@ -2,6 +2,8 @@
 
 ## 借用(borrow)
 
+<mark style="background-color:blue;">註：&符號在說明記憶體的所有權時的概念稱為借用(borrow)，而在說明變數的型別時稱為引用(reference)</mark>。
+
 如果我們必須在每個函式都交還所有權，這將會非常煩人。 當我們想處理更多所有權的時候會變得更糟。Rust 提供一個功能，借用（borrowing），可以幫助我們解決這個問題。
 
 借用指標的語法使用**`&`符號(唯讀)**或者**`&mut`符號(可讀寫)**表示。前者表示唯讀借用，後者表示可讀寫借用。**借用指標（borrow pointer）也可以稱作“引用”（reference）**。
@@ -10,22 +12,41 @@
 
 借用指標與普通指標的內部資料是一模一樣的，唯一的區別是語義層面上的。它的作用是告訴編譯器，它對指向的這塊記憶體區域沒有所有權。
 
+```rust
+fn main() {
+    let n = 5;
+ 
+    // Get the reference of n
+    // nref變數存放n的記憶體地址
+    let n_ref = &n;  // &i32
+ 
+    println!("{:p}", &n);       // 0x7fff24bd3e9c
+    println!("{:p}", n_ref);    // 0x7fff24bd3e9c
+    println!("{:p}", &n_ref);   // 0x7fff24bd3ea0
+    // Dereference n_ref to get n
+    println!("{}", *n_ref);     // 5
+}
+```
+
 ### 唯讀的借用
 
-* `&`符號在let表達式中，一定是放在`=`符號的右側。
-* `&`符號在函數中，一定是放在變數型別前。
+* `&`符號在let表達式中，一定是放在`=`符號的右側，表示對記憶體的引用，而左側的變數只是借用，沒有所有權。
+* `&`符號在函數中，一定是放在變數型別前，表示傳入的是引用型別。
 * 變數傳入函數時，要明確寫出`&`符號。
 
 ```rust
 fn foo(_v1: &Vec<i32>, _v2: &Vec<i32>) -> i32 {
     // 變數以reference傳入，所有權為borrow而非move
+    println!("borrow: {:p}, {:p}", _v1, _v2);
+    // 0x7ffce11a8da0, 0x7ffce11a8db8, 相同的記憶體地址
     42
 }
 
 fn main() {
     let v1 = vec![1, 2, 3]; // v1有vec的所有權
     let v2 = vec![1, 2, 3]; // v2有vec的所有權
-    let answer = foo(&v1, &v2); // 所有權以reference傳入函數
+    println!("{:p}, {:p}", &v1, &v2);   // 0x7ffce11a8da0, 0x7ffce11a8db8
+    let answer = foo(&v1, &v2); // 以reference傳入函數
     println!("v1: {:?}, v2: {:?}", v1, v2); // OK, 所有權仍在v1, v2
     println!("answer: {}", answer); // 42
 }
@@ -33,9 +54,9 @@ fn main() {
 
 ### 可變的借用
 
-* `&mut`符號在let表達式中，一定是放在`=`符號的右側。
+* `&mut`符號在let表達式中，一定是放在`=`符號的右側，表示對記憶體可變的引用。
 * `&mut`符號在函數中，一定是放在變數型別前。
-* 變數傳入函數時，要明確寫出`&mut`符號。
+* 變數傳入函數時，要明確寫出`&mut`符號，<mark style="color:red;">而且只有\&mut的變數可以傳入</mark>。
 
 ```rust
 // 我們需要“可變的”借用指標,因此函數簽名需要改變
@@ -52,19 +73,18 @@ fn main() {
 }
 ```
 
-對於`&mut`型指標，要注意不要混淆它與變數綁定之間的語法。
+對於`&mut`型指標，要注意不要混淆它與變數綁定之間的語法：
 
 * 如果`mut`修飾的是變數名，那麼它代表這個變數可以被重新綁定；(但指向的物件不能被修改)
 * 如果`mut`修飾的是“借用指標&”，那麼它代表的是被指向的物件可以被修改。(但變數不能被修改)
 
 ## 可變借用與綁定的組合
 
-| Rust          | C++               | 含義                    | 解釋             |
-| ------------- | ----------------- | --------------------- | -------------- |
-| a: \&T        | const T\* const a | 都不能修改                 | 不可變引(借)用的不可變綁定 |
-| mut a: \&T    | const T\* a       | 不能修改a指向的內容，但a可指向新的引用。 | 不可變引(借)用的可變綁定  |
-| a: \&mut T    | T\* const a       | 不能經由a修改，但可直修改物件       | 可變引(借)用的不可變綁定  |
-| mut a:\&mut T | T\* a             | 都能修改                  | 可變引(借)用的可變綁定   |
+| let a: \&T = value;             | a與value都不能修改                                  | const T\* const a |
+| ------------------------------- | --------------------------------------------- | ----------------- |
+| let mut a: \&T = \&value;       | a可變，但value不可變，即不能透過a修改指向(value)的內容，但a可指向新的地址。 | const T\* a       |
+| let a: \&mut T = \&mut value;   | a不可變，但value可變，即可透過a修改value的內容，但a不可指向新的地址。     | T\* const a       |
+| let mut a:\&mut T =\&mut value; | a與value都能修改                                   | T\* a             |
 
 ```rust
 let x = value;
@@ -75,12 +95,15 @@ let mut x = value;
 
 let x = &value;
 // x {binds immutably} to {a reference to} {immutable value}
+// 不可變引用x指向不可變的value
 
 let x = &mut value;
 // x {binds immutably} to {a reference to} {mutable value}
+// 可直接修改value之值，或是用*x修改指向值，但x不可指向其它變數
 
 let mut x = &value;
 // x {binds mutably} to {a reference to} {immutable value}
+// value之值不可變，也不可透過*x修改值，但x可指向其它的變數
 
 let mut x = &mut value;
 // x {binds mutably} to {a reference to} {mutable value}
@@ -385,3 +408,4 @@ fn main() {
 
 * [\[知乎\] 理解 Rust 引用和借用](https://zhuanlan.zhihu.com/p/59998584)
 * [\[stackoverflow\] What's the difference between placing "mut" before a variable name and after the ":"?](https://stackoverflow.com/questions/28587698/whats-the-difference-between-placing-mut-before-a-variable-name-and-after-the)
+* [Rust Smart Pointers 最燒腦的智慧指標](https://weihanglo.tw/slides/rust-smart-pointers.html)
