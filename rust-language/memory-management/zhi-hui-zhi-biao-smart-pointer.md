@@ -53,3 +53,42 @@ fn main() {
     } // Implicitly drop. Call drop(&v) when v is out of scope.
 }
 ```
+
+## std crate的智慧指標
+
+Box、Rc、Arc、Cel、RefCell、Mutex、RwLock、Atomic\*、Vec、String ，以及在 std::collections 的集合型別。
+
+### Box
+
+在 heap 上配置空間儲存資料。
+
+* 指向 heap 上的資料，Box變數本身配置在 stack 上，佔 1 usize 的空間。
+* 保有 content 的 ownership，Box 生命週期結束會 drop 它的資料。
+* 是最泛用的智慧指標。 類似 C++ std::unique\_ptr。
+
+```rust
+fn main() {
+    // 將值放入box
+    let val = 5u8;
+    let boxed = Box::new(val);
+
+    // 解引用
+    let val2 = *boxed;
+    println!("val2={val2}"); //5
+
+    // 自動解引用
+    implicit_deref(&boxed); // 5
+}
+fn implicit_deref(a: &u8) {
+    println!("{a}");
+}
+```
+
+### 什麼時候該用 Box
+
+* 你需要儲存遞迴的資料，且無法靜態決定型別大小。
+* 你需要轉移資料的所有權但想避免複製整個物件。
+* 你需要將資料配置在 heap 上。
+* 你需要一個 null pointer（Option\<Box>）。
+* 你想寫簡單的 singly linked list
+* 你需要做 dynamic dispatch，例如 dyn Trait（former Trait Object）
