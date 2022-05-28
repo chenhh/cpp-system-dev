@@ -90,7 +90,11 @@ let p: Person = match serde_json::from_str(data) {
 
 ## ? - 故障時返回Err物件
 
-當碰到Err時，我們不一定要panic!，也可以返回Err。不是每個Err都是不可恢復的，因此有時並不需要panic!。
+Rust 中的問號 ( ?) 運算子用作返回`Result<T,E>`或`Option<T>`型別函式的錯誤傳播替代方案。?運算子是一種快捷方式，因為它減少了立即返回或從型別或函式中?返回所需的程式碼量。
+
+<mark style="color:blue;">註：因為Result的回傳值為OK或Err，而Option的回傳值為Some或None，均為二類回傳值，可將?算子視為C/C++中的三元運算子，成功時傳回OK/Some，失敗時傳回Err/None</mark>。
+
+錯誤傳播是傳播或返回程式碼中檢測到的錯誤資訊的過程，通常由呼叫函式觸發，以允許呼叫函式正確處理問題。當碰到Err時，我們不一定要panic!，也可以返回Err。不是每個Err都是不可恢復的，因此有時並不需要panic!。
 
 ```rust
 let p: Person = match serde_json::from_str(data) {
@@ -101,6 +105,15 @@ let p: Person = match serde_json::from_str(data) {
 // 等價寫法
 let p:Person = serde_json::from_str(data)?;
 ```
+
+使用match處理OK與Err很棒，因為：
+
+* 在編寫程式碼時，您不會不小心忘記處理錯誤。
+* 閱讀程式碼時，您可以立即看到這裡可能存在錯誤。
+
+然而，它並不理想，因為它非常冗長。這就是問號運運算元的?用武之地。
+
+加了?後，在函數回傳時，若OK，則會解壓Result至p中，若為Err時，會呼叫`Into::into`錯誤值以潛在地將其轉換為另一種型別。
 
 ## 錯誤資訊類型不一樣，如何轉換？
 
