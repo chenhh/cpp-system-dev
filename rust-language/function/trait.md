@@ -1,6 +1,6 @@
 # trait
 
-在Rust中，trait這一個概念承擔了多種職責。在中文裡，trait可以翻譯為“特徵”“特點”“特性”等。由於這些詞區分度並不明顯，因此不翻譯trait這個詞，以避免歧義。trait中可以包含：函數、常量、類型等。
+在Rust中，trait這一個概念有多個意義。在中文裡，trait可以翻譯為“特徵”“特點”“特性”等。由於這些詞區分度並不明顯，因此不翻譯trait這個詞，以避免歧義。trait中可以包含：函數、常量、類型等。
 
 * trait本身可以攜帶泛型參數；
 * trait可以用在泛型參數的約束中；
@@ -13,19 +13,19 @@
 
 ## 成員函數(membership function)
 
-trait中可以定義函數，稱為該trait的成員函數。該函數可直接實作，等到imp時再實作即可。
+trait中可以定義函數，稱為該trait的成員函數(membership function)。該函數可直接實作，等到imp時再實作即可，類似於interface的概念。
 
 ```rust
 trait Shape {
-    fn area(&self) -> f64;
+    fn area(&self) -> f64;    //成員函數，尚未實作
 }
 ```
 
-所有的trait中都有一個隱藏的**類型Self（大寫S），代表當前這個實現了此trait的具體類型**。trait中定義的函數，也可以稱作關聯函數（associated function）。
+<mark style="background-color:red;">所有的trait中都有一個隱藏的</mark><mark style="background-color:red;">**類型Self（大寫S），代表當前這個實現了此trait的具體類型**</mark><mark style="background-color:red;">。trait中定義的函數，也可以稱作關聯函數（associated function）</mark>。
 
 函數的第一個參數如果是Self相關的類型，且命名為self（小寫s），這個參數可以被稱為“receiver”（接收者）。
 
-Rust中Self（大寫S）和self（小寫s）都是關鍵字，大寫S的是類型名，小寫s的是變數名，一定要注意區分。
+Rust中Self（大寫S）和self（小寫s）都是關鍵字，<mark style="color:red;">大寫S的是類型名(實作trait的struct名稱類型)，小寫s的是變數名(綁定實作的struct的實例)</mark>，一定要注意區分。
 
 * <mark style="color:blue;">trait中具有receiver參數的函數，我們稱為“方法”（method）</mark>可以通過變數實例使用小數點來調用。
 * <mark style="color:blue;">trait中沒有receiver參數的函數，我們稱為“靜態函數”（static function）</mark>，可以通過類型加雙冒號::的方式來調用。
@@ -33,7 +33,7 @@ Rust中Self（大寫S）和self（小寫s）都是關鍵字，大寫S的是類�
 
 對於第一個self參數，常見的類型有`self:Self`、`self:&Self`、`self:&mut Self`等類型。對於以上這些類型，Rust提供了一種簡化的寫法，我們可以將參數簡寫為`self`、`&self`、`&mut self`。
 
-self參數只能用在第一個參數的位置。請注意“變數self”和“類型Self”的大小寫不同。
+<mark style="color:red;">self參數只能用在第一個參數的位置</mark>。請注意“變數self”和“類型Self”的大小寫不同。
 
 ```rust
 trait T {
@@ -58,7 +58,7 @@ trait中可以包含方法的預設實現。如果這個方法在trait中已經�
 
 ## 實現trait
 
-我們可以為某些具體類型實現（impl）這個trait。
+我們可以為某些具體類型實現（impl）這個trait。而且要實現所有的成員函數。
 
 假如我們有一個結構體類型Circle，它實現了這個trait，程式碼如下：
 
@@ -96,7 +96,7 @@ fn main() {
 另外，針對一個類型，我們可以直接對它impl來增加成員方法，無須trait名字（可視為該類型特有的匿名trait）。用這種方式定義的方法叫作這個類型的“內在方法”（inherent methods）。
 
 ```rust
-// 實現Circle類型的匿名trait
+// 實現Circle類型的匿名trait, 類似class的概念
 impl Circle {
     fn get_radius(&self) -> f64 {
         self.radius
@@ -122,7 +122,8 @@ impl Round for Circle {
     }
 }
 // 注意這裡是 impl Trait for Trait
-// Round不是類型而是trait，因此要加dyn
+// Round不是類型而是trait，因此要加dyn，
+// 表示佔用的記憶體為動態
 impl Shape for dyn Round {
     fn area(&self) -> f64 {
         std::f64::consts::PI * self.get_radius() * self.get_radius()
@@ -166,7 +167,7 @@ fn main() {
 
 在標準庫中就有一些這樣的例子。Box的一系列方法`Box::into_raw(b:Self)`,`Box::leak(b:Self)`，以及Rc的一系列方法`Rc::try_unwrap(this:Self)`,`Rc::downgrade(this:&Self)`，都是這種情況。
 
-它們的receiver不是self關鍵字，這樣設計的目的是強制使用者用`Rc::downgrade(&obj)`的形式調用，而禁止`obj.downgrade()`形式的調用。**這樣程式碼表達出來的意思更清晰，不會因為`Rc<T>`裡面的成員方法和T裡面的成員方法重名而造成誤解問題**。
+<mark style="background-color:red;">它們的receiver不是self關鍵字，這樣設計的目的是強制使用者用</mark><mark style="background-color:red;">`Rc::downgrade(&obj)`</mark><mark style="background-color:red;">的形式調用，而禁止</mark><mark style="background-color:red;">`obj.downgrade()`</mark><mark style="background-color:red;">形式的調用</mark>。**這樣程式碼表達出來的意思更清晰，不會因為`Rc<T>`裡面的成員方法和T裡面的成員方法重名而造成誤解問題**。
 
 trait中也可以定義靜態函數。下面以標準庫中的`std::default::Default` trait為例，介紹靜態函數的相關用法
 
@@ -206,7 +207,7 @@ impl Double for i32 {
     }
 }
 fn main() {
-    // 可以像成员方法一样调用
+    // 可以像成員方法一樣調用
     let x: i32 = 10.double();
     println!("{}", x);
 }
