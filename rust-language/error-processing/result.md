@@ -11,9 +11,11 @@ pub enum Result<T, E> {
 }
 ```
 
-在變體Err(E)為None時，Option可以被看作Result的特例。
+在變體`Err(E)`為`None`時，`Option`可以被看作`Result`的特例。
 
-Result的處理方法和Option類似，都可以使用unwrap和expect方法，也可以使用map和and\_then方法，並且用法也都類似。
+`Result`的處理方法和`Option`類似，都可以使用`unwrap`和`expect方`法，也可以使用`map`和`and_then`方法，並且用法也都類似。
+
+如果你呼叫了 `Result::unwrap` 或 `Option::unwrap` ，`panic!`會分別在值為 Err 或 None 時發生，這用在程式碰到了無法回覆的錯誤。
 
 ## 用match處理各類錯誤
 
@@ -92,6 +94,8 @@ let p: Person = match serde_json::from_str(data) {
 
 Rust 中的問號 ( ?) 運算子用作返回`Result<T,E>`或`Option<T>`型別函式的錯誤傳播替代方案。?運算子是一種快捷方式，因為它減少了立即返回或從型別或函式中?返回所需的程式碼量。
 
+<mark style="color:orange;">如果有個函式在它呼叫其它函式時發生了錯誤的情況，?算子它就把錯誤往上回傳</mark>。
+
 <mark style="color:blue;">註：因為Result的回傳值為OK或Err，而Option的回傳值為Some或None，均為二類回傳值，可將?算子視為C/C++中的三元運算子，成功時傳回OK/Some，失敗時傳回Err/None</mark>。
 
 錯誤傳播是傳播或返回程式碼中檢測到的錯誤資訊的過程，通常由呼叫函式觸發，以允許呼叫函式正確處理問題。當碰到Err時，我們不一定要panic!，也可以返回Err。不是每個Err都是不可恢復的，因此有時並不需要panic!。
@@ -99,10 +103,11 @@ Rust 中的問號 ( ?) 運算子用作返回`Result<T,E>`或`Option<T>`型別函
 ```rust
 let p: Person = match serde_json::from_str(data) {
         Ok(p) => p,
-        Err(e) => return Err(e.into()),
+        Err(e) => return Err(e.into()),        // 失敗的話直接回傳錯誤
 };
 
-// 等價寫法
+// 等價寫法，用p接Ok()的結果，或是Err()時直接回傳
+// 可在使用p時，再針對Ok或是Err()的種類以match處理
 let p:Person = serde_json::from_str(data)?;
 ```
 
@@ -114,6 +119,40 @@ let p:Person = serde_json::from_str(data)?;
 然而，它並不理想，因為它非常冗長。這就是問號運運算元的?用武之地。
 
 加了?後，在函數回傳時，若OK，則會解壓Result至p中，若為Err時，會呼叫`Into::into`錯誤值以潛在地將其轉換為另一種型別。
+
+以讀檔為例：
+
+```rust
+use std::io::{self, Read};
+
+fn read_and_append<R: Read>(reader: R) -> io::Result<String> {
+  let mut buf = String::new();
+  match reader.read_to_string(&mut buf) {
+    // 成功的話什麼都不用做
+    Ok(_) => {}
+    // 失敗的話直接回傳錯誤
+    err => return err,
+  }
+  // 假設這邊還要做些處理後才回傳
+  buf.push_str("END");
+  // 回傳成功的結果
+  Ok(buf)
+}
+```
+
+其中的判斷錯誤，如果是錯誤就回傳的這段因為太常用到了，所以 Rust 就提供了個簡寫的方法，我們可以直接把上面的 match 那段改寫成：
+
+```rust
+reader.read_to_string(&mut buf)?;
+```
+
+如果它在成功時是會有回傳值的，比如 File::open 成功會回傳 File ，一個代表檔案的 struct ，那你也可以使用 ? 接住成功的結果。
+
+```rust
+let f = File::open("filename")?;
+```
+
+
 
 ## 錯誤資訊類型不一樣，如何轉換？
 
