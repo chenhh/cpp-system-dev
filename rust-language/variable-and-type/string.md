@@ -2,11 +2,26 @@
 
 ## 簡介
 
-Rust的字串有點複雜，主要是跟所有權有關。Rust的字串涉及兩種類型，一種是`&str(slice類型)`，另外一種是`String`。
+Rust的字串有點複雜，主要是跟所有權有關。Rust的字串涉及兩種類型，一種是`&str(slice類型)`，另外一種是`String`，為Rust 標准庫中集合（collections）的非常有用的資料結構。
+
+* Rust 中只有一種字串原生類型：`str`，而字串切片，它通常以被借用的形式出現，`&str`，因為是唯讀借用，所以**沒有所有權且不可變**。
+* 稱作 String 的類型是由標准庫提供的，而沒有寫進核心語言部分，它是可增長的、可變的、**有所有權**的UTF-8 編碼的字串類型。
+* <mark style="color:red;">當 Rustacean 們談到 Rust 的 “字串”時，它們通常指的是</mark> <mark style="color:red;"></mark><mark style="color:red;">`String`</mark> <mark style="color:red;"></mark><mark style="color:red;">和字串</mark> <mark style="color:red;"></mark><mark style="color:red;">`slice &str`</mark> <mark style="color:red;"></mark><mark style="color:red;">類型，而不僅僅是其中之一</mark>。<mark style="background-color:red;">String 和字串 slice 都是 UTF-8 編碼的</mark>。
+
+Rust 標准庫中還包含一系列其他字串類型，比如 OsString、OsStr、CString 和 CStr。對應著它們提供的所有權和可借用的字串變體。
+
+## 字元和字串
+
+| 名稱   | 範例       | 類別                       |
+| ---- | -------- | ------------------------ |
+| 字元   | 'H'      | unicode(UTF-16), 4 bytes |
+| 位元組  | b'H'     | ASCII, 1byte             |
+| 字串   | "hello"  | u8 array                 |
+| 位元字串 | b"hello" | ASCII array              |
 
 ## \&str
 
-* \&str是Rust的內置類型，不可修改指向的字串。\&str是對str的借用。
+* \&str是Rust的內置類型，<mark style="color:red;">不可修改指向的字串</mark>。\&str是對str的借用。
 * **Rust的字串內部預設是使用utf-8編碼格式的。而內置的char類型是4位元組長度的，存儲的內容是Unicode Scalar Value**。所以，Rust裡面的字串不能視為char類型的陣列，而更接近u8類型的陣列。
 
 ```rust
@@ -69,13 +84,39 @@ fn main() {
 }
 ```
 
-## String
+## 字串(String)
 
 模組[std::string](https://doc.rust-lang.org/std/string/index.html)。
 
 String類型，這個型別管理被分配到**堆積**上的資料，所以能夠儲存在編譯時未知大小的文字。
 
-它跟\&str類型的主要區別是，它有管理記憶體空間的權力。<mark style="color:red;">**\&str類型是對一塊字串區間的借用，它對所指向的記憶體空間沒有所有權，哪怕\&mut str也一樣**</mark>。
+<mark style="background-color:red;">它跟\&str類型的主要區別是，它有管理記憶體空間的權力</mark>。<mark style="color:red;">**\&str類型是對一塊字串區間的借用，它對所指向的記憶體空間沒有所有權，哪怕\&mut str也一樣**</mark>。
+
+### 新建字串
+
+```rust
+fn main(){
+    // 直接新建字串, new()沒有參數傳入
+    let mut s = String::new();
+    // String可用+新增內容
+    s += "hello world";
+    println!("{s}");
+    
+    // 由str建構String
+    let s = String::from("world");
+    println!("{s}");
+    
+    // 由str建構String
+    let s: String = "also this".into();
+    println!("{s}");
+    
+    // 由str轉為String
+    let s = "initial contents".to_string();
+    println!("{s}"); 
+}
+```
+
+
 
 ```rust
 fn main() {
@@ -101,25 +142,28 @@ fn main() {
     let mut s = String::from("Hello World");
     // 傳進函數時， mut String自動轉為&mut str
     capitalize(&mut s);
-    println!("{}", s);    // HELLO WORLD
-}
+    println!("{}", s);    // HELLO WORL
 ```
 
 Rust的記憶體管理方式和C++有很大的相似之處。如果用C++來對比，Rust的String類型類似於std::string，而Rust的\&str類型類似於std::string\_view。
 
-## string slice
+## 字串切片(string slice)
 
-字串 slice（string slice）是 String 中一部分值的引用。它不是對整個 String 的引用，而是對部分 String 的引用。
+字串 slice（string slice）是字串中一部分值的引用，沒有所有權。它不是對整個字串的引用，而是對部分字串的引用。
 
 ```rust
 fn main() {
     let s = String::from("hello world");
 
-    let hello = &s[0..5];
-    let world = &s[6..11];
-    println!("{}-{}", hello, world);
+    let hello = &s[0..5];    //hello 
+    let world = &s[6..11];  // world
+    println!("{hello}-{world}");
 }
 ```
+
+hello 是一個部分字串的引用，由一個額外的`[0..5]`部分指定。可以使用一個由中括號中的 \[starting\_index..ending\_index] 指定的 range 創建一個切片。
+
+
 
 ![hello world slice](../../.gitbook/assets/hello\_world\_slice-min.png)
 

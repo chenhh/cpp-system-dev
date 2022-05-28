@@ -2,15 +2,14 @@
 description: 數組
 ---
 
-# 陣列
+# 陣列與切片
 
 ## 簡介
 
 * 陣列是一個容器，它在一塊**連續空間記憶體**中，存儲了一系列的**同樣類型**的資料。
-* 陣列中元素的佔用空間大小必須是**編譯期確定**的。
-* 陣列本身所容納的元素個數也必須是編譯期確定的，執行階段不可變。如
-* 果需要使用變長的容器，可以使用標準庫中的Vec/LinkedList等。
-* 陣列類型的表示方式為**\[T:n\]**。其中T代表元素類型；n代表元素個數；它必須是編譯期常量整數；中間用分號隔開。
+* 陣列中元素的佔用空間大小必須是**編譯期可以確定**的，<mark style="background-color:red;">即內容元素均有實現</mark>[<mark style="background-color:red;">sized trait</mark>](https://doc.rust-lang.org/std/marker/trait.Sized.html)。
+* 陣列本身所容納的元素個數也必須是編譯期確定的，執行階段不可變。如果需要使用變長的容器，可以使用標準庫中的Vec/LinkedList等。
+* 陣列類型的表示方式為**`[T:n]`**。其中T代表元素類型；n代表元素個數；它必須是編譯期常量整數；中間用分號隔開。
 * 對陣列內部元素的訪問，可以使用中括弧索引的方式。Rust支援usize類型的索引的陣列，**索引從0開始計數**。
 
 ```rust
@@ -31,8 +30,12 @@ fn main() {
 fn main() {
     let mut xs: [i32; 5] = [1, 2, 3, 4, 5];
     let ys: [i32; 5] = [6, 7, 8, 9, 10];
-    xs = ys;    // 所有權轉移
+    println!("array xs address:{:p}", &xs); // 0x7ffe6885fa78
+    println!("array ys address:{:p}", &ys); //  0x7ffe6885fa8c
+    xs = ys;    // ys所有權轉移
     println!("new array {:?}", xs);
+    println!("moved array xs address:{:p}", &xs);   // 0x7ffe6885fa78
+    println!("moved array ys address:{:p}", &ys);   // 0x7ffe6885fa8c
     
     let zs = [0; 6];
     // xs = zs; // error, 長度不同的陣列不可賦值
@@ -48,8 +51,8 @@ fn main() {
 fn main() {
     let v1 = [1, 2, 3];
     let v2 = [1, 2, 4];
-    // element-wise comparison
-    println!("{:?}", v1 < v2);
+    // element-wise comparison, 結果為純量
+    println!("{}", v1 < v2);  // true
 }
 ```
 
@@ -59,8 +62,9 @@ fn main() {
 fn main() {
     let v = [0_i32; 10];
     for i in &v {
-        println!("{:?}", i);
+        print!("{} ", i);
     }
+    // 0 0 0 0 0 0 0 0 0 0 
 }
 ```
 
@@ -69,18 +73,23 @@ fn main() {
 ```rust
 fn main() {
     // 3 * 2 array
-    let v: [[i32; 2]; 3] = [[0, 0], [0, 0], [0, 0]];
+    let v: [[i32; 2]; 3] = [[1, 2], [3, 4], [5, 6]];
     for i in &v {
         println!("{:?}", i);
     }
+    // [1, 2]
+    // [3, 4]
+    // [5, 6]
 }
 ```
 
-## 陣列切片\(slice\)
+## 陣列切片(slice)
 
 **對陣列取借用borrow操作，可以生成一個“陣列切片”（Slice）**。
 
-陣列切片對陣列沒有“所有權”，我們可以把陣列切片看作專門用於指向陣列的指標，是對陣列的另外一個“視圖” \(view\)。比如，我們有一個陣列`[T:n]`，它的借用指標的類型就是`&[T;n]`。它可以通過編譯器內部魔法轉換為陣列切片類型`&[T]`。陣列切片實質上還是指標，它不過是在類型系統中丟棄了編譯階段定長陣列類型的長度資訊，而將此長度資訊存儲為執行期的值。
+切片允許你引用集合中一段連續的元素序列，而不用引用整個集合。<mark style="color:red;">切片是一類引用，所以它沒有所有權</mark>。<mark style="color:blue;">我們可以把陣列切片看作專門用於指向陣列的指標，是對陣列的另外一個“視圖” (view)</mark>。
+
+比如，我們有一個陣列`[T:n]`，它的借用指標的類型就是`&[T;n]`。它可以通過編譯器內部魔法轉換為陣列切片類型`&[T]`。陣列切片實質上還是指標，它不過是在類型系統中丟棄了編譯階段定長陣列類型的長度資訊，而將此長度資訊存儲為執行期的值。
 
 ```rust
 fn main() {
@@ -186,7 +195,7 @@ Rust設計出DST類型，使得類型暫時系統更完善，也有助於消除�
 
 ## Range
 
-Rust中的Range代表一個“區間”，一個“範圍”，它有內置的語法支援，就是兩個小數點..。
+Rust中的Range代表一個“區間”，一個“範圍”，它有內置的語法支援，就是兩個小數點`..`。
 
 ```rust
 fn main() {
@@ -213,7 +222,7 @@ pub struct Range<Idx> {
 }
 ```
 
-這個類型本身實現了Iterator trait，因此它可以直接應用到迴圈語句中。Range具有反覆運算器的全部功能，因此它能調用反覆運算器的成員方法。
+這個類型本身實現了`Iterator trait`，因此它可以直接應用到迴圈語句中。Range具有迭代運算器的全部功能，因此它能調用迭代運算器的成員方法。
 
 ```rust
 fn main() {
@@ -234,9 +243,11 @@ fn main() {
 
 ```rust
 fn print_slice(arr: &[i32]) {
-    println!("Length: {}", arr.len());
+    let len = arr.len();
+    println!("Length: {len}");
     for item in arr {
-        print!("{}\t", item);
+        // 傳入的arr為引用，因此for中的arr不需再加&
+        print!("{item}\t");
     }
     println!("");
 }
@@ -259,7 +270,7 @@ fn main() {
 * `std::ops::RangeInclusive`，語法為`start..=end`，含義是`[start, end]`。
 * `std::ops::RangeToInclusive`，語法為`..=end`，對有符號數的含義是`（-∞, end]`，對無符號數的含義是`[0, end]`。
 
-## 邊界檢查\(boundary check\)
+## 邊界檢查(boundary check)
 
 ```rust
 fn main() {
@@ -291,7 +302,7 @@ impl<T> ops::Index<usize> for [T] {
 }
 ```
 
-為了防止索引操作導致程式崩潰，如果我們不確定使用的“索引”是否合法，應該使用get\(\)方法調用來獲取陣列中的元素，這個方法不會引起panic！，它的返回類型是Option&lt;T&gt;：
+為了防止索引操作導致程式崩潰，如果我們不確定使用的“索引”是否合法，應該使用get()方法調用來獲取陣列中的元素，這個方法不會引起panic！，它的返回類型是Option\<T>：
 
 ```rust
 fn main() {
@@ -306,7 +317,7 @@ Rust宣稱的優點是“無GC的記憶體安全”，那麼陣列越界會直�
 
 對於明顯的陣列越界行為，在Rust中可以通過lint檢查來發現。大家可以參考“clippy”這個項目，它可以檢查出這種明顯的常量索引越界的現象。然而，**總體來說，在Rust裡面，靠編譯階段靜態檢查是無法消除陣列越界的行為的**。
 
-一般情況下，Rust不鼓勵大量使用“索引”操作。正常的“索引”操作都會執行一次“邊界檢查”。**從執行效率上來說，Rust比C/C++的陣列索引效率低一點，因為C/C++的索引操作是不執行任何安全性檢查的**，它們對應的Rust程式碼相當於調用get\_unchecked\(\)函數。在Rust中，更加安全的做法是儘量使用“迭代器”方法。
+一般情況下，Rust不鼓勵大量使用“索引”操作。正常的“索引”操作都會執行一次“邊界檢查”。**從執行效率上來說，Rust比C/C++的陣列索引效率低一點，因為C/C++的索引操作是不執行任何安全性檢查的**，它們對應的Rust程式碼相當於調用get\_unchecked()函數。在Rust中，更加安全的做法是儘量使用“迭代器”方法。
 
 ```rust
 fn main() {
@@ -320,6 +331,4 @@ fn main() {
     println!("{:?}", item);
 }
 ```
-
-
 
