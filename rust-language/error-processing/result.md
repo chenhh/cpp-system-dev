@@ -101,3 +101,57 @@ let p: Person = match serde_json::from_str(data) {
 // 等價寫法
 let p:Person = serde_json::from_str(data)?;
 ```
+
+## 錯誤資訊類型不一樣，如何轉換？
+
+```rust
+fn foo() -> Result<i32, String> {
+    // Err回傳類型為String
+    Err(String::from("foo error"))
+}
+
+#[derive(Debug)]
+struct MyErr{
+    error_code: i32,
+}
+
+impl  From<String> for MyErr{
+    fn from(s: String) -> Self {
+        if s.is_empty(){
+            MyErr{ error_code: 0}
+        }else {
+            MyErr{ error_code: 1}
+        }
+    }
+}
+
+fn bar() -> Result<i32, MyErr>{
+    // Err回傳類型為i32
+    // 錯誤資訊說，如果為 i32 實現了 From<String> 特性，還是允許的。
+    foo()?;
+    Ok(689)
+}
+
+fn main(){
+    println!("{:?}", bar()); // Err(MyErr { error_code: 1 })
+}
+```
+
+## 返回值由Option 轉 Result
+
+```rust
+fn foo() -> Option<i32> {
+    None
+}
+
+fn bar() -> Result<i32, String> {
+    foo().ok_or("error".to_string())?;
+    Ok(689)
+}
+
+fn main() {
+    println!("{:?}", bar()); //Err("error")
+}
+```
+
+ok\_or 可以把 Option 類型轉換為 Result。

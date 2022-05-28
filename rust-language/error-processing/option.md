@@ -49,6 +49,25 @@ fn sq(x: u32) -> Option<u32> {
 }
 ```
 
+## ? - 故障時返回Err物件
+
+如果你調用的函數和你正在寫的函數都返回 Option 類型，如果你調用的函數返回 None，你的函數也返回 None，這時，代碼可以用問號 ？ 操作符簡化。
+
+```rust
+fn foo() -> Option<i32> {
+    None
+}
+
+fn bar() -> Option<String>{
+    foo()?;
+    Some(String::from("hello world"))
+}
+
+fn main(){
+    println!("{:?}", bar()); // None
+}
+```
+
 ## 使用unwrap和?解包Option
 
 如果我們unwrap的Option的值是None，那麼程式就會panic!。
