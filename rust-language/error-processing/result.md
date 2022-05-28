@@ -139,6 +139,8 @@ fn main(){
 
 ## 返回值由Option 轉 Result
 
+`ok_or()` 可以把 Option 類型轉換為 Result。
+
 ```rust
 fn foo() -> Option<i32> {
     None
@@ -154,4 +156,22 @@ fn main() {
 }
 ```
 
-ok\_or 可以把 Option 類型轉換為 Result。
+## 返回值由Result轉Option
+
+如果想提前丟棄計算結果，可以用 `.ok()?` 方法。
+
+```rust
+fn foo() -> Result<i32, i32> {
+    Err(123)
+}
+
+fn bar() -> Option<i32> {
+    foo().ok()?;
+    Some(689)
+}
+
+fn main() {
+    println!("{:?}", bar()); //None
+}
+```
+
