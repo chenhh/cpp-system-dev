@@ -200,7 +200,7 @@ fn main() {
 
 枚舉允許你通過列舉可能的 成員（variants） 來定義一個類型。
 
-enum類型在Rust中代表的就是多個成員的OR關係（同時間只有一個成員可被使用）。
+enum類型在Rust中代表的就是多個成員的OR關係（同時間只有一個成員可被使用），所<mark style="background-color:red;">佔的記憶體空間為佔空間最大的成員的位元組數</mark>。
 
 在Rust中，enum和struct為內部成員創建了新的名字空間。如果要訪問內部成員，可以使用：：符號。因此，不同的enum中重名的元素也不會互相衝突。
 
@@ -209,8 +209,8 @@ enum類型在Rust中代表的就是多個成員的OR關係（同時間只有一�
 ```rust
 // Number為整數或浮點數
 enum Number {
-    Int(i32),
-    Float(f32),
+    Int(i32),   // struct tuple
+    Float(f32), // struct tuple
 }
 
 // enum的元素可為複合型別
@@ -233,7 +233,6 @@ fn main() {
     println!("Size of Number: {}", std::mem::size_of::<Number>());
     // 32 bytes
     println!("Size of Message: {}", std::mem::size_of::<Message>());
-
 }
 ```
 
@@ -323,27 +322,27 @@ fn main() {
 
 ### 標準庫內的Option\<T>
 
-Rust的core與std庫中有一個極其常用的enum類型[Option\<T>](https://doc.rust-lang.org/core/option/index.html)，它的定義如下：
+Rust的core與std庫中有一個極其常用的enum類型[Option\<T>](https://doc.rust-lang.org/core/option/index.html)，[variant.Some](https://doc.rust-lang.org/core/option/enum.Option.html#variant.Some), [Variant.None](https://doc.rust-lang.org/core/option/enum.Option.html#variant.None), 它的定義如下：
 
 ```rust
+// T為泛型，由使用者指定
 enum Option<T> {
     None,        // 沒有值
-    Some(T),     // 型別T有值
+    Some(T),     // struct tuple, 型別T有值
 }
 ```
 
 由於它實在是太常用，標準庫將Option以及它的成員Some、None都加入到了Prelude中，使用者甚至不需要use語句聲明就可以直接使用。
 
-它表示的含義是“<mark style="color:red;">類型T的值要麼存在、要麼不存在</mark>”。比如Option\<i32>表達的意思就是“可以是一個i32類型的值，或者沒有任何值”。
+它表示的含義是“<mark style="background-color:red;"><mark style="color:red;">類型T的值要麼存在、要麼不存在<mark style="color:red;"></mark><mark style="background-color:red;">”</mark>。比如Option\<i32>表達的意思就是“可以是一個i32類型的值，或者沒有任何值”。
 
 從類型系統的角度來表達這個概念就意味著<mark style="color:blue;">編譯器需要檢查是否處理了所有應該處理的情況</mark>，這樣就可以避免在其他編程語言中非常常見的 bug。
 
-Rust 並沒有空值，不過它確實擁有一個可以編碼存在或不存在概念的枚舉，即為Option\<T>。
+<mark style="background-color:blue;">Rust 並沒有空值(null)，不過它確實擁有一個可以編碼存在或不存在概念的枚舉，即為Option\<T></mark>。
 
 ```rust
 let some_number = Some(5);
 let some_string = Some("a string");
-
 let absent_number: Option<i32> = None;
 ```
 
@@ -355,6 +354,7 @@ Rust裡面的複合資料類型是允許遞迴定義的。比如struct裡面嵌�
 struct Recursive {
     data: i32,
     // 不可直接遞迴定義，會出現編譯錯誤
+    // 因為無法算出Recursive的size
     rec: Recursive, 
 }
 

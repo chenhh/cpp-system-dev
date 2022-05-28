@@ -11,27 +11,27 @@ fn main() {
     
     // false, logical and,帶短路功能
     let z = x && y; 
-    println!("{}", z);
+    println!("{z}");
     
     // true, logical or,帶短路功能
     let z = x || y; 
-    println!("{}", z);
+    println!("{z}");
     
     // false, bitwise and,不帶短路功能
     let z = x & y; 
-    println!("{}", z);
+    println!("{z}");
     
     // true, bitwise or,不帶短路功能
     let z = x | y; 
-    println!("{}", z);
+    println!("{z}");
     
     // true, bitwise xor,不帶短路功能
     let z = x ^ y; 
-    println!("{}", z);
+    println!("{z}");
 
     // 一些比較運算運算式的類型就是bool類型
     let z: bool = 2 < 3;
-    println!("{}", z);
+    println!("{z}");    // true
 }
 ```
 
