@@ -215,17 +215,65 @@ fn main() {
 
 即使實作的類型不是在當前的專案中聲明的，我們依然可以為它增加一些成員方法。
 
-### 孤兒規則(orphan rule)
+## 孤兒規則(orphan rule)
 
-但我們也不是隨隨便便就可以這麼做的，Rust對此有一個規定。在聲明trait和impl trait的時候，**Rust規定了一個Coherence Rule（一致性規則）或稱為Orphan Rule（孤兒規則）：impl塊要麼與trait的聲明在同一個的crate中，要麼與類型的聲明在同一個crate中**。
+但我們也不是隨隨便便就可以這麼做的，Rust對此有一個規定。在聲明trait和impl trait的時候，**Rust規定了一個Coherence Rule（一致性規則）或稱為Orphan Rule（孤兒規則）：**<mark style="background-color:red;">**impl塊要麼與trait的聲明在同一個的crate中，要麼與類型的聲明在同一個crate中**</mark><mark style="background-color:red;">。</mark>
 
 也就是說，如果trait來自於外部crate，而且類型也來自於外部crate，編譯器不允許你為這個類型impl這個trait。**它們之中必須至少有一個是在當前crate中定義的**。
+
+<mark style="color:red;">孤立規則是用來預防相依性專案，在新增新Trait實作時造成破壞</mark>，也就是說只有在當前區域Crate中而非外部Crate時，Rust才會允許Trait或是型別實作。
+
+具體地說：
+
+1. 如果要實現外部定義的 trait 需要先將其導入作用域。&#x20;
+2. 不允許對外部類型實現外部 trait；&#x20;
+3. 可以對外部類型實現自定義的 trait；&#x20;
+4. 可以對自定義類型上實現外部 trait。
+
+外部是指不是由自己，而是由外部定義的，<mark style="color:red;">包括標准庫</mark>。
 
 因為在其他的crate中，一個類型沒有實現一個trait，很可能是有意的設計。如果我們在使用其他的crate的時候，強行把它們“配對”，是會製造出bug的。
 
 比如說，我們寫了一個程式，引用了外部庫lib1和lib2，lib1中聲明了一個trait T，lib2中聲明了一個struct S，我們不能在自己的程式中針對S實現T。這也意味著，上游開發者在給別人寫庫的時候，尤其要注意，一些比較常見的標準庫中的trait，如Display Debug ToString Default等，應該盡可能地提供好。否則，使用這個庫的下游開發者是沒辦法幫我們把這些trait實現的。
 
 同理，如果是匿名impl，那麼這個impl塊必須與類型本身存在於同一個crate中。
+
+### 可以對自定義類型上實現外部 trait與不可對外部類型實作外部trait
+
+```rust
+// 可以對自定義類型上實現外部 trait
+// 外部的trait
+use std::ops::Add;
+
+// 本地的struct
+struct Mydata(i32);
+
+// 本地的struct實現外部的trait
+impl Add<i32> for Mydata{
+    type Output = i32;
+    fn add(self, other:i32) -> Self::Output {
+        (self.0) + other
+    }
+}
+
+// error 不可為外部的類型實現trait
+i// mpl Add<i32> for Option<Mydata>{
+//    ...
+//}
+
+fn main(){
+    let res = Mydata(3) + 5;
+    println!("{res}");  // 8
+}
+```
+
+
+
+### 1.41.0鬆綁Trait實作限制
+
+但是這限制遇到泛型時，情況就變得複雜，例如當Crate定義了BetterVec結構，而開發者想要把該結構轉換成標準函式庫的Vec，程式碼寫作impl From\<BetterVec> for Vec{// ...}，在Rust 1.40中，這個寫法違反孤立原則，因為From和Vec都是定義在標準函式庫，對於當前Crate來說是外部的Trait與型別。
+
+上述案例在Rust 1.41中，From和Vec仍然為外部的Trait與型別，但是Trait將會透過區域型別引數化，因此在最新版本這個實作是可行的。
 
 ## OOP語言的Interface與trait的區別
 
