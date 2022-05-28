@@ -2,7 +2,7 @@
 
 ## 簡介
 
-<mark style="color:red;">所有權是 Rust 用來達成其最大的目標「記憶體安全」的方法</mark>。 它有幾個不同的概念：
+所有權是 Rust 用來達成其最大的目標，記憶體安全，的方法。 它有幾個不同的概念：
 
 * 所有權（ownership）。
 * 借用（borrowing），及其相關功能「參照」（references）。
@@ -21,32 +21,31 @@
 2. let繫結，繫結了什麼？變數 + 作用域 + 資料（記憶體）。
 3. move、lifetime、RAII都是和作用域相關的，所以想理解它們就先要理解作用域。
 
-
-
 ## 所有權(ownership)
 
-所有權，顧名思義，至少應該包含兩個物件：“所有者”和“所有物”。<mark style="color:red;">在Rust中，“所有者”就是變數，“所有物”是資料，抽象來說，就是指某一片記憶體。</mark><mark style="color:red;background-color:red;">let關鍵字，允許你繫結“所有者”和“所有物”</mark>。
+所有權，顧名思義，至少應該包含兩個物件：“所有者”和“所有物”。<mark style="color:red;">在Rust中，“所有者”就是變數，“所有物”是資料，抽象來說，就是指某一片記憶體。let關鍵字，允許你繫結“所有者”和“所有物”</mark>。
 
 “所有權”代表著以下意義：
 
 * 每個值在Rust中都有一個變數來管理它，這個變數就是這個值、這塊記憶體的所有者；
-* <mark style="color:red;">每個值在一個時間點上只有一個管理者(不能同時有多個管理者)</mark>；
-* 當變數所在的作用域結束的時候，變數以及它代表的值將會被銷毀(類似RAII)。
+* 每個值在一個時間點上只有一個管理者；
+* 當變數所在的作用域結束的時候，變數以及它代表的值將會被銷毀。
 
 **這代表當綁定離開有效範圍，Rust 就會釋放所綁定的資源**。
 
 ### 變數作用域(scope)
 
 ```rust
-{                      // 變數s在這裡無效, 它尚未聲明
-    let s = "hello";   // 從此處起，s是有效的
+{                      // s 在這裡無效, 它尚未聲明
+    let s = "hello";   // 從此處起，s 是有效的
+
     // 使用 s
-}                      // 此作用域已結束，s不再有效
+}                      // 此作用域已結束，s 不再有效r
 ```
 
 ```rust
 fn main() {
-    // 從此處起，變數s是有效的
+    // 從此處起，s 是有效的
     let mut s = String::from("hello");
     // 因為對s有寫入的操作，因此必須宣告為mut
     s.push_str(" world");
@@ -83,7 +82,7 @@ scope 1 {
 }
 ```
 
-在Rust裡面，<mark style="background-color:orange;">不可以做“設定運算子重載”</mark>，<mark style="color:red;">若需要“深複製” (deep copy)（指的是對於複雜結構中所有元素的複製，而不是單純以共享指標指向該結構），必須手工調用clone方法。</mark>這個clone方法來自於std:clone::Clone這個trait。clone方法裡面的行為是可以自訂的。
+在Rust裡面，不可以做“設定運算子重載”，<mark style="color:red;">若需要“深複製” (deep copy)（指的是對於複雜結構中所有元素的複製，而不是單純以共享指標指向該結構），必須手工調用clone方法。</mark>這個clone方法來自於std:clone::Clone這個trait。clone方法裡面的行為是可以自訂的。
 
 ### 所有權與函數
 
@@ -173,7 +172,6 @@ let s2 = s1;
 ![s1對hello的所有權移動至s2](../../.gitbook/assets/string\_move-min.png)
 
 ```rust
-fn create(){
     let s = String::from("hello");
     return s; // 所有權轉移,從函數內部移動到外部
 }
@@ -208,9 +206,7 @@ C++的做法就不一樣了，它允許賦值構造函數(copy constructor)、�
 * 此處的複製指的是隱式的copy，而非顯式的clone。
 * move可以類比成作業系統中的剪下(或移動)操作，移動後，原始的資料就不可再被使用。
 
-<mark style="background-color:blue;">預設的move語義是Rust的一個重要設計</mark>，但是任何時候需要複製都去調用clone函數會顯得非常煩瑣。對於一些簡單類型，比如整數、bool，讓它們在賦值的時候默認採用複製操作會讓語言更簡單。
-
-<mark style="background-color:orange;">基本類型有實作copy trait, // =運算子會使用copy而非move</mark>。
+預設的move語義是Rust的一個重要設計，但是任何時候需要複製都去調用clone函數會顯得非常煩瑣。對於一些簡單類型，比如整數、bool，讓它們在賦值的時候默認採用複製操作會讓語言更簡單。
 
 ```rust
 fn main() {
@@ -390,12 +386,14 @@ pub trait Copy: Clone { }
 
 * Copy內部沒有方法，Clone內部有兩個方法。
 * **Copy trait是給編譯器用的**，告訴編譯器這個類型預設採用copy語義，而不是move語義。
-* **Clone trait是給程式設計師用的**，我們必須手動呼叫clone方法，它才能發揮作用。
+* **Clone trait是給程式設計師用的**，我們必須手動調用clone方法，它才能發揮作用。
 * Copy trait不是想實現就能實現的，它對類型是有要求的，有些類型不可能impl Copy。而Clone trait則沒有什麼前提條件，任何類型都可以實現（unsized類型除外，因為無法使用unsized類型作為返回值）。
 * Copy trait規定了這個類型在執行變數綁定、函數參數傳遞、函數返回等場景下的操作方式。即這個類型在這種場景下，必然執行的是“簡單記憶體複製”操作，這是由編譯器保證的，程式師無法控制。
 * Clone trait裡面的clone方法究竟會執行什麼操作，則是取決於程式師自己寫的邏輯。一般情況下，clone方法應該執行一個“深複製”操作，但這不是強制性的。
 * 如果你確實不需要Clone trait執行其他自訂操作（絕大多數情況都是這樣），編譯器提供了一個工具，我們可以在一個類型上添加`#[derive（Clone）]`，來讓編譯器幫我們自動生成那些重複的程式碼。_編譯器自動生成的clone方法非常機械，就是依次調用每個成員的clone方法_。
 * Rust語言規定了在`T：Copy` (類型必須有實現copy)的情況下，Clone trait代表的含義。即：當某變數`t：T`符合`T：Copy`時，它調用`t.clone（）`方法的含義必須等同於“簡單記憶體複製”。也就是說，clone的行為必須等同於`let x=std::ptr::read(&t);`，也等同於`let x=t;`。當`T:Copy`時，我們不要在Clone trait裡面亂寫自己的邏輯。所以，當我們需要指定一個類型是Copy的時候，最好使用`#[derive（Copy，Clone）]`方式，避免手動實現Clone導致錯誤。
+
+###
 
 ### copy的含意
 

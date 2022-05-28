@@ -2,7 +2,7 @@
 
 ## 變數宣告
 
-Rust的變數必須先聲明後才能使用，<mark style="color:red;">預設是唯讀不可寫入</mark>，與C/C++中變數預寫為可讀寫不同，定義可寫入的變數要用`let mut`宣告。
+Rust的變數必須先聲明後才能使用，<mark style="color:red;">預設是唯讀不可寫入</mark>，與C/C++中變數預寫為可讀寫不同。
 
 Rust 通過靜態類型確保類型安全。變量綁定可以在聲明時說明類型，不過在多數情況下， 編譯器能夠從上下文推導出變量的類型，從而大大減少了類型說明的工作。
 
@@ -16,9 +16,9 @@ Rust 通過靜態類型確保類型安全。變量綁定可以在聲明時說明
 
 ```rust
 fn main() {
-    let an_integer = 1u32;    // 將數字1綁定至唯讀變數an_integer
-    let a_boolean = true;     // 將布林true綁定至唯護變數a_boolean 
-    let unit = ();            // empty tuple
+    let an_integer = 1u32;
+    let a_boolean = true;
+    let unit = ();
 
     // 将 `an_integer` 複製到 `copied_integer`，因為基本型別有實現copy trait
     let copied_integer = an_integer;
@@ -84,22 +84,6 @@ fn main() {
 <mark style="background-color:red;">Rust內的型別如果沒有實作copy trait時(只有基礎型別可實作)，賦值運算子</mark><mark style="background-color:red;">`=`</mark><mark style="background-color:red;">預設為move語意</mark>。
 
 Rust裡面的底線`_`是一個特殊的識別字，在編譯器內部它是被特殊處理的。它跟其他識別字有許多重要區別。
-
-### 印出變數的記憶體位址
-
-```rust
-fn main() {
-    let data: u32 = 42;
-    let copy_data = data;
-    let borrow_data = &data;
-
-    // the {:p} mapping shows pointer values as hexadecimal memory addresses
-    println!("Data address: {:p}", &data);
-    println!("Copy data address: {:p}", &copy_data); // 與data不同，因為為copy而非move
-    println!("Borrow data address: {:p}", &borrow_data); // borrow_data變數的地址
-    println!("Borrow data storage address: {:p}", borrow_data); // borrow_data變數儲存之值的地址，與data相同
-}
-```
 
 ## 變數遮蔽(variable shadowing)
 

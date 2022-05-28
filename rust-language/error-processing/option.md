@@ -48,3 +48,24 @@ fn sq(x: u32) -> Option<u32> {
     Some(x * x) 
 }
 ```
+
+## 使用unwrap和?解包Option
+
+如果我們unwrap的Option的值是None，那麼程式就會panic!。
+
+```rust
+fn next_birthday(current_age: Option<u8>) -> Option<String> {
+	// If `current_age` is `None`, this returns `None`.
+	// If `current_age` is `Some`, the inner `u8` gets assigned to `next_age` after 1 is added to it
+    let next_age: u8 = current_age?;
+    Some(format!("Next year I will be {}", next_age + 1))
+}
+
+fn main() {
+  let s = next_birthday(None);
+  match s {
+      Some(a) => println!("{:#?}", a),
+      None => println!("No next birthday")
+  }
+}
+```
