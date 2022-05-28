@@ -151,7 +151,7 @@
 ## rust語言 <a href="#rust-language" id="rust-language"></a>
 
 * [Rust簡介](rust-language/introduction.md)
-* [測試](rust-language/testing/README.md)
+* [測試](rust-language/testing.md)
   * [斷言(assert)](rust-language/testing/duan-yan-assert.md)
 * [錯誤處理](rust-language/error-processing/README.md)
   * [Option](rust-language/error-processing/option.md)
