@@ -12,6 +12,8 @@
 * ndarray-stats：
 * [polars](https://github.com/pola-rs/polars)：快速多線程的DataFrame函式庫。
 * [noisy\_float](https://docs.rs/noisy\_float/0.2.0/noisy\_float/)：這個板塊包含了浮點類型，如果它們被設置為非法值，例如NaN，就會發生panic!。
+* [stars](https://github.com/statrs-dev/statrs)：統計套件。
+*
 
 ## 系統程式
 
