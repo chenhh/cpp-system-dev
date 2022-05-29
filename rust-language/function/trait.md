@@ -552,11 +552,101 @@ pub trait Sized {
 
 在C/C++這一類的語言中，大部分變數、參數、返回值都應該是編譯階段固定大小的。**在Rust中，但凡編譯階段能確定大小的類型，都滿足Sized約束。**
 
-那還有什麼類型是不滿足Sized約束的呢？比如C語言裡的不定長陣列（Variable-length Array）。不定長陣列的長度在編譯階段是未知的，是在執行階段才確定下來的。Rust裡面也有類似的類型\[T]。在Rust中VLA類型已經通過了RFC設計，只是暫時還沒有實現而已。
+有些類型在編譯期無法確定大小。
 
-不定長類型在使用的時候有一些限制，比如不能用它作為函數的返回類型，而必須將這個類型藏到指標背後才可以。但它作為一個類型，依然是有意義的，我們可以為它添加成員方法，用它產生實體泛型參數，等等。
+* 一個 slice的`[T]`的size是未知的，因為在編譯期不知道到底會有多少個T存在。
+* 一個trait的size是未知的，因為不知道實現這個trait的結構是什麼。
 
-Rust中對於動態大小類型專門有一個名詞Dynamic Sized Type。我們後面將會看到的\[T]，str以及dyn Trait都是DST。
+
+
+確定類型別的大小(size)對於能夠在堆疊(stack)上為實例分配足夠的空間是十分重要的。確定大小型別(sized type)可以通過傳值(by value)或者傳引用(by reference)的方式來傳遞。
+
+如果一個類型的大小不能在編譯期確定，那麼它就被稱為不確定大小型別(unsized type)或者DST，即動態大小型別(Dynamically-Sized Type)。因為不確定大小類型(unsized type)不能存放在堆疊上，所以它們只能通過傳引用(by reference)的方式來傳遞。
+
+<mark style="background-color:red;">把unsized的類型放到指標或者Box裡面，就變成了sized了</mark>，可通過指標找到源頭，然後順著源頭找到其他的資料。
+
+```rust
+use std::mem::size_of;
+
+fn main() {
+    // primitives
+    assert_eq!(4, size_of::<i32>());
+    assert_eq!(8, size_of::<f64>());
+
+    // tuples
+    assert_eq!(8, size_of::<(i32, i32)>());
+
+    // arrays
+    assert_eq!(0, size_of::<[i32; 0]>());
+    assert_eq!(12, size_of::<[i32; 3]>());
+
+    struct Point {
+        x: i32,
+        y: i32,
+    }
+
+    // structs
+    assert_eq!(8, size_of::<Point>());
+
+    // enums
+    assert_eq!(8, size_of::<Option<i32>>());
+
+    // get pointer width, will be
+    // 4 bytes wide on 32-bit targets or
+    // 8 bytes wide on 64-bit targets
+    const WIDTH: usize = size_of::<&()>();
+
+    // pointers to sized types are 1 width
+    assert_eq!(WIDTH, size_of::<&i32>());
+    assert_eq!(WIDTH, size_of::<&mut i32>());
+    assert_eq!(WIDTH, size_of::<Box<i32>>());
+    assert_eq!(WIDTH, size_of::<fn(i32) -> i32>());
+
+    const DOUBLE_WIDTH: usize = 2 * WIDTH;
+
+    // unsized struct
+    struct Unsized {
+        unsized_field: [i32],
+    }
+
+    // pointers to unsized types are 2 widths
+    assert_eq!(DOUBLE_WIDTH, size_of::<&str>()); // slice
+    assert_eq!(DOUBLE_WIDTH, size_of::<&[i32]>()); // slice
+    assert_eq!(DOUBLE_WIDTH, size_of::<&dyn ToString>()); // trait object
+    assert_eq!(DOUBLE_WIDTH, size_of::<Box<dyn ToString>>()); // trait object
+    assert_eq!(DOUBLE_WIDTH, size_of::<&Unsized>()); // user-defined unsized type
+
+    // unsized types
+    // size_of::<str>(); // compile error
+    // size_of::<[i32]>(); // compile error
+    // size_of::<dyn ToString>(); // compile error
+    // size_of::<Unsized>(); // compile error
+}
+```
+
+* 在Rust中，指向陣列的動態大小檢視(dynamically sized views)被稱為切片(slice)。例如，一個`&str`是一個"字串切片(string slice)" ，一個`&[i32]`是一個"`i32`切片"。最常見的切片是字串切片`&str`和陣列切片`&[T]`。
+* 切片(slice)是雙寬度(double-width)的，因為他們儲存了一個指向陣列的指標和陣列中元素的數量。
+* trait物件指標是雙寬度(double-width)的，因為他們儲存了一個指向資料的指標和一個指向vtale的指標。
+* 不確定大小(unsized) 結構體指標是雙寬度的，因為他們儲存了一個指向結構體資料的指標和結構體的大小(size)。
+* 不確定大小(unsized) 結構體只能擁有有1個不確定大小(unsized)欄位(field)而且它必須是結構體裡的最後一個欄位(field)。
+
+### ?Sized trait
+
+`?Sized`就表示UnSized(不確定類型大小)類型。
+
+`fn foo<T:?Sized>(){}`現在可以接受`UnSized`的資料類型了。
+
+* `?Sized`可以是明顯的“可選大小(optionally sized)”或者“可能大小(maybe sized)”，將其新增到型別引數的約束(bound)上，允許該型別是確定大小(sized)或者不確定大小(unsized)。
+* `?Sized`是一個非常特殊的用法，其他的trait bound，都是用來縮小數據的類型範圍的，<mark style="color:red;">這個是用來擴大類型範圍的</mark>。
+* `?Sized`是Rust中惟一的寬松約束。
+
+為什麼這很重要？當我們處理泛型引數的時候並且那個型別隱藏在指標背後，我們幾乎總是想要選擇退出預設的Sized約束來讓我們的函式在其將要接受的引數型別上更加自由。而且，如果我們沒有選擇退出預設的Sized約束，我們將最終得到一些令人驚訝和迷惑的編譯錯誤資訊。
+
+<mark style="background-color:red;">Traits預設是?Sized</mark>。trait物件本質上不確定大小(unsized)的，因為任何大小的任意型別都能實現一個trait，因此，如果是`Trait:?Sized`，我們只能為dyn Trait實現trait。
+
+```rust
+trait Trait where Self: ?Sized {}
+```
 
 ### Default
 
@@ -588,3 +678,5 @@ trait Default {
 它只包含一個“靜態函數”default()返回Self類型。標準庫中很多類型都實現了這個trait，它相當於提供了一個類型的預設值。
 
 在Rust中，單詞new並不是一個關鍵字。所以我們可以看到，很多類型中都使用了new作為函數名，用於命名那種最常用的創建新物件的情況。因為這些new函數差別甚大，所以並沒有一個trait來對這些new函數做一個統一抽象。
+
+##

@@ -190,7 +190,7 @@ fn main() {
 * 你需要動態建立多個可變的 alias。
 * 你想要變更 Rc 多個指標底層的資料狀態。
 
-## Rc (reference call)
+## Rc (reference counter)
 
 單執行緒的引用計數指標，用來共享配置在 heap 上的資料。
 

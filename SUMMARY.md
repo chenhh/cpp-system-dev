@@ -190,6 +190,7 @@
 * [智慧指標(smart pointer)](rust-language/memory-management/zhi-hui-zhi-biao-smart-pointer.md)
   * [解引用(deref)](rust-language/memory-management/deref.md)
   * [Box](rust-language/zhi-hui-zhi-biao-smart-pointer/box.md)
+  * [Rc引用計數](rust-language/zhi-hui-zhi-biao-smart-pointer/rc-yin-yong-ji-shu.md)
 * [執行緒安全](rust-language/thread-safe/README.md)
   * [管道(channel)](rust-language/thread-safe/channel.md)
   * [狀態共享](rust-language/thread-safe/state-sharing.md)
