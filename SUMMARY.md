@@ -188,7 +188,7 @@
   * [unsafe區塊](rust-language/memory-management/unsafe.md)
 * [容器與迭代器](rust-language/container.md)
 * [智慧指標(smart pointer)](rust-language/memory-management/zhi-hui-zhi-biao-smart-pointer.md)
-  * [解引用(deref)](rust-language/zhi-hui-zhi-biao-smart-pointer/deref.md)
+  * [解引用(deref)](rust-language/memory-management/deref.md)
   * [Box](rust-language/zhi-hui-zhi-biao-smart-pointer/box.md)
 * [執行緒安全](rust-language/thread-safe/README.md)
   * [管道(channel)](rust-language/thread-safe/channel.md)
