@@ -1,21 +1,21 @@
-# 容器與迭代器
+# 容器
 
 ## 常用的容器
 
-| 名稱         | 描述                         |
-| ---------- | -------------------------- |
-| Vec        | 可變長度陣列，連續儲存資料              |
-| VecDeque   | 雙向佇列，適用於從頭部與尾部插入與刪除資料      |
-| LinkedList | 雙向鏈結，非連續儲存資料               |
-| HashMap    | 以hash算法儲存key-value對        |
-| BTreeMap   | 以Btree算法儲存key-value對       |
-| HashSet    | 基於Hash算法的集合，相當於沒有值的HashMap |
-| BTreeSet   | 基於BTree的集合 相當於沒有值的BTreeMap |
-| BinaryHeap | 基於二元樹堆積實現的優先佇列             |
+| 名稱 | 描述 |
+| :--- | :--- |
+| Vec | 可變長度陣列，連續儲存資料 |
+| VecDeque | 雙向佇列，適用於從頭部與尾部插入與刪除資料 |
+| LinkedList | 雙向鏈結，非連續儲存資料 |
+| HashMap | 以hash算法儲存key-value對 |
+| BTreeMap | 以Btree算法儲存key-value對 |
+| HashSet | 基於Hash算法的集合，相當於沒有值的HashMap |
+| BTreeSet | 基於BTree的集合 相當於沒有值的BTreeMap |
+| BinaryHeap | 基於二元樹堆積實現的優先佇列 |
 
-## 迭代器 (iterator)
+## 迭代器 \(iterator\)
 
-Rust的迭代器是指實現了`Iterator` trait的類型。
+Rust的迭代器是指實現了Iterator trait的類型。
 
 ```rust
 trait Iterator {
@@ -133,30 +133,6 @@ fn main() {
 }
 ```
 
-### [\[rust中文社區\] 迭代器是如何做到避免邊界檢查的](https://rustcc.cn/article?id=295bb1bf-d826-4da0-be02-a721052ab901)？
-
-迭代器不是避免邊界檢查，是避免額外的邊界檢查。
-
-{% code title="" %}
-```rust
-for i in 0..length{
-    arr[i] = 0;
-}
-```
-{% endcode %}
-
-由於arr的長度並不一定真的是length，如果arr不是length長度，那程式就會越界訪問。而rust要求安全，在length並不等於arr長度的時候，也要能導致程式panic，所以在arr\[i]時也要進行一次邊界檢查來檢視i是否超出arr的長度。 這樣在rust裡就變成了對for循環變量是否到達length進行一次檢查，然後對循環變量索引是否對於arr越界進行一次邊界檢查，就有了兩次檢查，如果我們能保證length就是arr的length，那這次多餘的檢查就是無必要的。
-
-那迭代器是怎麼避免的，rust迭代器是這麼寫的：
-
-```rust
-for e in arr.iter_mut(){
-    *e = 0;
-}
-```
-
-因為迭代器是由arr創建的，那麼就能保證只要在next中進行一次檢查，如果返回的是Some(\&e)就是必然有效的，那麼第二次邊界檢查就可以省掉。 當然，第一種寫法是可能被編譯器最佳化掉的，例如編譯器可以判定length就是arr的長度，不過這在代碼復雜的時候並不夠可靠，所以還是需要用迭代器來保證進行這種最佳化，這也是官方推薦使用迭代器來避免邊界檢查的原因。
-
 ## for循環
 
 Rust裡面更簡潔、更自然地使用迭代器的方式是使用for迴圈。本質上來說，for迴圈就是專門為迭代器設計的一個語法糖。for迴圈可以對針對陣列切片、字串、Range、Vec、LinkedList、HashMap、BTreeMap等所有具有迭代器的類型執行迴圈，而且還允許我們針對自訂類型實現迴圈。
@@ -183,7 +159,7 @@ trait IntoIterator {
 }
 ```
 
-只要某個類型實現了IntoIterator，那麼調用into\_iter()方法就可以得到對應的迭代器。這個into\_iter()方法的receiver是self，而不是\&self，執行的是move語義。這麼做，可以同時支援Item類型為T、\&T或者\&mut T，用戶有選擇的權力。
+只要某個類型實現了IntoIterator，那麼調用into\_iter\(\)方法就可以得到對應的迭代器。這個into\_iter\(\)方法的receiver是self，而不是&self，執行的是move語義。這麼做，可以同時支援Item類型為T、&T或者&mut T，用戶有選擇的權力。
 
 ```rust
 impl<K, V> IntoIterator for BTreeMap<K, V> {
@@ -200,9 +176,9 @@ impl<'a, K: 'a, V: 'a> IntoIterator for &'a mut BTreeMap<K, V> {
 }
 ```
 
-對於一個容器類型，標準庫裡面對它impl了三次IntoIterator。當Self類型為BTreeMap的時候，Item類型為（K，V），這意味著，每次next()方法都是把內部的元素move出來了；當Self類型為\&BTreeMap的時候，Item類型為（\&K，\&V），每次next()方法返回的是借用；當Self類型為\&mut BTreeMap的時候，Item類型為（\&K，\&mut V），每次next()方法返回的key是唯讀的，value是可讀寫的。
+對於一個容器類型，標準庫裡面對它impl了三次IntoIterator。當Self類型為BTreeMap的時候，Item類型為（K，V），這意味著，每次next\(\)方法都是把內部的元素move出來了；當Self類型為&BTreeMap的時候，Item類型為（&K，&V），每次next\(\)方法返回的是借用；當Self類型為&mut BTreeMap的時候，Item類型為（&K，&mut V），每次next\(\)方法返回的key是唯讀的，value是可讀寫的。
 
-Rust的for\<item>in\<container>{\<body>}語法結構就是一個語法糖。這個語法的原理其實就是調用**`<container>.into_iter()`**方法來獲得迭代器，然後不斷迴圈調用迭代器的`next()`方法，將返回值解包，賦值給\<item>，然後調用\<body>語句塊。
+Rust的for&lt;item&gt;in&lt;container&gt;{&lt;body&gt;}語法結構就是一個語法糖。這個語法的原理其實就是調用**`<container>.into_iter()`**方法來獲得迭代器，然後不斷迴圈調用迭代器的`next()`方法，將返回值解包，賦值給&lt;item&gt;，然後調用&lt;body&gt;語句塊。
 
 在使用for迴圈的時候，我們可以自主選擇三種使用方式：
 
@@ -219,4 +195,6 @@ for item in &mut container{}
 ```
 
 Rust的IntoIterator trait實際上就是for語法的擴展介面。如果我們需要讓各種自訂容器也能在for迴圈中使用，那就可以借鑒標準庫中的寫法，自行實現這個trait即可。
+
+
 
