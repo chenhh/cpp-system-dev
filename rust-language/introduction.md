@@ -136,3 +136,5 @@ unsafe域裡面一切皆有可能（包括safe與unsafe的結合）。因為真�
 [\[知乎\] 如何看待 Rust 這門語言？](https://www.zhihu.com/question/432640008/answer/1668000615)
 
 [This Week in Rust](https://this-week-in-rust.org/)
+
+[why-is-my-rust-build-so-slow](https://fasterthanli.me/articles/why-is-my-rust-build-so-slow)

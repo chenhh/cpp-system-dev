@@ -9,7 +9,7 @@ description: 數組
 * 陣列是一個容器，它在一塊**連續空間記憶體**中，存儲了一系列的**同樣類型**的資料。
 * 陣列中元素的佔用空間大小必須是**編譯期可以確定**的，<mark style="background-color:red;">即內容元素均有實現</mark>[<mark style="background-color:red;">sized trait</mark>](https://doc.rust-lang.org/std/marker/trait.Sized.html)。
 * 陣列本身所容納的元素個數也必須是編譯期確定的，執行階段不可變。如果需要使用變長的容器，可以使用標準庫中的Vec/LinkedList等。
-* 陣列類型的表示方式為**`[T:n]`**。其中T代表元素類型；n代表元素個數；它必須是編譯期常量整數；中間用分號隔開。
+* 陣列類型的表示方式為**`[T:n]`**。其中`T`代表元素類型，`n`代表元素個數；它必須是編譯期常量整數；中間用分號隔開。
 * 對陣列內部元素的訪問，可以使用中括弧索引的方式。Rust支援usize類型的索引的陣列，**索引從0開始計數**。
 
 ```rust

@@ -18,7 +18,7 @@
 * <mark style="color:red;">**錯誤**</mark>：一般是在意料中可能出現問題的地方出現了問題。比如http鏈接超時，訪問了不存在的檔案等。這些錯誤其實是開發者可以處理的。但是在那些異常處理語言中，把失敗和錯誤，都歸到了異常中，粒度非常粗。
 * <mark style="color:red;">**異常**</mark>：真正的異常，是指完全不可預料的問題。比如NullError，訪問了越界的陣列等等，基本是開發者無法處理的情況。
 
-Rust語言在這方面則做的非常精緻。
+<mark style="background-color:red;">Rust處理異常的方法有4種：Option、Result、線程恐慌（Panic）、程式終止（Abort）</mark>。
 
 * 處理失敗：`Option<T>`，傳回值`Some(T)`，或者傳回`None`表示失數。
 * 處理錯誤： `Result<T, E>`，傳回成功值`OK(T)`，或是錯誤`Err(E)`。
@@ -203,12 +203,12 @@ Rust 錯誤處理本質上還是基於返回值的，很多基於返回值做錯
 ```cpp
 enum Option<T> {
     None,
-    Some(T),
+    Some(T),    // struct tuple
 }
 
 enum Result<T, E> {
-    Ok(T),
-    Err(E),
+    Ok(T),    // struct tuple
+    Err(E),    // struct tuple
 }
 ```
 
