@@ -357,7 +357,12 @@ fn main() {
 
 ## trait約束
 
-Rust的trait的另外一個大用處是，作為泛型約束使用，**即限定只有實現給定trait的類型才可被調用**。
+Rust的trait的另外一個大用處是，作為**泛型約束**使用，<mark style="background-color:red;">**即限定只有實現給定trait的類型才可被調用**</mark>。
+
+有兩種語法：
+
+* 在泛型的角括號中加入限制。
+* 在函數後面加where(多trait限制時 較容易閱讀)。
 
 ```rust
 use std::fmt::Debug;
@@ -482,7 +487,7 @@ pub trait Debug {
 
 它們的主要用處就是用在類似println！這樣的地方。
 
-只有實現了Display trait的類型，才能用`{}`格式控制列印出來；只有實現了Debug trait的類型，才能用`{:?}{#?}`格式控制列印出來。
+只有實現了`Display` trait的類型，才能用`{}`格式控制列印出來；只有實現了`Debug` trait的類型，才能用`{:?}{#?}`格式控制列印出來。
 
 Display假定了這個類型可以用utf-8格式的字串表示，它是準備給最終用戶看的，並不是所有類型都應該或者能夠實現這個trait。這個trait的fmt應該如何格式化字串，完全取決於程式師自己，編譯器不提供自動derive的功能。
 
@@ -543,7 +548,7 @@ pub trait Sized {
 
 這個trait定義在`std::marker`模組中，它沒有任何的成員方法。它有#\[lang="sized"]屬性，說明它與普通trait不同，編譯器對它有特殊的處理。
 
-用戶也不能針對自己的類型impl這個trait。**一個類型是否滿足Sized約束是完全由編譯器推導的，用戶無權指定**。
+用戶也不能針對自己的類型impl這個trait。<mark style="background-color:red;">**一個類型是否滿足Sized約束是完全由編譯器推導的，用戶無權指定**</mark>。
 
 在C/C++這一類的語言中，大部分變數、參數、返回值都應該是編譯階段固定大小的。**在Rust中，但凡編譯階段能確定大小的類型，都滿足Sized約束。**
 
