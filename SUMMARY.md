@@ -194,5 +194,6 @@
   * [Rc引用計數](rust-language/zhi-hui-zhi-biao-smart-pointer/rc-yin-yong-ji-shu.md)
   * [Cow(copy on write)](rust-language/zhi-hui-zhi-biao-smart-pointer/cow-copy-on-write.md)
 * [執行緒安全](rust-language/thread-safe/README.md)
+  * [執行緒](rust-language/thread-safe/zhi-hang-xu.md)
   * [管道(channel)](rust-language/thread-safe/channel.md)
   * [狀態共享](rust-language/thread-safe/state-sharing.md)
