@@ -190,6 +190,37 @@ impl<T> Default for Vec<T> {
 
 作為對比，C++裡面成員方法預設可以訪問this指標，因此它需要用static關鍵字來標記靜態方法。Rust不採取這個設計，主要原因是self參數的類型變化太多，不同寫法語義差別很大，選擇顯式聲明self參數更方便指定它的類型。
 
+### 關聯類型(associated types)
+
+關聯類型是一個將類型佔位符與 trait 相關聯的方式，這樣 trait 的方法簽名中就可以使用這些佔位符類型。
+
+一個帶有關聯類型的 trait 的例子是標准庫提供的 Iterator trait。它有一個叫做 Item 的關聯類型來替代遍歷的值的類型。
+
+```rust
+pub trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+```
+
+關聯類型看起來像一個類似泛型的概念，因為它允許定義一個函數而不指定其可以處理的類型。那麼為什麼要使用關聯類型呢？**Ans: 區別在於使用泛型時，則不得不在每一個實現中標注類型**。通過關聯類型，則無需標注類型，因為不能多次實現這個 trait。
+
+```rust
+//關聯類型
+impl Iterator for Counter {
+    type Item = u32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        // --snip--
+}
+// 泛型
+pub trait Iterator<T> {
+    // 每次都要為回傳值的T標注類型
+    fn next(&mut self) -> Option<T>;
+}
+```
+
 ## 擴展類型方法
 
 我們還可以利用trait給其他的類型添加成員方法，哪怕這個類型不是我們自己寫的。
