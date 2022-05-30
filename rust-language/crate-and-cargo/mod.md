@@ -187,6 +187,8 @@ mod top_mod2 {
     pub fn call() {
         // 當前crate下的top_mod1
         ::top_mod1::f1();
+        // 也可以明確寫出crate
+        crate::top_mod1::f1();
     }
 }
 ```
