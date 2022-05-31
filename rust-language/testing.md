@@ -123,3 +123,93 @@ Rust 傾向於根據測試的兩個主要分類來考慮問題：單元測試（
 
 * 單元測試傾向於更小而更集中，在隔離的環境中一次測試一個模塊，或者是測試私有介面。
 * 而整合測試對於你的庫來說則完全是外部的。它們與其他外部代碼一樣，通過相同的方式使用你的代碼，只測試公有介面而且每個測試都有可能會測試多個模塊。
+
+## 文檔測試
+
+為 Rust 工程編寫文檔的主要方式是在程式碼中寫注釋。文檔注釋使用 markdown 語法 書寫，支援程式塊。Rust 很注重正確性，這些注釋中的程式碼塊也會被編譯並且用作測試。
+
+````rust
+/// 第一行是對函式的簡短描述。
+///
+/// 接下來數行是詳細文件。程式碼塊用三個反引號開啟，Rust 會隱式地在其中新增
+/// `fn main()` 和 `extern crate <cratename>`。比如測試 `doccomments` crate：
+///
+/// ```
+/// let result = doccomments::add(2, 3);
+/// assert_eq!(result, 5);
+/// ```
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+/// 文件註釋通常可能帶有 "Examples"、"Panics" 和 "Failures" 這些部分。
+///
+/// 下面的函式將兩數相除。
+///
+/// # Examples
+///
+/// ```
+/// let result = doccomments::div(10, 2);
+/// assert_eq!(result, 5);
+/// ```
+///
+/// # Panics
+///
+/// 如果第二個引數是 0，函式將會 panic。
+///
+/// ```rust,should_panic
+/// // panics on division by zero
+/// doccomments::div(10, 0);
+/// ```
+pub fn div(a: i32, b: i32) -> i32 {
+    if b == 0 {
+        panic!("Divide-by-zero error");
+    }
+
+    a / b
+}
+````
+
+## 整合測試
+
+單元測試一次僅能單獨測試一個模塊(mod)，這種測試是小規模的，並且能測試私有代碼；
+
+整合測試是 crate 外部的測試，並且僅使用 crate 的公共介面，就像其他使用 該 crate 的程式那樣。整合測試的目的是檢驗你的庫的各部分是否能夠正確地協同工作。
+
+cargo 在與 src 同級別的 tests 目錄尋找整合測試。
+
+```
+// 檔案 src/lib.rs：
+// 在一個叫做 'adder' 的 crate 中定義此函式。
+pub fn add(a: i32, b: i32) -> i32 {
+    a + b
+}
+
+// 包含測試的檔案：tests/integration_test.rs：
+#[test]
+fn test_add() {
+    assert_eq!(adder::add(3, 2), 5);
+}
+```
+
+tests 目錄中的每一個 Rust 原始檔都被編譯成一個單獨的 crate。在整合測試中要想 共享代碼，一種方式是創建具有公用函數的模塊，然後在測試中導入並使用它。
+
+帶有共用代碼的模塊遵循和普通的[模塊](https://rustwiki.org/zh-CN/rust-by-example/mod.html)一樣的規則，所以完全可以把公共模塊 寫在 `tests/common/mod.rs` 檔案中。
+
+```rust
+檔案 tests/common.rs:
+pub fn setup() {
+    // 一些配置程式碼，比如建立檔案/目錄，開啟伺服器等等。
+}
+
+// 包含測試的檔案：tests/integration_test.rs
+// 匯入共用模組。
+mod common;
+
+#[test]
+fn test_add() {
+    // 使用共用模組。
+    common::setup();
+    assert_eq!(adder::add(3, 2), 5);
+}
+```
