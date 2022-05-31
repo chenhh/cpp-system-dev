@@ -4,10 +4,10 @@
 
 Rust支援6種斷言。分別是：
 
-* assert!：a用於斷言布林表達式是否為true。
-* assert\_eq!：用於斷言兩個表達式是否相等。
-* assert\_ne!：用於斷言兩個表達式是否不相等。
-* debug\_assert!
+* `assert!`：用於斷言布林表達式是否為true。
+* `assert_eq!`：用於斷言兩個表達式是否相等。
+* `assert_ne!`：用於斷言兩個表達式是否不相等。
+* debug\_assert!：同上，但只用於debug模式。
 * debug\_assert\_eq!
 * debug\_assert\_ne!
 
