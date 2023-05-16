@@ -2,23 +2,23 @@
 
 * [簡介](README.md)
 
-## 組合語言 <a href="#assembly" id="assembly"></a>
+## x86組合語言 <a href="#x86assembly" id="x86assembly"></a>
 
-* [x86 CPU架構簡介](assembly/x86-cpu-arch.md)
-* [x86定址模式(addressing mode)](assembly/x86-addressing-mode.md)
-* [組譯器(assembler)](assembly/assembler.md)
-* [目的檔(object file)](assembly/object-file/README.md)
-  * [Windows PE格式](assembly/object-file/pe-format.md)
-* [程式重定址(program relocation)](assembly/program-relocation.md)
-* [載入程式(loading program)](assembly/loading-program.md)
-* [連結器(linker)](assembly/linker/README.md)
-  * [靜態連結(static linking)](assembly/linker/static-linking.md)
-* [暫存器(register)](assembly/register.md)
-* [保護模式(protect mode)](assembly/protect-mode/README.md)
-  * [記憶體保護機制](assembly/protect-mode/mem-protection-mechanism.md)
-  * [中斷與例外處理](assembly/protect-mode/interrupt-and-exception.md)
-* [大端與小端(big endian and little endian)](assembly/big-endian-and-little-endian.md)
-* [組合語言格式(Intel, AT\&T格式)](assembly/assembly-style.md)
+* [x86 CPU架構簡介](x86assembly/x86-cpu-arch.md)
+* [x86定址模式(addressing mode)](x86assembly/x86-addressing-mode.md)
+* [組譯器(assembler)](x86assembly/assembler.md)
+* [目的檔(object file)](x86assembly/object-file/README.md)
+  * [Windows PE格式](x86assembly/object-file/pe-format.md)
+* [程式重定址(program relocation)](x86assembly/program-relocation.md)
+* [載入程式(loading program)](x86assembly/loading-program.md)
+* [連結器(linker)](x86assembly/linker/README.md)
+  * [靜態連結(static linking)](x86assembly/linker/static-linking.md)
+* [暫存器(register)](x86assembly/register.md)
+* [保護模式(protect mode)](x86assembly/protect-mode/README.md)
+  * [記憶體保護機制](x86assembly/protect-mode/mem-protection-mechanism.md)
+  * [中斷與例外處理](x86assembly/protect-mode/interrupt-and-exception.md)
+* [大端與小端(big endian and little endian)](x86assembly/big-endian-and-little-endian.md)
+* [組合語言格式(Intel, AT\&T格式)](x86assembly/assembly-style.md)
 
 ## C/C++ <a href="#c_cpp" id="c_cpp"></a>
 
