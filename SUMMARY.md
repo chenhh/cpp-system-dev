@@ -125,14 +125,11 @@
 * [DNS](network/dns.md)
 * [websocket](network/websocket.md)
 
-## 逆向工程 <a href="#reverse-engineering" id="reverse-engineering"></a>
+## 資安 <a href="#cyber-security" id="cyber-security"></a>
 
-* [逆向工程簡介](reverse-engineering/ni-xiang-gong-cheng-jian-jie.md)
-* [Ghidra](reverse-engineering/ghidra.md)
-* [Radare2](reverse-engineering/radare2.md)
-* [加殼與脫殼](reverse-engineering/shelling.md)
-* [RSA](reverse-engineering/rsa.md)
-* [網路安全簡介](reverse-engineering/basic-network-security.md)
+* [加殼與脫殼](cyber-security/shelling.md)
+* [RSA](cyber-security/rsa.md)
+* [網路安全簡介](cyber-security/basic-network-security.md)
 
 ## 平行處理 <a href="#parallel-processing" id="parallel-processing"></a>
 

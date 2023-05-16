@@ -80,11 +80,7 @@ fn main() {
 
 ## 可變借用與綁定的組合
 
-| let a: \&T = value;             | a與value都不能修改                                  | const T\* const a |
-| ------------------------------- | --------------------------------------------- | ----------------- |
-| let mut a: \&T = \&value;       | a可變，但value不可變，即不能透過a修改指向(value)的內容，但a可指向新的地址。 | const T\* a       |
-| let a: \&mut T = \&mut value;   | a不可變，但value可變，即可透過a修改value的內容，但a不可指向新的地址。     | T\* const a       |
-| let mut a:\&mut T =\&mut value; | a與value都能修改                                   | T\* a             |
+<table data-header-hidden><thead><tr><th>Rust</th><th>含義</th><th data-hidden>C++</th></tr></thead><tbody><tr><td>let a: &#x26;T = value;</td><td>a與value都不能修改</td><td>const T* const a</td></tr><tr><td>let mut a: &#x26;T = &#x26;value;</td><td>a可變，但value不可變，即不能透過a修改指向(value)的內容，但a可指向新的地址。</td><td>const T* a</td></tr><tr><td>let a: &#x26;mut T = &#x26;mut value;</td><td>a不可變，但value可變，即可透過a修改value的內容，但a不可指向新的地址。</td><td>T* const a</td></tr><tr><td>let mut a:&#x26;mut T =&#x26;mut value;</td><td>a與value都能修改</td><td>T* a</td></tr></tbody></table>
 
 ```rust
 let x = value;
