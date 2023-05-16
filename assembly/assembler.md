@@ -1,8 +1,8 @@
 # 組譯器(assembler)
 
-組譯器的功能是將組合語言寫成的程式碼翻譯成目的碼。
+組譯器的功能是將組合語言寫成的程式碼翻譯成目的碼(object ocde)。
 
-組合語言程式是由**指令及資料**組成。常用的指令有二種，分別是機器指令(machine instruction)與虛擬指令(pseudo instruction)。
+組合語言程式是由<mark style="color:red;">**指令及資料**</mark>組成。常用的指令有二種，分別是<mark style="color:red;">機器指令(machine instruction)與虛擬指令(pseudo instruction)</mark>。
 
 * 機器指令經由組譯器處理後會產生目的碼；
 * 虛擬指令的主要作用是標明程式的開始處及結束處，或給予組譯器指引，因此虛擬指令經由組譯器處理後通常不會產生目的碼。

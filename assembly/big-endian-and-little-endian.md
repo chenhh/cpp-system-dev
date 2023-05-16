@@ -2,7 +2,12 @@
 
 大端小端在計算機領域，是指位元組順序(byte order)。
 
-&#x20;**目前我們常見的CPU PowerPC、IBM是大端模式，x86是小端模式。ARM既可以工作在大端模式，也可以工作在小端模式，一般ARM都預設是小端模式。一般通訊協議都採用的是大端模式。**
+**常見的CPU：**
+
+* **PowerPC、IBM是大端模式**
+* **x86是小端模式**
+* **ARM既可以工作在大端模式，也可以工作在小端模式，一般ARM都預設是小端模式。**
+* **一般通訊協定(如TCP)都採用的是大端模式。**
 
 針對一個32-bit (4 bytes)的數值，如0x12345678h，總共四個位元組，兩個十六進位制數表示一個位元組，高位位元組為0x12，低位位元組為0x78；中間兩個位元組分別為0x34和0x56；
 
@@ -11,9 +16,9 @@
 * &#x20;**方式一 (big endian)**、數值的高位位元組存放在記憶體的低地址端，低位位元組存放在記憶體的高地址端：
 * **方式二 (little endian)**、數值的低位位元組存放在記憶體的低地址端，高位位元組存放在記憶體的高地址端：
 
-![Big endian範例](../.gitbook/assets/big-endian.png)
+![Big endian範例(高位放LSB)](../.gitbook/assets/big-endian.png)
 
-![Little endian範例](../.gitbook/assets/little-endian.png)
+![Little endian範例(高位放MSB)](../.gitbook/assets/little-endian.png)
 
 ![Big與Little endian比較](../.gitbook/assets/byte\_order.png)
 
@@ -30,8 +35,8 @@
 #include <stdio.h>
 
 union EndianTest {
-  unsigned long l;
-  unsigned char c[4];
+  unsigned long l;    // 4 bytes, 共用記憶體位址
+  unsigned char c[4]; // 4 bytes
 };
 
 int main() {
