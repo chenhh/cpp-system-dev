@@ -88,25 +88,6 @@
 * [CMake](compiling\_and\_linking\_tool/cmake.md)
 * [LLVM](compiling\_and\_linking\_tool/llvm.md)
 
-## 作業系統 <a href="#operating-system" id="operating-system"></a>
-
-* [開機流程](operating-system/computer-start.md)
-* [記憶體管理(memory management)](operating-system/memory-management/README.md)
-  * [分頁(paging)](operating-system/memory-management/fen-ye-paging.md)
-  * [虛擬記憶體(virtual memory)](operating-system/memory-management/virtual-memory.md)
-  * [記憶體置換(memory swapping)](operating-system/memory-management/ji-yi-ti-zhi-huan-memory-swapping.md)
-  * [連續記憶體分配(contiguous memory allocation)](operating-system/memory-management/contiguous-memory-allocation.md)
-* [保護環(protection rings)](operating-system/protection-rings.md)
-* [NUMA架構](operating-system/numa.md)
-* [CPU快取一致性協議MESI](operating-system/cpu-kuai-qu-yi-zhi-xing-xie-yi-mesi.md)
-* [中斷(interrupt)](operating-system/interrupt.md)
-* [系統呼叫(system call)](operating-system/xi-tong-hu-jiao-system-call.md)
-* [Windows API](operating-system/windows-api.md)
-* [GLIBC](operating-system/glibc.md)
-* [IO](operating-system/io.md)
-* [Init行程：sysvinit](operating-system/init-process-sysvinit/README.md)
-  * [init行程：upstart](operating-system/init-process-sysvinit/init-process-upstart.md)
-  * [init行程：systemd](operating-system/init-process-sysvinit/init-process-systemd.md)
 
 ***
 
